@@ -34,7 +34,7 @@ class AuthorsManager:
             "• Анна Сидорова — графика\n"
             "• Дмитрий Козлов — программирование\n\n"
             "🔧 Проект: Clicker Basketball\n"
-            "📅 2025 © GlitchHunters"
+            "📅 2026 © GlitchHunters"
         )
 
         tk.Label(
