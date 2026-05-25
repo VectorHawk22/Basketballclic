@@ -59,29 +59,45 @@ class InventoryManager:
         image_frame.pack(side=tk.LEFT, anchor="w", padx=(0, 10))
         image_frame.pack_propagate(False)
 
+        # === Загрузка изображений ===
         self.photo = None
+        self.empty_potion_image = None
+
         try:
-            base_dir = os.path.dirname(os.path.dirname(__file__))  # Папка aaaaa_clicker
-            image_path = os.path.join(base_dir, "images", "potionthatgives2xcoins.png")
-            print(f"🔍 Путь к изображению: {os.path.abspath(image_path)}")
+            base_dir = os.path.dirname(os.path.dirname(__file__))
+            full_path = os.path.join(base_dir, "images", "potionthatgives2xcoins.png")
+            empty_path = os.path.join(base_dir, "images", "emptypotionthatgives2xcoins.png")
 
-            if not os.path.exists(image_path):
-                raise FileNotFoundError(f"❌ Файл не найден: {image_path}")
+            # Полная бутылка
+            if os.path.exists(full_path):
+                img = Image.open(full_path).resize((80, 80), Image.Resampling.LANCZOS)
+                self.photo = ImageTk.PhotoImage(img)
+                print("✅ Загружена полная бутылка")
+            else:
+                print(f"⚠️ Нет файла полной бутылки: {full_path}")
 
-            image = Image.open(image_path)
-            print(f"🖼️  Изображение загружено: {image.size}, формат: {image.format}")
+            # Пустая бутылка
+            if os.path.exists(empty_path):
+                img = Image.open(empty_path).resize((80, 80), Image.Resampling.LANCZOS)
+                self.empty_potion_image = ImageTk.PhotoImage(img)
+                print("✅ Загружена пустая бутылка")
+            else:
+                print(f"⚠️ Нет файла пустой бутылки: {empty_path}")
 
-            image = image.resize((80, 80), Image.Resampling.LANCZOS)
-            self.photo = ImageTk.PhotoImage(image)
-
-            image_label = tk.Label(image_frame, image=self.photo, bg="lightyellow")
-            image_label.image = self.photo  # Сохраняем ссылку!
-            image_label.pack(side=tk.LEFT, padx=5, pady=5)
-            print("✅ Изображение успешно загружено и отображено")
         except Exception as e:
-            print(f"❌ Ошибка загрузки изображения: {e}")
-            tk.Label(image_frame, text="🧪", font=("Arial", 32), bg="lightyellow").pack(side=tk.LEFT, padx=5, pady=5)
+            print(f"❌ Ошибка загрузки изображений: {e}")
 
+        # Определяем стартовое изображение
+        start_img = self.empty_potion_image if self.game.is_potion_active() else self.photo
+        fallback_text = "" if start_img is None else None
+
+        if start_img:
+            self.image_label = tk.Label(image_frame, image=start_img, bg="lightyellow")
+            self.image_label.image = start_img  # Критически важно для Tkinter
+            self.image_label.pack(side=tk.LEFT, padx=5, pady=5)
+        else:
+            self.image_label = tk.Label(image_frame, text=fallback_text, font=("Arial", 32), bg="lightyellow")
+            self.image_label.pack(side=tk.LEFT, padx=5, pady=5)
         # === Текст и кнопка ===
         text_frame = tk.Frame(inner_frame, bg="lightyellow")
         text_frame.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
@@ -119,7 +135,7 @@ class InventoryManager:
         # Переключаем кнопку внизу
         self.parent.btn_language.pack_forget()
         self.parent.btn_back.pack(fill=tk.BOTH, expand=True)
-
+        self.update_button()
     def close(self):
         """Закрывает инвентарь"""
         self.inventory_frame.pack_forget()
@@ -131,23 +147,43 @@ class InventoryManager:
 
     def use_potion(self):
         if self.game.activate_potion():
+            # Сначала обновляем состояние UI (кнопка + изображение)
             self.update_button()
             self.update_timer()
+
+            # Визуальная обратная связь
             self.parent.update_ui()
-            self.parent.label_result.config(text="🧪 Эффект x2 активирован!", fg="green")
+            self.parent.label_result.config(text=" Эффект x2 активирован!", fg="green")
+
+            # Мигание рамки
             self.potion_frame.config(bg="lightgreen")
             self.parent.root.after(3000, lambda: self.potion_frame.config(bg="lightyellow"))
+
+            print("🔄 Состояние обновлено. Изображение должно смениться автоматически.")
         else:
             self.parent.label_result.config(text="⏳ Эффект уже активен!", fg="orange")
-
     def update_button(self):
         tr = self.translations[self.current_lang]
+        is_active = self.game.is_potion_active()
+
+        # 1. Обновляем кнопку
         if self.potion_btn:
-            if self.game.is_potion_active():
+            if is_active:
                 self.potion_btn.config(text=tr["use"], state="disabled")
             else:
                 self.potion_btn.config(text=tr["potion_inactive"], state="normal")
 
+        # 2. Обновляем изображение (только если метка существует)
+        if self.image_label:
+            new_img = self.empty_potion_image if is_active else self.photo
+
+            if new_img:
+                self.image_label.config(image=new_img)
+                self.image_label.image = new_img  # Держим ссылку, иначе GC удалит картинку
+            else:
+                # Если нужное изображение не загрузилось, ставим эмодзи
+                self.image_label.config(text="🧪" if is_active else "⬜", image="")
+                self.image_label.image = None
     def update_timer(self):
         tr = self.translations[self.current_lang]
         time_left = self.game.get_potion_time_left()

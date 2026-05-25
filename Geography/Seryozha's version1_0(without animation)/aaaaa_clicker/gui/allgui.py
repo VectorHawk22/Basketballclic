@@ -106,6 +106,10 @@ class ClickerGUI:
         self.label_points = tk.Label(self.game_frame, text=tr["points"].format(self.game.get_points()),
                                      font=("Arial", 16, "bold"))
         self.label_points.pack(padx=1, pady=1)
+        # Атрибуты для изображений зелья
+        self.photo = None          # Полная бутылка
+        self.empty_photo = None    # Пустая бутылка
+        self.image_label = None    # Виджет Label с картинкой
 
         # Водяной знак
         glitch_label = tk.Label(
@@ -276,35 +280,31 @@ class ClickerGUI:
 
     def open_inventory(self):
         tr = self.translations[self.current_lang]
-        # Скрываем основную игру
-        self.game_frame.pack_forget()
-        # Скрываем правую панель
-        self.right_frame.grid_remove()
-        # Показываем инвентарь
-        self.inventory_frame.pack(fill=tk.BOTH, expand=True)
 
-        # Очищаем инвентарь
+        # Скрываем основную игру и правую панель
+        self.game_frame.pack_forget()
+        self.right_frame.grid_remove()
+
+        # Очищаем инвентарь перед перерисовкой
         for widget in self.inventory_frame.winfo_children():
             widget.destroy()
+
+        # Показываем инвентарь
+        self.inventory_frame.pack(fill=tk.BOTH, expand=True)
 
         # Заголовок
         tk.Label(self.inventory_frame, text=tr["inventory"], font=("Arial", 16, "bold")).pack(pady=20)
 
-        # === Слот для зелья (выровнен по левому краю) ===
+        # === Слот для зелья ===
         self.potion_frame = tk.Frame(
             self.inventory_frame,
-            relief="ridge",
-            bd=4,
-            bg="lightyellow",
-            highlightbackground="gold",
-            highlightthickness=2,
-            width=250,
-            height=140
+            relief="ridge", bd=4, bg="lightyellow",
+            highlightbackground="gold", highlightthickness=2,
+            width=250, height=140
         )
         self.potion_frame.pack(pady=30, padx=(20, 10), anchor="w")
         self.potion_frame.pack_propagate(False)
 
-        # Внутренний фрейм
         inner_frame = tk.Frame(self.potion_frame, bg="lightyellow")
         inner_frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
 
@@ -313,80 +313,79 @@ class ClickerGUI:
         image_frame.pack(side=tk.LEFT, anchor="w", padx=(0, 10))
         image_frame.pack_propagate(False)
 
-        # Сбрасываем фото
+        # Сброс переменных изображений
         self.photo = None
+        self.empty_photo = None
+        self.image_label = None
 
         try:
-            # Используем путь относительно текущего файла
-            base_dir = os.path.dirname(__file__)
-            image_path = os.path.join(base_dir, "..", "images", "potionthatgives2xcoins.png")
-            print(f"🔍 Путь к изображению: {os.path.abspath(image_path)}")
+            # Определяем пути. Убедитесь, что папка images лежит рядом с allgui.py
+            # Поднимаемся на один уровень вверх из папки gui/ в папку проект/
+            base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-            if not os.path.exists(image_path):
-                raise FileNotFoundError(f"❌ Файл не найден: {image_path}")
+            full_path = os.path.join(base_dir, "images", "potionthatgives2xcoins.png")
+            empty_path = os.path.join(base_dir, "images", "emptypotionthatgives2xcoins.png")
 
-            image = Image.open(image_path)
-            print(f"🖼️  Изображение загружено: {image.size}, формат: {image.format}")
+            print(f"🔍 Ищем полную бутылку: {full_path}")
+            print(f"🔍 Ищем пустую бутылку: {empty_path}")
 
-            image = image.resize((80, 80), Image.Resampling.LANCZOS)
-            self.photo = ImageTk.PhotoImage(image)
+            # Загрузка полной
+            if os.path.exists(full_path):
+                img_full = Image.open(full_path).resize((80, 80), Image.Resampling.LANCZOS)
+                self.photo = ImageTk.PhotoImage(img_full)
+            else:
+                print("⚠️ Файл полной бутылки НЕ НАЙДЕН!")
 
-            # ВАЖНО: сохраняем ссылку и отображаем
-            image_label = tk.Label(image_frame, image=self.photo, bg="lightyellow")
-            image_label.image = self.photo  # ← Это предотвращает удаление изображения сборщиком мусора
-            image_label.pack(side=tk.LEFT, padx=5, pady=5)
-            print("✅ Изображение успешно загружено и отображено")
+            # Загрузка пустой
+            if os.path.exists(empty_path):
+                img_empty = Image.open(empty_path).resize((80, 80), Image.Resampling.LANCZOS)
+                self.empty_photo = ImageTk.PhotoImage(img_empty)
+            else:
+                print("⚠️ Файл пустой бутылки НЕ НАЙДЕН!")
+
+            # Выбор текущего изображения
+            current_img = self.empty_photo if self.game.is_potion_active() else self.photo
+
+            # Если картинок нет вообще, ставим заглушку
+            if current_img is None:
+                current_img = self.photo if self.photo else self.empty_photo
+
+            # Создание Label
+            if current_img:
+                self.image_label = tk.Label(image_frame, image=current_img, bg="lightyellow")
+                self.image_label.image = current_img  # Сохраняем ссылку!
+            else:
+                # Если ни одной картинки не загрузилось
+                self.image_label = tk.Label(image_frame, text="🧪", font=("Arial", 32), bg="lightyellow")
+
+            self.image_label.pack(side=tk.LEFT, padx=5, pady=5)
+
         except Exception as e:
-            print(f"❌ Ошибка загрузки изображения: {e}")
-            # Резервный вариант — крупная иконка
-            fallback_label = tk.Label(
-                image_frame,
-                text="🧪",
-                font=("Arial", 32),
-                bg="lightyellow",
-                width=3,
-                height=2
-            )
-            fallback_label.pack(side=tk.LEFT, padx=5, pady=5)
+            print(f"❌ Критическая ошибка загрузки: {e}")
+            # Фоллбэк при ошибке
+            self.image_label = tk.Label(image_frame, text="", font=("Arial", 32), bg="lightyellow")
+            self.image_label.pack(side=tk.LEFT, padx=5, pady=5)
 
-        # === ПРАВАЯ ЧАСТЬ — ТЕКСТ И КНОПКА ===
+        # === ПРАВАЯ ЧАСТЬ ===
         text_frame = tk.Frame(inner_frame, bg="lightyellow")
         text_frame.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 
-        tk.Label(
-            text_frame,
-            text=tr["potion"],
-            bg="lightyellow",
-            font=("Arial", 10, "bold"),
-            anchor="w"
-        ).pack(fill=tk.X, pady=(0, 5))
+        tk.Label(text_frame, text=tr["potion"], bg="lightyellow", font=("Arial", 10, "bold"), anchor="w").pack(
+            fill=tk.X, pady=(0, 5))
 
-        self.potion_btn = tk.Button(
-            text_frame,
-            text="",
-            font=("Arial", 9),
-            width=18,
-            command=self.use_potion
-        )
+        self.potion_btn = tk.Button(text_frame, text="", font=("Arial", 9), width=18, command=self.use_potion)
         self.potion_btn.pack(anchor="w")
 
-        # Таймер под кнопкой
-        self.potion_timer_label = tk.Label(
-            self.potion_frame,
-            text="",
-            bg="lightyellow",
-            font=("Arial", 9)
-        )
+        self.potion_timer_label = tk.Label(self.potion_frame, text="", bg="lightyellow", font=("Arial", 9))
         self.potion_timer_label.pack(pady=(5, 0), anchor="w", padx=15)
 
-        # Обновляем состояние
+        # Обновляем UI
         self.update_potion_button()
         self.update_potion_timer_label()
 
-        # Переключаем кнопку внизу
+        # Переключение кнопок навигации
         self.btn_language.pack_forget()
         self.btn_back.pack(fill=tk.BOTH, expand=True)
-
     def close_inventory(self):
         # Скрываем инвентарь
         self.inventory_frame.pack_forget()
@@ -404,9 +403,9 @@ class ClickerGUI:
         if self.game.activate_potion():
             self.update_potion_button()
             self.update_potion_timer_label()
+            self.update_potion_image()  # ← ДОБАВЛЕНО: меняем картинку
             self.update_ui()
             self.label_result.config(text="🧪 Эффект x2 активирован!", fg="green")
-            # Подсветка
             self.potion_frame.config(bg="lightgreen")
             self.root.after(3000, lambda: self.potion_frame.config(bg="lightyellow"))
         else:
@@ -430,15 +429,13 @@ class ClickerGUI:
                 self.potion_timer_label.config(text="")
 
     def update_potion_display(self):
-        # Обновляем очки
         self.update_ui()
 
-        # Обновляем таймер зелья, если инвентарь открыт
         if self.inventory_frame.winfo_ismapped():
             self.update_potion_timer_label()
             self.update_potion_button()
+            self.update_potion_image()  # ← ДОБАВЛЕНО: проверка каждые 1 сек
 
-        # Планируем следующее обновление
         self.root.after(1000, self.update_potion_display)
 
     def show_game(self):
@@ -560,3 +557,23 @@ class ClickerGUI:
         # 6. Возвращаем команду кнопки "Назад" к инвентарю (по умолчанию)
         tr = self.translations[self.current_lang]
         self.btn_back.config(command=self.close_inventory, text=tr["back"])
+
+    def update_potion_image(self):
+        """Обновляет изображение зелья в зависимости от статуса"""
+        # Проверяем, создан ли вообще label и загружены ли картинки
+        if not hasattr(self, 'image_label') or self.image_label is None:
+            return
+
+        if not self.photo or not self.empty_photo:
+            # Если картинки не загрузились, ничего не меняем
+            return
+
+        try:
+            is_active = self.game.is_potion_active()
+            new_img = self.empty_photo if is_active else self.photo
+
+            # Применяем новое изображение
+            self.image_label.config(image=new_img)
+            self.image_label.image = new_img  # 🔑 ВАЖНО: держим ссылку для GC
+        except Exception as e:
+            print(f"Ошибка обновления картинки: {e}")
