@@ -3,6 +3,7 @@ from game_logic import ClickerGame
 from datetime import datetime
 import os
 from PIL import Image, ImageTk  # Для масштабирования изображений
+from gui.settings import Settings
 
 
 class ClickerGUI:
@@ -25,7 +26,7 @@ class ClickerGUI:
                 "start_challenge": "Click to start!", "click_now": "CLICK NOW!",
                 "score_message": "{} clicks in 1 second!", "inventory": "Inventory",
                 "potion": "🧪 Double Points (10 min)", "potion_active": "Active! Time left: {} sec",
-                "potion_inactive": "Use: 10 min x2", "use": "Use", "back": "Back"
+                "potion_inactive": "Use: 10 min x2", "use": "Use", "back": "Back", "btn_settings": "Settings"
             },
             "Русский": {
                 "title": "Кликер", "result": "Результат: -", "hit": "🎯 Попал! +1 очко!", "miss": "❌ Промах :(",
@@ -34,7 +35,7 @@ class ClickerGUI:
                 "start_challenge": "Нажми, и начни!", "click_now": "ЖМИ СЕЙЧАС!",
                 "score_message": "{} кликов за 1 секунду!", "inventory": "Инвентарь",
                 "potion": "🧪2x очки (10 мин)", "potion_active": "Активно! Осталось: {} сек",
-                "potion_inactive": "Использовать: 10 мин", "use": "Использовать", "back": "Назад"
+                "potion_inactive": "Использовать: 10 мин", "use": "Использовать", "back": "Назад", "btn_settings": "Настройки"
             },
             "Французский": {
                 "title": "Cliqueur", "result": "Résultat : -", "hit": "🎯 Touché ! +1 point !", "miss": "❌ Raté :(",
@@ -43,7 +44,7 @@ class ClickerGUI:
                 "start_challenge": "Cliquez pour commencer !", "click_now": "CLIQUEZ MAINTENANT !",
                 "score_message": "{} clics en 1 seconde !", "inventory": "Inventaire",
                 "potion": "🧪 Double points (10 min)", "potion_active": "Actif ! Temps restant : {} sec",
-                "potion_inactive": "Utiliser : 10 min x2", "use": "Utiliser", "back": "Retour"
+                "potion_inactive": "Utiliser : 10 min x2", "use": "Utiliser", "back": "Retour", "btn_settings": "Paramètres"
             },
             "Немецкий": {
                 "title": "Klicker", "result": "Ergebnis: -", "hit": "🎯 Treffer! +1 Punkt!", "miss": "❌ Daneben :(",
@@ -52,7 +53,7 @@ class ClickerGUI:
                 "start_challenge": "Klicke zum Starten!", "click_now": "JETZT KLICKEN!",
                 "score_message": "{} Klicks in 1 Sekunde!", "inventory": "Inventar",
                 "potion": "🧪 Doppelte Punkte (10 Min)", "potion_active": "Aktiv! Verbleibend: {} Sek",
-                "potion_inactive": "Benutzen: 10 Min x2", "use": "Benutzen", "back": "Zurück"
+                "potion_inactive": "Benutzen: 10 Min x2", "use": "Benutzen", "back": "Zurück", "btn_settings": "Einstellungen"
             },
             "Китайский": {
                 "title": "点击器", "result": "结果: -", "hit": "🎯 击中！+1 分！", "miss": "❌ 未命中 :(",
@@ -61,11 +62,13 @@ class ClickerGUI:
                 "start_challenge": "点击开始！", "click_now": "立即点击！",
                 "score_message": "1秒内点击 {} 次！", "inventory": "背包",
                 "potion": "🧪 双倍积分 (10分钟)", "potion_active": "生效中！剩余时间：{} 秒",
-                "potion_inactive": "使用：10分钟双倍", "use": "使用", "back": "返回"
+                "potion_inactive": "使用：10分钟双倍", "use": "使用", "back": "返回", "btn_settings": "设置"
             }
         }
 
         self.current_lang = "Русский"
+        self.settings_frame = None
+        self.settings = None
         tr = self.translations[self.current_lang]
 
         # Главный фрейм
@@ -197,6 +200,17 @@ class ClickerGUI:
             padx=(0, 5),
             pady=1
         )
+
+        # Кнопка настроек (слева снизу)
+        self.btn_settings = tk.Button(
+            right_frame,
+            text=tr["btn_settings"],
+            font=("Arial", 10, "bold"),
+            bg="lightgray",
+            command=self.open_settings
+        )
+
+        self.btn_settings.grid(row=4, column=0, sticky="nsew", padx=(0, 5), pady=1)
 
         self.root.title(tr["title"])
 
@@ -330,6 +344,7 @@ class ClickerGUI:
         self.btn1.config(text=tr["btn_inventory"])
         self.btn2.config(text=tr["btn_shop"])
         self.btn3.config(text=tr["btn_authors"])
+        self.btn_settings.config(text=tr["btn_settings"])
 
     def update_ui(self, result=None):
         tr = self.translations[self.current_lang]
@@ -639,3 +654,67 @@ class ClickerGUI:
             self.image_label.image = new_img  # 🔑 ВАЖНО: держим ссылку для GC
         except Exception as e:
             print(f"Ошибка обновления картинки: {e}")
+
+    def open_settings(self):
+        self.hide_all_screens()
+
+        self.btn_language.grid_remove()
+        self.btn_settings.grid_remove()
+
+        self.btn_back.config(command=self.back_to_game,
+                             text=self.translations[self.current_lang]["back"])
+        self.btn_back.pack(fill=tk.BOTH, expand=True)
+
+        if self.settings_frame is None:
+            self.settings_frame = tk.Frame(self.root)
+            self.settings = Settings(self.settings_frame, self)
+
+        self.settings_frame.pack(fill=tk.BOTH, expand=True)
+    def close_settings(self):
+        if self.settings_frame:
+            self.settings_frame.pack_forget()
+
+        # возвращаем игру
+        self.game_frame.pack(fill=tk.BOTH, expand=True)
+        self.right_frame.grid()
+
+        # возвращаем кнопки
+        self.btn_language.grid()
+        self.btn_settings.grid()
+
+        # убираем back
+        self.btn_back.pack_forget()
+    def hide_all_screens(self):
+        self.game_frame.pack_forget()
+        self.inventory_frame.pack_forget()
+        self.shop_frame.pack_forget()
+        self.authors_frame.pack_forget()
+        self.right_frame.grid_remove()
+
+    def back_to_game(self):
+        # скрываем ВСЁ
+        self.game_frame.pack_forget()
+        self.inventory_frame.pack_forget()
+        self.shop_frame.pack_forget()
+        self.authors_frame.pack_forget()
+        if self.settings_frame:
+            self.settings_frame.pack_forget()
+
+        self.right_frame.grid()
+
+        # возвращаем игру
+        self.game_frame.pack(fill=tk.BOTH, expand=True)
+
+        # UI кнопки
+        self.btn_language.grid()
+        self.btn_settings.grid()
+
+        self.btn_back.pack_forget()
+
+    def hide_all(self):
+        self.game_frame.pack_forget()
+        self.inventory_frame.pack_forget()
+        self.shop_frame.pack_forget()
+        self.authors_frame.pack_forget()
+        if self.settings_frame:
+            self.settings_frame.pack_forget()
