@@ -29,11 +29,11 @@ class AuthorsManager:
 
         # Информация об авторах
         authors_text = (
-            "🎮 Разработчики:\n\n"
-            "• Иван Петров — геймдизайн\n"
-            "• Анна Сидорова — графика\n"
-            "• Дмитрий Козлов — программирование\n\n"
-            "🔧 Проект: Clicker Basketball\n"
+            "🎮 Authors:\n\n"
+            "• thekosmoss\n"
+            "• artman\n"
+            "• amonpys\n\n"
+            "🔧 Проект: Basketball click\n"
             "📅 2026 © GlitchHunters"
         )
 
