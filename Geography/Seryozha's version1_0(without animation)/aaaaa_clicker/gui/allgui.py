@@ -80,6 +80,49 @@ class ClickerGUI:
                 "potion_inactive": "Utiliser : 10 min x2",
                 "use": "Utiliser",
                 "back": "Retour"
+            },
+            # --- НОВЫЕ ЯЗЫКИ НИЖЕ ---
+            "Немецкий": {
+                "title": "Klicker",
+                "result": "Ergebnis: -",
+                "hit": "🎯 Treffer! +1 Punkt!",
+                "miss": "❌ Daneben :(",
+                "points": "Punkte: {}",
+                "button_click": "Klick!",
+                "menu_lang": "Sprache wählen",
+                "btn_inventory": "Inventar",
+                "btn_shop": "Laden",
+                "btn_authors": "Autoren",
+                "start_challenge": "Klicke zum Starten!",
+                "click_now": "JETZT KLICKEN!",
+                "score_message": "{} Klicks in 1 Sekunde!",
+                "inventory": "Inventar",
+                "potion": "🧪 Doppelte Punkte (10 Min)",
+                "potion_active": "Aktiv! Verbleibend: {} Sek",
+                "potion_inactive": "Benutzen: 10 Min x2",
+                "use": "Benutzen",
+                "back": "Zurück"
+            },
+            "Китайский": {
+                "title": "点击器",
+                "result": "结果: -",
+                "hit": "🎯 击中！+1 分！",
+                "miss": "❌ 未命中 :(",
+                "points": "分数: {}",
+                "button_click": "点击！",
+                "menu_lang": "选择语言",
+                "btn_inventory": "背包",
+                "btn_shop": "商店",
+                "btn_authors": "作者",
+                "start_challenge": "点击开始！",
+                "click_now": "立即点击！",
+                "score_message": "1秒内点击 {} 次！",
+                "inventory": "背包",
+                "potion": "🧪 双倍积分 (10分钟)",
+                "potion_active": "生效中！剩余时间：{} 秒",
+                "potion_inactive": "使用：10分钟双倍",
+                "use": "使用",
+                "back": "返回"
             }
         }
 
@@ -107,9 +150,9 @@ class ClickerGUI:
                                      font=("Arial", 16, "bold"))
         self.label_points.pack(padx=1, pady=1)
         # Атрибуты для изображений зелья
-        self.photo = None          # Полная бутылка
-        self.empty_photo = None    # Пустая бутылка
-        self.image_label = None    # Виджет Label с картинкой
+        self.photo = None  # Полная бутылка
+        self.empty_photo = None  # Пустая бутылка
+        self.image_label = None  # Виджет Label с картинкой
 
         # Водяной знак
         glitch_label = tk.Label(
@@ -230,16 +273,35 @@ class ClickerGUI:
         self.button_click.config(text=tr["start_challenge"], command=self.start_challenge)
 
     def show_message(self, action):
-        tr = self.translations[self.current_lang]
+        # Добавляем новые языки в сообщения об ошибках/пустых состояниях
         messages = {
-            "Inventory": {"Русский": "Инвентарь пуст", "Английский": "Inventory is empty",
-                          "Французский": "L'inventaire est vide"},
-            "Shop": {"Русский": "Магазин закрыт", "Английский": "Shop is closed",
-                     "Французский": "Le magasin est fermé"},
-            "Authors": {"Русский": "Разработчик: Вы", "Английский": "Developer: You",
-                        "Французский": "Développeur : Vous"}
+            "Inventory": {
+                "Русский": "Инвентарь пуст",
+                "Английский": "Inventory is empty",
+                "Французский": "L'inventaire est vide",
+                "Немецкий": "Inventar ist leer",
+                "Китайский": "背包是空的"
+            },
+            "Shop": {
+                "Русский": "Магазин закрыт",
+                "Английский": "Shop is closed",
+                "Французский": "Le magasin est fermé",
+                "Немецкий": "Laden geschlossen",
+                "Китайский": "商店已关闭"
+            },
+            "Authors": {
+                "Русский": "Разработчик: Вы",
+                "Английский": "Developer: You",
+                "Французский": "Développeur : Vous",
+                "Немецкий": "Entwickler: Du",
+                "Китайский": "开发者：你"
+            }
         }
-        msg = messages[action][self.current_lang]
+
+        # Защита от KeyError, если язык есть в основном словаре, но не в сообщениях
+        lang_dict = messages.get(action, {})
+        msg = lang_dict.get(self.current_lang, messages[action].get("Английский", "Error"))
+
         self.label_result.config(text=msg, fg="purple")
 
     def show_language_menu(self):
@@ -258,17 +320,32 @@ class ClickerGUI:
         self.root.title(tr["title"])
         self.btn_language.config(text=tr["menu_lang"])
         self.btn_back.config(text=tr["back"])
-        self.button_click.config(text=tr.get(self.button_click["text"]))
+
+        # Логика обновления текста кнопки действия в зависимости от её текущего состояния
+        current_text = self.button_click.cget("text")
+        if current_text == self.translations["Русский"]["start_challenge"] or \
+                current_text == self.translations["Английский"]["start_challenge"] or \
+                current_text == self.translations["Французский"]["start_challenge"] or \
+                current_text == self.translations["Немецкий"]["start_challenge"] or \
+                current_text == self.translations["Китайский"]["start_challenge"]:
+            self.button_click.config(text=tr["start_challenge"])
+        elif current_text == self.translations["Русский"]["click_now"] or \
+                current_text == self.translations["Английский"]["click_now"] or \
+                current_text == self.translations["Французский"]["click_now"] or \
+                current_text == self.translations["Немецкий"]["click_now"] or \
+                current_text == self.translations["Китайский"]["click_now"]:
+            self.button_click.config(text=tr["click_now"])
+        elif current_text == self.translations["Русский"]["button_click"] or \
+                current_text == self.translations["Английский"]["button_click"] or \
+                current_text == self.translations["Французский"]["button_click"] or \
+                current_text == self.translations["Немецкий"]["button_click"] or \
+                current_text == self.translations["Китайский"]["button_click"]:
+            self.button_click.config(text=tr["button_click"])
+
         self.label_points.config(text=tr["points"].format(self.game.get_points()))
         self.btn1.config(text=tr["btn_inventory"])
         self.btn2.config(text=tr["btn_shop"])
         self.btn3.config(text=tr["btn_authors"])
-        if "start_challenge" in self.button_click["text"]:
-            self.button_click.config(text=tr["start_challenge"])
-        elif "click_now" in self.button_click["text"]:
-            self.button_click.config(text=tr["click_now"])
-        elif "button_click" in self.button_click["text"]:
-            self.button_click.config(text=tr["button_click"])
 
     def update_ui(self, result=None):
         tr = self.translations[self.current_lang]
@@ -386,6 +463,7 @@ class ClickerGUI:
         # Переключение кнопок навигации
         self.btn_language.pack_forget()
         self.btn_back.pack(fill=tk.BOTH, expand=True)
+
     def close_inventory(self):
         # Скрываем инвентарь
         self.inventory_frame.pack_forget()
