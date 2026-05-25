@@ -19,110 +19,49 @@ class ClickerGUI:
         # Словарь переводов
         self.translations = {
             "Английский": {
-                "title": "Clicker",
-                "result": "Result: -",
-                "hit": "🎯 Hit! +1 point!",
-                "miss": "❌ Missed :(",
-                "points": "Points: {}",
-                "button_click": "Click!",
-                "menu_lang": "Select language",
-                "btn_inventory": "Inventory",
-                "btn_shop": "Shop",
-                "btn_authors": "Authors",
-                "start_challenge": "Click to start!",
-                "click_now": "CLICK NOW!",
-                "score_message": "{} clicks in 1 second!",
-                "inventory": "Inventory",
-                "potion": "🧪 Double Points (10 min)",
-                "potion_active": "Active! Time left: {} sec",
-                "potion_inactive": "Use: 10 min x2",
-                "use": "Use",
-                "back": "Back"
+                "title": "Clicker", "result": "Result: -", "hit": "🎯 Hit! +1 point!", "miss": "❌ Missed :(",
+                "points": "Points: {}", "button_click": "Click!", "menu_lang": "Select language",
+                "btn_inventory": "Inventory", "btn_shop": "Shop", "btn_authors": "Authors",
+                "start_challenge": "Click to start!", "click_now": "CLICK NOW!",
+                "score_message": "{} clicks in 1 second!", "inventory": "Inventory",
+                "potion": "🧪 Double Points (10 min)", "potion_active": "Active! Time left: {} sec",
+                "potion_inactive": "Use: 10 min x2", "use": "Use", "back": "Back"
             },
             "Русский": {
-                "title": "Кликер",
-                "result": "Результат: -",
-                "hit": "🎯 Попал! +1 очко!",
-                "miss": "❌ Промах :(",
-                "points": "Очки: {}",
-                "button_click": "Клик!",
-                "menu_lang": "Язык",
-                "btn_inventory": "Инвентарь",
-                "btn_shop": "Магазин",
-                "btn_authors": "Авторы",
-                "start_challenge": "Нажми, и начни!",
-                "click_now": "ЖМИ СЕЙЧАС!",
-                "score_message": "{} кликов за 1 секунду!",
-                "inventory": "Инвентарь",
-                "potion": "🧪2x очки (10 мин)",
-                "potion_active": "Активно! Осталось: {} сек",
-                "potion_inactive": "Использовать: 10 мин",
-                "use": "Использовать",
-                "back": "Назад"
+                "title": "Кликер", "result": "Результат: -", "hit": "🎯 Попал! +1 очко!", "miss": "❌ Промах :(",
+                "points": "Очки: {}", "button_click": "Клик!", "menu_lang": "Язык",
+                "btn_inventory": "Инвентарь", "btn_shop": "Магазин", "btn_authors": "Авторы",
+                "start_challenge": "Нажми, и начни!", "click_now": "ЖМИ СЕЙЧАС!",
+                "score_message": "{} кликов за 1 секунду!", "inventory": "Инвентарь",
+                "potion": "🧪2x очки (10 мин)", "potion_active": "Активно! Осталось: {} сек",
+                "potion_inactive": "Использовать: 10 мин", "use": "Использовать", "back": "Назад"
             },
             "Французский": {
-                "title": "Cliqueur",
-                "result": "Résultat : -",
-                "hit": "🎯 Touché ! +1 point !",
-                "miss": "❌ Raté :(",
-                "points": "Points : {}",
-                "button_click": "Cliquez !",
-                "menu_lang": "Choisir la langue",
-                "btn_inventory": "Inventaire",
-                "btn_shop": "Magasin",
-                "btn_authors": "Auteurs",
-                "start_challenge": "Cliquez pour commencer !",
-                "click_now": "CLIQUEZ MAINTENANT !",
-                "score_message": "{} clics en 1 seconde !",
-                "inventory": "Inventaire",
-                "potion": "🧪 Double points (10 min)",
-                "potion_active": "Actif ! Temps restant : {} sec",
-                "potion_inactive": "Utiliser : 10 min x2",
-                "use": "Utiliser",
-                "back": "Retour"
+                "title": "Cliqueur", "result": "Résultat : -", "hit": "🎯 Touché ! +1 point !", "miss": "❌ Raté :(",
+                "points": "Points : {}", "button_click": "Cliquez !", "menu_lang": "Choisir la langue",
+                "btn_inventory": "Inventaire", "btn_shop": "Magasin", "btn_authors": "Auteurs",
+                "start_challenge": "Cliquez pour commencer !", "click_now": "CLIQUEZ MAINTENANT !",
+                "score_message": "{} clics en 1 seconde !", "inventory": "Inventaire",
+                "potion": "🧪 Double points (10 min)", "potion_active": "Actif ! Temps restant : {} sec",
+                "potion_inactive": "Utiliser : 10 min x2", "use": "Utiliser", "back": "Retour"
             },
-            # --- НОВЫЕ ЯЗЫКИ НИЖЕ ---
             "Немецкий": {
-                "title": "Klicker",
-                "result": "Ergebnis: -",
-                "hit": "🎯 Treffer! +1 Punkt!",
-                "miss": "❌ Daneben :(",
-                "points": "Punkte: {}",
-                "button_click": "Klick!",
-                "menu_lang": "Sprache wählen",
-                "btn_inventory": "Inventar",
-                "btn_shop": "Laden",
-                "btn_authors": "Autoren",
-                "start_challenge": "Klicke zum Starten!",
-                "click_now": "JETZT KLICKEN!",
-                "score_message": "{} Klicks in 1 Sekunde!",
-                "inventory": "Inventar",
-                "potion": "🧪 Doppelte Punkte (10 Min)",
-                "potion_active": "Aktiv! Verbleibend: {} Sek",
-                "potion_inactive": "Benutzen: 10 Min x2",
-                "use": "Benutzen",
-                "back": "Zurück"
+                "title": "Klicker", "result": "Ergebnis: -", "hit": "🎯 Treffer! +1 Punkt!", "miss": "❌ Daneben :(",
+                "points": "Punkte: {}", "button_click": "Klick!", "menu_lang": "Sprache wählen",
+                "btn_inventory": "Inventar", "btn_shop": "Laden", "btn_authors": "Autoren",
+                "start_challenge": "Klicke zum Starten!", "click_now": "JETZT KLICKEN!",
+                "score_message": "{} Klicks in 1 Sekunde!", "inventory": "Inventar",
+                "potion": "🧪 Doppelte Punkte (10 Min)", "potion_active": "Aktiv! Verbleibend: {} Sek",
+                "potion_inactive": "Benutzen: 10 Min x2", "use": "Benutzen", "back": "Zurück"
             },
             "Китайский": {
-                "title": "点击器",
-                "result": "结果: -",
-                "hit": "🎯 击中！+1 分！",
-                "miss": "❌ 未命中 :(",
-                "points": "分数: {}",
-                "button_click": "点击！",
-                "menu_lang": "选择语言",
-                "btn_inventory": "背包",
-                "btn_shop": "商店",
-                "btn_authors": "作者",
-                "start_challenge": "点击开始！",
-                "click_now": "立即点击！",
-                "score_message": "1秒内点击 {} 次！",
-                "inventory": "背包",
-                "potion": "🧪 双倍积分 (10分钟)",
-                "potion_active": "生效中！剩余时间：{} 秒",
-                "potion_inactive": "使用：10分钟双倍",
-                "use": "使用",
-                "back": "返回"
+                "title": "点击器", "result": "结果: -", "hit": "🎯 击中！+1 分！", "miss": "❌ 未命中 :(",
+                "points": "分数: {}", "button_click": "点击！", "menu_lang": "选择语言",
+                "btn_inventory": "背包", "btn_shop": "商店", "btn_authors": "作者",
+                "start_challenge": "点击开始！", "click_now": "立即点击！",
+                "score_message": "1秒内点击 {} 次！", "inventory": "背包",
+                "potion": "🧪 双倍积分 (10分钟)", "potion_active": "生效中！剩余时间：{} 秒",
+                "potion_inactive": "使用：10分钟双倍", "use": "使用", "back": "返回"
             }
         }
 
@@ -143,70 +82,121 @@ class ClickerGUI:
         self.game_frame = tk.Frame(left_frame)
         self.game_frame.pack(fill=tk.BOTH, expand=True)
 
-        tk.Label(self.game_frame, text="").pack(pady=40)
+        # --- ИЗМЕНЕНИЯ ЗДЕСЬ ---
+
+        # 1. Отступ сверху, чтобы опустить элементы ниже
+
+        tk.Label(self.game_frame, text="").pack(pady=(250, 0))
+
+        # Сообщение результата
+        self.label_result = tk.Label(
+            self.game_frame,
+            text="",
+            font=("Arial", 12)
+        )
+        self.label_result.pack(pady=20)
+
+        # Кнопка "Нажми и начни" внизу
+        # Нижняя строка
+        bottom_row = tk.Frame(self.game_frame)
+        bottom_row.pack(
+            side=tk.BOTTOM,
+            anchor="s",
+            pady=(0, 5)
+        )
+
+        # Кнопка
+        self.button_click = tk.Button(
+            bottom_row,
+            text=tr["start_challenge"],
+            font=("Arial", 14),
+            width=18,
+            height=2,
+            bg="lightblue",
+            command=self.start_challenge
+        )
+        self.button_click.pack(side=tk.LEFT, padx=20)
 
         # Очки
-        self.label_points = tk.Label(self.game_frame, text=tr["points"].format(self.game.get_points()),
-                                     font=("Arial", 16, "bold"))
-        self.label_points.pack(padx=1, pady=1)
-        # Атрибуты для изображений зелья
-        self.photo = None  # Полная бутылка
-        self.empty_photo = None  # Пустая бутылка
-        self.image_label = None  # Виджет Label с картинкой
+        self.label_points = tk.Label(
+            bottom_row,
+            text=tr["points"].format(self.game.get_points()),
+            font=("Arial", 16, "bold")
+        )
+        self.label_points.pack(side=tk.LEFT, padx=20)
 
-        # Водяной знак
+        # Водяной знак (поверх всего)
         glitch_label = tk.Label(
             root,
             text="GlitchHunters",
             font=("Georgia", 10),
             fg="blue"
         )
-        glitch_label.place(x=10, y=10, anchor="nw")
+        glitch_label.place(x=10, rely=1.0, y=-10,  anchor="sw")
 
-        # Сообщение
-        self.label_result = tk.Label(self.game_frame, text="", font=("Arial", 12))
-        self.label_result.pack(pady=10)
-
-        # Кнопка действия
-        self.button_click = tk.Button(
-            self.game_frame, text=tr["start_challenge"],
-            font=("Arial", 14), width=15, height=3, bg="lightblue", command=self.start_challenge
-        )
-        self.button_click.pack(pady=30)
+        # --- КОНЕЦ ИЗМЕНЕНИЙ ---
 
         # Правая колонка — боковые кнопки
-        right_frame = tk.Frame(main_frame, width=120)
+        # Правая колонка — боковые кнопки
+        right_frame = tk.Frame(main_frame, width=140, height=225)
         right_frame.grid(row=0, column=1, sticky="ns")
         right_frame.pack_propagate(False)
-        right_frame.rowconfigure(0, weight=1)
-        right_frame.rowconfigure(1, weight=1)
-        right_frame.rowconfigure(2, weight=1)
 
-        self.btn1 = tk.Button(right_frame, text=tr["btn_inventory"], bg="lightcoral", font=("Arial", 10, "bold"),
-                              command=self.open_inventory)
-        self.btn1.grid(row=0, column=0, sticky="nsew", padx=(0, 5), pady=(0, 1))
+        # Каждая кнопка получает одинаковую часть высоты
+        for i in range(4):
+            right_frame.rowconfigure(i, weight=1)
 
-        self.btn2 = tk.Button(right_frame, text=tr["btn_shop"], bg="lightgreen", font=("Arial", 10, "bold"),
-                              command=self.open_shop)
-        self.btn2.grid(row=1, column=0, sticky="nsew", padx=(0, 5), pady=1)
+        right_frame.columnconfigure(0, weight=1)
 
-        self.btn3 = tk.Button(right_frame, text=tr["btn_authors"], bg="lightyellow", font=("Arial", 10, "bold"),
-                              command=self.open_authors)
-        self.btn3.grid(row=2, column=0, sticky="nsew", padx=(0, 5), pady=(1, 0))
+        # пустое пространство снизу
+        right_frame.rowconfigure(4, weight=1)
 
-        # Кнопка выбора языка снизу
-        bottom_frame = tk.Frame(root, height=60)
-        bottom_frame.pack(fill=tk.BOTH, side=tk.BOTTOM, padx=10, pady=10)
-        bottom_frame.pack_propagate(False)
+        self.btn1 = tk.Button(
+            right_frame,
+            text=tr["btn_inventory"],
+            bg="lightcoral",
+            font=("Arial", 10, "bold"),
+            command=self.open_inventory
+        )
+        self.btn1.grid(row=0, column=0, sticky="nsew",
+                       padx=(0, 5), pady=1)
 
+        self.btn2 = tk.Button(
+            right_frame,
+            text=tr["btn_shop"],
+            bg="lightgreen",
+            font=("Arial", 10, "bold"),
+            command=self.open_shop
+        )
+        self.btn2.grid(row=1, column=0, sticky="nsew",
+                       padx=(0, 5), pady=1)
+
+        self.btn3 = tk.Button(
+            right_frame,
+            text=tr["btn_authors"],
+            bg="lightyellow",
+            font=("Arial", 10, "bold"),
+            command=self.open_authors
+        )
+        self.btn3.grid(row=2, column=0, sticky="nsew",
+                       padx=(0, 5), pady=1)
+
+        # Кнопка языка теперь под Авторами
         self.btn_language = tk.Button(
-            bottom_frame,
+            right_frame,
             text=tr["menu_lang"],
-            font=("Arial", 12),
             bg="lightblue",
+            font=("Arial", 10, "bold"),
             command=self.show_language_menu
         )
-        self.btn_language.pack(fill=tk.BOTH, expand=True)
+
+        self.btn_language.grid(
+            row=3,
+            column=0,
+            sticky="nsew",
+            padx=(0, 5),
+            pady=1
+        )
 
         self.root.title(tr["title"])
 
@@ -219,14 +209,15 @@ class ClickerGUI:
         self.shop_frame = tk.Frame(left_frame)
         self.authors_frame = tk.Frame(left_frame)
 
-        # Слот для зелья (будет в инвентаре)
+        # Слот для зелья
         self.potion_frame = None
         self.potion_btn = None
         self.potion_timer_label = None
 
         # Кнопка "Назад" (внизу)
+        # Кнопка "Назад"
         self.btn_back = tk.Button(
-            bottom_frame,
+            root,
             text=tr["back"],
             font=("Arial", 12),
             bg="lightblue",
@@ -234,18 +225,11 @@ class ClickerGUI:
             state="normal"
         )
 
-        # Сохраняем правую панель как атрибут
         self.right_frame = right_frame
 
-        # Показываем основную игру
         self.show_game()
-
-        # Обновление таймера
         self.update_potion_display()
-
-        # Обработка закрытия окна
         self.root.protocol("WM_DELETE_WINDOW", self.on_closing)
-
     def start_challenge(self):
         tr = self.translations[self.current_lang]
         self.button_click.config(text=tr["click_now"], bg="red", state="normal")
@@ -461,7 +445,7 @@ class ClickerGUI:
         self.update_potion_timer_label()
 
         # Переключение кнопок навигации
-        self.btn_language.pack_forget()
+        self.btn_language.grid_remove()
         self.btn_back.pack(fill=tk.BOTH, expand=True)
 
     def close_inventory(self):
@@ -473,7 +457,7 @@ class ClickerGUI:
         self.right_frame.grid()
         # Возвращаем кнопку языка
         self.btn_back.pack_forget()
-        self.btn_language.pack(fill=tk.BOTH, expand=True)
+        self.btn_language.grid()
         # Обновляем UI
         self.update_ui()
 
@@ -535,7 +519,7 @@ class ClickerGUI:
         self.right_frame.grid_remove()  # Скрывает инвентарь, магазин, авторов
 
         # 2. Скрываем кнопку языка
-        self.btn_language.pack_forget()
+        self.btn_language.grid_remove()
 
         # 3. Очищаем магазин от старого содержимого
         for widget in self.shop_frame.winfo_children():
@@ -567,7 +551,7 @@ class ClickerGUI:
         self.btn_back.pack_forget()
 
         # 5. Возвращаем кнопку языка
-        self.btn_language.pack(fill=tk.BOTH, expand=True)
+        self.btn_language.grid()
 
         # 6. Возвращаем команду кнопки "Назад" к инвентарю (по умолчанию)
         tr = self.translations[self.current_lang]
@@ -582,7 +566,7 @@ class ClickerGUI:
         self.right_frame.grid_remove()  # Скрывает Инвентарь/Магазин/Авторы
 
         # 2. Скрываем кнопку языка
-        self.btn_language.pack_forget()
+        self.btn_language.grid_remove()
 
         # 3. Очищаем старые виджеты экрана авторов
         for widget in self.authors_frame.winfo_children():
@@ -630,7 +614,7 @@ class ClickerGUI:
         self.btn_back.pack_forget()
 
         # 5. Возвращаем кнопку языка
-        self.btn_language.pack(fill=tk.BOTH, expand=True)
+        self.btn_language.grid()
 
         # 6. Возвращаем команду кнопки "Назад" к инвентарю (по умолчанию)
         tr = self.translations[self.current_lang]
