@@ -2,7 +2,7 @@ import tkinter as tk
 from game_logic import ClickerGame
 from datetime import datetime
 import os
-from PIL import Image, ImageTk  # Для масштабирования изображений
+from PIL import Image, ImageTk
 from gui.settings import Settings
 
 
@@ -14,10 +14,8 @@ class ClickerGUI:
         self.root.geometry("600x450")
         self.root.resizable(False, False)
 
-        # Загружаем игру
         self.game.load_game()
 
-        # Словарь переводов
         self.translations = {
             "Английский": {
                 "title": "Clicker", "result": "Result: -", "hit": "🎯 Hit! +1 point!", "miss": "❌ Missed :(",
@@ -35,7 +33,8 @@ class ClickerGUI:
                 "start_challenge": "Нажми, и начни!", "click_now": "ЖМИ СЕЙЧАС!",
                 "score_message": "{} кликов за 1 секунду!", "inventory": "Инвентарь",
                 "potion": "🧪2x очки (10 мин)", "potion_active": "Активно! Осталось: {} сек",
-                "potion_inactive": "Использовать: 10 мин", "use": "Использовать", "back": "Назад", "btn_settings": "Настройки"
+                "potion_inactive": "Использовать: 10 мин", "use": "Использовать", "back": "Назад",
+                "btn_settings": "Настройки"
             },
             "Французский": {
                 "title": "Cliqueur", "result": "Résultat : -", "hit": "🎯 Touché ! +1 point !", "miss": "❌ Raté :(",
@@ -44,7 +43,8 @@ class ClickerGUI:
                 "start_challenge": "Cliquez pour commencer !", "click_now": "CLIQUEZ MAINTENANT !",
                 "score_message": "{} clics en 1 seconde !", "inventory": "Inventaire",
                 "potion": "🧪 Double points (10 min)", "potion_active": "Actif ! Temps restant : {} sec",
-                "potion_inactive": "Utiliser : 10 min x2", "use": "Utiliser", "back": "Retour", "btn_settings": "Paramètres"
+                "potion_inactive": "Utiliser : 10 min x2", "use": "Utiliser", "back": "Retour",
+                "btn_settings": "Paramètres"
             },
             "Немецкий": {
                 "title": "Klicker", "result": "Ergebnis: -", "hit": "🎯 Treffer! +1 Punkt!", "miss": "❌ Daneben :(",
@@ -53,7 +53,8 @@ class ClickerGUI:
                 "start_challenge": "Klicke zum Starten!", "click_now": "JETZT KLICKEN!",
                 "score_message": "{} Klicks in 1 Sekunde!", "inventory": "Inventar",
                 "potion": "🧪 Doppelte Punkte (10 Min)", "potion_active": "Aktiv! Verbleibend: {} Sek",
-                "potion_inactive": "Benutzen: 10 Min x2", "use": "Benutzen", "back": "Zurück", "btn_settings": "Einstellungen"
+                "potion_inactive": "Benutzen: 10 Min x2", "use": "Benutzen", "back": "Zurück",
+                "btn_settings": "Einstellungen"
             },
             "Китайский": {
                 "title": "点击器", "result": "结果: -", "hit": "🎯 击中！+1 分！", "miss": "❌ 未命中 :(",
@@ -72,178 +73,247 @@ class ClickerGUI:
         tr = self.translations[self.current_lang]
 
         # Главный фрейм
-        main_frame = tk.Frame(root)
-        main_frame.pack(fill=tk.BOTH, expand=True)
+        self.main_frame = tk.Frame(root)
+        self.main_frame.pack(fill=tk.BOTH, expand=True)
 
-        # Левая колонка — основной контент
-        left_frame = tk.Frame(main_frame)
-        left_frame.grid(row=0, column=0, sticky="nsew", padx=20, pady=20)
-        main_frame.columnconfigure(0, weight=1)
-        main_frame.columnconfigure(1, weight=0)
+        # Левая колонка
+        self.left_frame = tk.Frame(self.main_frame)
+        self.left_frame.grid(row=0, column=0, sticky="nsew", padx=20, pady=20)
+        self.main_frame.columnconfigure(0, weight=1)
+        self.main_frame.columnconfigure(1, weight=0)
 
-        # Элементы основной игры
-        self.game_frame = tk.Frame(left_frame)
+        self.game_frame = tk.Frame(self.left_frame)
         self.game_frame.pack(fill=tk.BOTH, expand=True)
 
-        # --- ИЗМЕНЕНИЯ ЗДЕСЬ ---
-
-        # 1. Отступ сверху, чтобы опустить элементы ниже
-
         tk.Label(self.game_frame, text="").pack(pady=(250, 0))
-
-        # Сообщение результата
-        self.label_result = tk.Label(
-            self.game_frame,
-            text="",
-            font=("Arial", 12)
-        )
+        self.label_result = tk.Label(self.game_frame, text="", font=("Arial", 12))
         self.label_result.pack(pady=20)
 
-        # Кнопка "Нажми и начни" внизу
-        # Нижняя строка
         bottom_row = tk.Frame(self.game_frame)
-        bottom_row.pack(
-            side=tk.BOTTOM,
-            anchor="s",
-            pady=(0, 5)
-        )
-
-        # Кнопка
-        self.button_click = tk.Button(
-            bottom_row,
-            text=tr["start_challenge"],
-            font=("Arial", 14),
-            width=18,
-            height=2,
-            bg="lightblue",
-            command=self.start_challenge
-        )
+        bottom_row.pack(side=tk.BOTTOM, anchor="s", pady=(0, 5))
+        self.button_click = tk.Button(bottom_row, text=tr["start_challenge"], font=("Arial", 14), width=18, height=2,
+                                      bg="lightblue", command=self.start_challenge)
         self.button_click.pack(side=tk.LEFT, padx=20)
-
-        # Очки
-        self.label_points = tk.Label(
-            bottom_row,
-            text=tr["points"].format(self.game.get_points()),
-            font=("Arial", 16, "bold")
-        )
+        self.label_points = tk.Label(bottom_row, text=tr["points"].format(self.game.get_points()),
+                                     font=("Arial", 16, "bold"))
         self.label_points.pack(side=tk.LEFT, padx=20)
 
-        # Водяной знак (поверх всего)
-        glitch_label = tk.Label(
-            root,
-            text="GlitchHunters",
-            font=("Georgia", 10),
-            fg="blue"
-        )
-        glitch_label.place(x=10, rely=1.0, y=-10,  anchor="sw")
+        # === ВОДЯНОЙ ЗНАК (сохраняем как self.glitch_label для управления) ===
+        self.glitch_label = tk.Label(root, text="GlitchHunters", font=("Georgia", 10), fg="blue")
+        self.glitch_label.place(x=10, rely=1.0, y=-10, anchor="sw")
 
-        # --- КОНЕЦ ИЗМЕНЕНИЙ ---
+        # Правая колонка
+        self.right_frame = tk.Frame(self.main_frame, width=140)
+        self.right_frame.grid(row=0, column=1, sticky="ns")
+        self.right_frame.pack_propagate(False)
+        self.right_frame.columnconfigure(0, weight=1)
+        for i in range(5):
+            self.right_frame.rowconfigure(i, weight=1)
 
-        # Правая колонка — боковые кнопки
-        # Правая колонка — боковые кнопки
-        right_frame = tk.Frame(main_frame, width=140, height=225)
-        right_frame.grid(row=0, column=1, sticky="ns")
-        right_frame.pack_propagate(False)
+        self.btn1 = tk.Button(self.right_frame, text=tr["btn_inventory"], bg="lightcoral", font=("Arial", 10, "bold"),
+                              command=self.open_inventory)
+        self.btn1.grid(row=0, column=0, sticky="nsew", padx=(0, 5), pady=1)
 
-        # Каждая кнопка получает одинаковую часть высоты
-        for i in range(4):
-            right_frame.rowconfigure(i, weight=1)
+        self.btn2 = tk.Button(self.right_frame, text=tr["btn_shop"], bg="lightgreen", font=("Arial", 10, "bold"),
+                              command=self.open_shop)
+        self.btn2.grid(row=1, column=0, sticky="nsew", padx=(0, 5), pady=1)
 
-        right_frame.columnconfigure(0, weight=1)
+        self.btn3 = tk.Button(self.right_frame, text=tr["btn_authors"], bg="lightyellow", font=("Arial", 10, "bold"),
+                              command=self.open_authors)
+        self.btn3.grid(row=2, column=0, sticky="nsew", padx=(0, 5), pady=1)
 
-        # пустое пространство снизу
-        right_frame.rowconfigure(4, weight=1)
+        self.btn_language = tk.Button(self.right_frame, text=tr["menu_lang"], bg="lightblue",
+                                      font=("Arial", 10, "bold"), command=self.show_language_menu)
+        self.btn_language.grid(row=3, column=0, sticky="nsew", padx=(0, 5), pady=1)
 
-        self.btn1 = tk.Button(
-            right_frame,
-            text=tr["btn_inventory"],
-            bg="lightcoral",
-            font=("Arial", 10, "bold"),
-            command=self.open_inventory
-        )
-        self.btn1.grid(row=0, column=0, sticky="nsew",
-                       padx=(0, 5), pady=1)
-
-        self.btn2 = tk.Button(
-            right_frame,
-            text=tr["btn_shop"],
-            bg="lightgreen",
-            font=("Arial", 10, "bold"),
-            command=self.open_shop
-        )
-        self.btn2.grid(row=1, column=0, sticky="nsew",
-                       padx=(0, 5), pady=1)
-
-        self.btn3 = tk.Button(
-            right_frame,
-            text=tr["btn_authors"],
-            bg="lightyellow",
-            font=("Arial", 10, "bold"),
-            command=self.open_authors
-        )
-        self.btn3.grid(row=2, column=0, sticky="nsew",
-                       padx=(0, 5), pady=1)
-
-        # Кнопка языка теперь под Авторами
-        self.btn_language = tk.Button(
-            right_frame,
-            text=tr["menu_lang"],
-            bg="lightblue",
-            font=("Arial", 10, "bold"),
-            command=self.show_language_menu
-        )
-
-        self.btn_language.grid(
-            row=3,
-            column=0,
-            sticky="nsew",
-            padx=(0, 5),
-            pady=1
-        )
-
-        # Кнопка настроек (слева снизу)
-        self.btn_settings = tk.Button(
-            right_frame,
-            text=tr["btn_settings"],
-            font=("Arial", 10, "bold"),
-            bg="lightgray",
-            command=self.open_settings
-        )
-
+        self.btn_settings = tk.Button(self.right_frame, text=tr["btn_settings"], font=("Arial", 10, "bold"),
+                                      bg="lightgray", command=self.open_settings)
         self.btn_settings.grid(row=4, column=0, sticky="nsew", padx=(0, 5), pady=1)
 
-        self.root.title(tr["title"])
+        # === КНОПКА НАЗАД (ВНИЗУ ГЛАВНОГО ОКНА, НА ВСЮ ШИРИНУ) ===
+        self.btn_back = tk.Button(
+            self.root,
+            text=tr["back"],
+            font=("Arial", 12, "bold"),
+            bg="lightblue",
+            height=2,
+            anchor="center",
+            command=self.close_inventory
+        )
+        self.btn_back.pack_forget()  # Изначально скрыта
 
-        # Переменные для механики
+        self.root.title(tr["title"])
         self.click_count = 0
         self.challenge_active = False
 
-        # Фрейм инвентаря (скрыт по умолчанию)
-        self.inventory_frame = tk.Frame(left_frame)
-        self.shop_frame = tk.Frame(left_frame)
-        self.authors_frame = tk.Frame(left_frame)
+        self.inventory_frame = tk.Frame(self.left_frame)
+        self.shop_frame = tk.Frame(self.left_frame)
+        self.authors_frame = tk.Frame(self.left_frame)
 
-        # Слот для зелья
         self.potion_frame = None
         self.potion_btn = None
         self.potion_timer_label = None
-
-        # Кнопка "Назад" (внизу)
-        # Кнопка "Назад"
-        self.btn_back = tk.Button(
-            root,
-            text=tr["back"],
-            font=("Arial", 12),
-            bg="lightblue",
-            command=self.close_inventory,
-            state="normal"
-        )
-
-        self.right_frame = right_frame
+        self.photo = None
+        self.empty_photo = None
+        self.image_label = None
 
         self.show_game()
         self.update_potion_display()
         self.root.protocol("WM_DELETE_WINDOW", self.on_closing)
+
+    # ================= УПРАВЛЕНИЕ КНОПКОЙ НАЗАД И ВОДЯНЫМ ЗНАКОМ =================
+    def _show_back_button(self, command_func):
+        """Показывает кнопку внизу на всю ширину и поднимает водяной знак"""
+        tr = self.translations[self.current_lang]
+        self.btn_back.config(text=tr["back"], command=command_func)
+        if not self.btn_back.winfo_ismapped():
+            self.btn_back.pack(side=tk.BOTTOM, fill=tk.X)
+        # Поднимаем надпись, чтобы она не перекрывалась кнопкой
+        self.glitch_label.place_configure(y=-45)
+
+    def _hide_back_button(self):
+        """Скрывает кнопку назад и возвращает водяной знак на место"""
+        if self.btn_back.winfo_ismapped():
+            self.btn_back.pack_forget()
+        # Возвращаем надпись в исходную позицию
+        self.glitch_label.place_configure(y=-10)
+
+    # ================= НАВИГАЦИЯ =================
+    def open_inventory(self):
+        tr = self.translations[self.current_lang]
+        self.game_frame.pack_forget()
+        for btn in [self.btn1, self.btn2, self.btn3, self.btn_language, self.btn_settings]:
+            btn.grid_remove()
+
+        for widget in self.inventory_frame.winfo_children():
+            widget.destroy()
+        self.inventory_frame.pack(fill=tk.BOTH, expand=True)
+
+        tk.Label(self.inventory_frame, text=tr["inventory"], font=("Arial", 16, "bold")).pack(pady=20)
+
+        self.potion_frame = tk.Frame(self.inventory_frame, relief="ridge", bd=4, bg="lightyellow",
+                                     highlightbackground="gold", highlightthickness=2, width=250, height=140)
+        self.potion_frame.pack(pady=30, padx=(20, 10), anchor="w")
+        self.potion_frame.pack_propagate(False)
+
+        inner_frame = tk.Frame(self.potion_frame, bg="lightyellow")
+        inner_frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
+
+        image_frame = tk.Frame(inner_frame, bg="lightyellow", width=100, height=100)
+        image_frame.pack(side=tk.LEFT, anchor="w", padx=(0, 10))
+        image_frame.pack_propagate(False)
+
+        try:
+            base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+            full_path = os.path.join(base_dir, "images", "potionthatgives2xcoins.png")
+            empty_path = os.path.join(base_dir, "images", "emptypotionthatgives2xcoins.png")
+            if os.path.exists(full_path):
+                self.photo = ImageTk.PhotoImage(Image.open(full_path).resize((80, 80), Image.Resampling.LANCZOS))
+            if os.path.exists(empty_path):
+                self.empty_photo = ImageTk.PhotoImage(Image.open(empty_path).resize((80, 80), Image.Resampling.LANCZOS))
+
+            current_img = self.empty_photo if self.game.is_potion_active() else self.photo
+            if not current_img: current_img = self.photo
+            if current_img:
+                self.image_label = tk.Label(image_frame, image=current_img, bg="lightyellow")
+                self.image_label.image = current_img
+            else:
+                self.image_label = tk.Label(image_frame, text="🧪", font=("Arial", 32), bg="lightyellow")
+            self.image_label.pack(side=tk.LEFT, padx=5, pady=5)
+        except Exception as e:
+            print(f"Ошибка загрузки: {e}")
+            self.image_label = tk.Label(image_frame, text="", font=("Arial", 32), bg="lightyellow")
+            self.image_label.pack(side=tk.LEFT, padx=5, pady=5)
+
+        text_frame = tk.Frame(inner_frame, bg="lightyellow")
+        text_frame.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        tk.Label(text_frame, text=tr["potion"], bg="lightyellow", font=("Arial", 10, "bold"), anchor="w").pack(
+            fill=tk.X, pady=(0, 5))
+        self.potion_btn = tk.Button(text_frame, text="", font=("Arial", 9), width=18, command=self.use_potion)
+        self.potion_btn.pack(anchor="w")
+        self.potion_timer_label = tk.Label(self.potion_frame, text="", bg="lightyellow", font=("Arial", 9))
+        self.potion_timer_label.pack(pady=(5, 0), anchor="w", padx=15)
+
+        self.update_potion_button()
+        self.update_potion_timer_label()
+        self._show_back_button(self.close_inventory)
+
+    def close_inventory(self):
+        self.inventory_frame.pack_forget()
+        self.game_frame.pack(fill=tk.BOTH, expand=True)
+        for btn in [self.btn1, self.btn2, self.btn3, self.btn_language, self.btn_settings]:
+            btn.grid()
+        self._hide_back_button()
+        self.update_ui()
+
+    def open_shop(self):
+        tr = self.translations[self.current_lang]
+        self.game_frame.pack_forget()
+        for btn in [self.btn1, self.btn2, self.btn3, self.btn_language, self.btn_settings]:
+            btn.grid_remove()
+        for widget in self.shop_frame.winfo_children():
+            widget.destroy()
+        tk.Label(self.shop_frame, text=tr["btn_shop"], font=("Arial", 16, "bold")).pack(pady=20)
+        tk.Label(self.shop_frame, text="🏪 Магазин временно закрыт", font=("Arial", 12), fg="gray").pack(pady=10)
+        self.shop_frame.pack(fill=tk.BOTH, expand=True)
+        self._show_back_button(self.close_shop)
+
+    def close_shop(self):
+        self.shop_frame.pack_forget()
+        self.game_frame.pack(fill=tk.BOTH, expand=True)
+        for btn in [self.btn1, self.btn2, self.btn3, self.btn_language, self.btn_settings]:
+            btn.grid()
+        self._hide_back_button()
+
+    def open_authors(self):
+        tr = self.translations[self.current_lang]
+        self.game_frame.pack_forget()
+        for btn in [self.btn1, self.btn2, self.btn3, self.btn_language, self.btn_settings]:
+            btn.grid_remove()
+        for widget in self.authors_frame.winfo_children():
+            widget.destroy()
+        tk.Label(self.authors_frame, text=tr["btn_authors"], font=("Arial", 16, "bold")).pack(pady=20)
+        tk.Label(self.authors_frame,
+                 text="🎮 Authors:\n• thekosmoss\n• artman\n• Kirill\n\n🔧 Project: Clicker Basketball\n📅 2025 GlitchHunters Team",
+                 font=("Arial", 11), justify="center", fg="black").pack(pady=10)
+        self.authors_frame.pack(fill=tk.BOTH, expand=True)
+        self._show_back_button(self.close_authors)
+
+    def close_authors(self):
+        self.authors_frame.pack_forget()
+        self.game_frame.pack(fill=tk.BOTH, expand=True)
+        for btn in [self.btn1, self.btn2, self.btn3, self.btn_language, self.btn_settings]:
+            btn.grid()
+        self._hide_back_button()
+
+    def open_settings(self):
+        self.hide_all_screens()
+        for btn in [self.btn1, self.btn2, self.btn3, self.btn_language, self.btn_settings]:
+            btn.grid_remove()
+
+        if self.settings_frame is None:
+            self.settings_frame = tk.Frame(self.left_frame)
+            self.settings = Settings(self.settings_frame, self)
+        self.settings_frame.pack(fill=tk.BOTH, expand=True)
+        self._show_back_button(self.close_settings)
+
+    def close_settings(self):
+        if self.settings_frame:
+            self.settings_frame.pack_forget()
+        self.game_frame.pack(fill=tk.BOTH, expand=True)
+        for btn in [self.btn1, self.btn2, self.btn3, self.btn_language, self.btn_settings]:
+            btn.grid()
+        self._hide_back_button()
+
+    def hide_all_screens(self):
+        self.game_frame.pack_forget()
+        self.inventory_frame.pack_forget()
+        self.shop_frame.pack_forget()
+        self.authors_frame.pack_forget()
+        if self.settings_frame:
+            self.settings_frame.pack_forget()
+
+    # ================= ИГРОВАЯ ЛОГИКА И UI =================
     def start_challenge(self):
         tr = self.translations[self.current_lang]
         self.button_click.config(text=tr["click_now"], bg="red", state="normal")
@@ -254,8 +324,7 @@ class ClickerGUI:
         self.root.after(1000, self.end_challenge)
 
     def register_click(self):
-        if self.challenge_active:
-            self.click_count += 1
+        if self.challenge_active: self.click_count += 1
 
     def end_challenge(self):
         self.challenge_active = False
@@ -265,52 +334,32 @@ class ClickerGUI:
         self.button_click.config(text=tr["button_click"], bg="lightblue")
 
     def process_result(self):
-        success, chance = self.game.try_add_point(self.click_count)
+        success, _ = self.game.try_add_point(self.click_count)
         self.update_ui(result=1 if success else 2)
         tr = self.translations[self.current_lang]
         self.button_click.config(text=tr["start_challenge"], command=self.start_challenge)
 
     def show_message(self, action):
-        # Добавляем новые языки в сообщения об ошибках/пустых состояниях
         messages = {
-            "Inventory": {
-                "Русский": "Инвентарь пуст",
-                "Английский": "Inventory is empty",
-                "Французский": "L'inventaire est vide",
-                "Немецкий": "Inventar ist leer",
-                "Китайский": "背包是空的"
-            },
-            "Shop": {
-                "Русский": "Магазин закрыт",
-                "Английский": "Shop is closed",
-                "Французский": "Le magasin est fermé",
-                "Немецкий": "Laden geschlossen",
-                "Китайский": "商店已关闭"
-            },
-            "Authors": {
-                "Русский": "Разработчик: Вы",
-                "Английский": "Developer: You",
-                "Французский": "Développeur : Vous",
-                "Немецкий": "Entwickler: Du",
-                "Китайский": "开发者：你"
-            }
+            "Inventory": {"Русский": "Инвентарь пуст", "Английский": "Inventory is empty",
+                          "Французский": "L'inventaire est vide", "Немецкий": "Inventar ist leer",
+                          "Китайский": "背包是空的"},
+            "Shop": {"Русский": "Магазин закрыт", "Английский": "Shop is closed", "Французский": "Le magasin est fermé",
+                     "Немецкий": "Laden geschlossen", "Китайский": "商店已关闭"},
+            "Authors": {"Русский": "Разработчик: Вы", "Английский": "Developer: You",
+                        "Французский": "Développeur : Vous", "Немецкий": "Entwickler: Du", "Китайский": "开发者：你"}
         }
-
-        # Защита от KeyError, если язык есть в основном словаре, но не в сообщениях
         lang_dict = messages.get(action, {})
         msg = lang_dict.get(self.current_lang, messages[action].get("Английский", "Error"))
-
         self.label_result.config(text=msg, fg="purple")
 
     def show_language_menu(self):
-        if hasattr(self, 'language_menu') and self.language_menu:
-            self.language_menu.destroy()
+        if hasattr(self, 'language_menu') and self.language_menu: self.language_menu.destroy()
         self.language_menu = tk.Menu(self.root, tearoff=0)
         for lang in self.translations.keys():
             self.language_menu.add_command(label=lang, command=lambda l=lang: self.set_language(l))
-        btn_x = self.btn_language.winfo_rootx()
-        btn_y = self.btn_language.winfo_rooty() + self.btn_language.winfo_height()
-        self.language_menu.post(btn_x, btn_y)
+        self.language_menu.post(self.btn_language.winfo_rootx(),
+                                self.btn_language.winfo_rooty() + self.btn_language.winfo_height())
 
     def set_language(self, lang):
         self.current_lang = lang
@@ -319,25 +368,12 @@ class ClickerGUI:
         self.btn_language.config(text=tr["menu_lang"])
         self.btn_back.config(text=tr["back"])
 
-        # Логика обновления текста кнопки действия в зависимости от её текущего состояния
-        current_text = self.button_click.cget("text")
-        if current_text == self.translations["Русский"]["start_challenge"] or \
-                current_text == self.translations["Английский"]["start_challenge"] or \
-                current_text == self.translations["Французский"]["start_challenge"] or \
-                current_text == self.translations["Немецкий"]["start_challenge"] or \
-                current_text == self.translations["Китайский"]["start_challenge"]:
+        current = self.button_click.cget("text")
+        if any(x in current for x in ["start", "начни", "commencer", "Starten", "开始"]):
             self.button_click.config(text=tr["start_challenge"])
-        elif current_text == self.translations["Русский"]["click_now"] or \
-                current_text == self.translations["Английский"]["click_now"] or \
-                current_text == self.translations["Французский"]["click_now"] or \
-                current_text == self.translations["Немецкий"]["click_now"] or \
-                current_text == self.translations["Китайский"]["click_now"]:
+        elif any(x in current for x in ["now", "сейчас", "maintenant", "jetzt", "立即"]):
             self.button_click.config(text=tr["click_now"])
-        elif current_text == self.translations["Русский"]["button_click"] or \
-                current_text == self.translations["Английский"]["button_click"] or \
-                current_text == self.translations["Французский"]["button_click"] or \
-                current_text == self.translations["Немецкий"]["button_click"] or \
-                current_text == self.translations["Китайский"]["button_click"]:
+        else:
             self.button_click.config(text=tr["button_click"])
 
         self.label_points.config(text=tr["points"].format(self.game.get_points()))
@@ -354,133 +390,11 @@ class ClickerGUI:
         elif result == 2:
             self.label_result.config(text=tr["miss"], fg="red")
 
-    def open_inventory(self):
-        tr = self.translations[self.current_lang]
-
-        # Скрываем основную игру и правую панель
-        self.game_frame.pack_forget()
-        self.right_frame.grid_remove()
-
-        # Очищаем инвентарь перед перерисовкой
-        for widget in self.inventory_frame.winfo_children():
-            widget.destroy()
-
-        # Показываем инвентарь
-        self.inventory_frame.pack(fill=tk.BOTH, expand=True)
-
-        # Заголовок
-        tk.Label(self.inventory_frame, text=tr["inventory"], font=("Arial", 16, "bold")).pack(pady=20)
-
-        # === Слот для зелья ===
-        self.potion_frame = tk.Frame(
-            self.inventory_frame,
-            relief="ridge", bd=4, bg="lightyellow",
-            highlightbackground="gold", highlightthickness=2,
-            width=250, height=140
-        )
-        self.potion_frame.pack(pady=30, padx=(20, 10), anchor="w")
-        self.potion_frame.pack_propagate(False)
-
-        inner_frame = tk.Frame(self.potion_frame, bg="lightyellow")
-        inner_frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
-
-        # === ЛЕВАЯ ЧАСТЬ — КАРТИНКА ===
-        image_frame = tk.Frame(inner_frame, bg="lightyellow", width=100, height=100)
-        image_frame.pack(side=tk.LEFT, anchor="w", padx=(0, 10))
-        image_frame.pack_propagate(False)
-
-        # Сброс переменных изображений
-        self.photo = None
-        self.empty_photo = None
-        self.image_label = None
-
-        try:
-            # Определяем пути. Убедитесь, что папка images лежит рядом с allgui.py
-            # Поднимаемся на один уровень вверх из папки gui/ в папку проект/
-            base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
-            full_path = os.path.join(base_dir, "images", "potionthatgives2xcoins.png")
-            empty_path = os.path.join(base_dir, "images", "emptypotionthatgives2xcoins.png")
-
-            print(f"🔍 Ищем полную бутылку: {full_path}")
-            print(f"🔍 Ищем пустую бутылку: {empty_path}")
-
-            # Загрузка полной
-            if os.path.exists(full_path):
-                img_full = Image.open(full_path).resize((80, 80), Image.Resampling.LANCZOS)
-                self.photo = ImageTk.PhotoImage(img_full)
-            else:
-                print("⚠️ Файл полной бутылки НЕ НАЙДЕН!")
-
-            # Загрузка пустой
-            if os.path.exists(empty_path):
-                img_empty = Image.open(empty_path).resize((80, 80), Image.Resampling.LANCZOS)
-                self.empty_photo = ImageTk.PhotoImage(img_empty)
-            else:
-                print("⚠️ Файл пустой бутылки НЕ НАЙДЕН!")
-
-            # Выбор текущего изображения
-            current_img = self.empty_photo if self.game.is_potion_active() else self.photo
-
-            # Если картинок нет вообще, ставим заглушку
-            if current_img is None:
-                current_img = self.photo if self.photo else self.empty_photo
-
-            # Создание Label
-            if current_img:
-                self.image_label = tk.Label(image_frame, image=current_img, bg="lightyellow")
-                self.image_label.image = current_img  # Сохраняем ссылку!
-            else:
-                # Если ни одной картинки не загрузилось
-                self.image_label = tk.Label(image_frame, text="🧪", font=("Arial", 32), bg="lightyellow")
-
-            self.image_label.pack(side=tk.LEFT, padx=5, pady=5)
-
-        except Exception as e:
-            print(f"❌ Критическая ошибка загрузки: {e}")
-            # Фоллбэк при ошибке
-            self.image_label = tk.Label(image_frame, text="", font=("Arial", 32), bg="lightyellow")
-            self.image_label.pack(side=tk.LEFT, padx=5, pady=5)
-
-        # === ПРАВАЯ ЧАСТЬ ===
-        text_frame = tk.Frame(inner_frame, bg="lightyellow")
-        text_frame.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
-
-        tk.Label(text_frame, text=tr["potion"], bg="lightyellow", font=("Arial", 10, "bold"), anchor="w").pack(
-            fill=tk.X, pady=(0, 5))
-
-        self.potion_btn = tk.Button(text_frame, text="", font=("Arial", 9), width=18, command=self.use_potion)
-        self.potion_btn.pack(anchor="w")
-
-        self.potion_timer_label = tk.Label(self.potion_frame, text="", bg="lightyellow", font=("Arial", 9))
-        self.potion_timer_label.pack(pady=(5, 0), anchor="w", padx=15)
-
-        # Обновляем UI
-        self.update_potion_button()
-        self.update_potion_timer_label()
-
-        # Переключение кнопок навигации
-        self.btn_language.grid_remove()
-        self.btn_back.pack(fill=tk.BOTH, expand=True)
-
-    def close_inventory(self):
-        # Скрываем инвентарь
-        self.inventory_frame.pack_forget()
-        # Показываем основную игру
-        self.game_frame.pack(fill=tk.BOTH, expand=True)
-        # Возвращаем правую панель
-        self.right_frame.grid()
-        # Возвращаем кнопку языка
-        self.btn_back.pack_forget()
-        self.btn_language.grid()
-        # Обновляем UI
-        self.update_ui()
-
     def use_potion(self):
         if self.game.activate_potion():
             self.update_potion_button()
             self.update_potion_timer_label()
-            self.update_potion_image()  # ← ДОБАВЛЕНО: меняем картинку
+            self.update_potion_image()
             self.update_ui()
             self.label_result.config(text="🧪 Эффект x2 активирован!", fg="green")
             self.potion_frame.config(bg="lightgreen")
@@ -500,20 +414,24 @@ class ClickerGUI:
         tr = self.translations[self.current_lang]
         time_left = self.game.get_potion_time_left()
         if hasattr(self, 'potion_timer_label') and self.potion_timer_label:
-            if time_left > 0:
-                self.potion_timer_label.config(text=tr["potion_active"].format(time_left))
-            else:
-                self.potion_timer_label.config(text="")
+            self.potion_timer_label.config(text=tr["potion_active"].format(time_left) if time_left > 0 else "")
 
     def update_potion_display(self):
         self.update_ui()
-
-        if self.inventory_frame.winfo_ismapped():
+        if hasattr(self, 'inventory_frame') and self.inventory_frame.winfo_ismapped():
             self.update_potion_timer_label()
             self.update_potion_button()
-            self.update_potion_image()  # ← ДОБАВЛЕНО: проверка каждые 1 сек
-
+            self.update_potion_image()
         self.root.after(1000, self.update_potion_display)
+
+    def update_potion_image(self):
+        if not hasattr(self, 'image_label') or not self.image_label or not self.photo or not self.empty_photo: return
+        try:
+            new_img = self.empty_photo if self.game.is_potion_active() else self.photo
+            self.image_label.config(image=new_img)
+            self.image_label.image = new_img
+        except Exception as e:
+            print(f"Ошибка картинки: {e}")
 
     def show_game(self):
         self.game_frame.pack(fill=tk.BOTH, expand=True)
@@ -523,198 +441,4 @@ class ClickerGUI:
         self.game.save_game()
 
     def on_closing(self):
-        self.save_game()
-        self.root.destroy()
-
-    def open_shop(self):
-        tr = self.translations[self.current_lang]
-
-        # 1. Скрываем игру и правую панель
-        self.game_frame.pack_forget()
-        self.right_frame.grid_remove()  # Скрывает инвентарь, магазин, авторов
-
-        # 2. Скрываем кнопку языка
-        self.btn_language.grid_remove()
-
-        # 3. Очищаем магазин от старого содержимого
-        for widget in self.shop_frame.winfo_children():
-            widget.destroy()
-
-        # 4. Рисуем интерфейс магазина
-        tk.Label(self.shop_frame, text=tr["btn_shop"], font=("Arial", 16, "bold")).pack(pady=20)
-        tk.Label(self.shop_frame, text="🏪 Магазин временно закрыт", font=("Arial", 12), fg="gray").pack(pady=10)
-
-        # 5. Показываем фрейм магазина
-        self.shop_frame.pack(fill=tk.BOTH, expand=True)
-
-        # 6. Настраиваем и показываем кнопку "Назад"
-        # Важно: меняем команду кнопки, чтобы она закрывала именно магазин
-        self.btn_back.config(command=self.close_shop, text=tr["back"])
-        self.btn_back.pack(fill=tk.BOTH, expand=True)
-
-    def close_shop(self):
-        # 1. Скрываем магазин
-        self.shop_frame.pack_forget()
-
-        # 2. Возвращаем игру
-        self.game_frame.pack(fill=tk.BOTH, expand=True)
-
-        # 3. Возвращаем правую панель
-        self.right_frame.grid()
-
-        # 4. Скрываем кнопку "Назад"
-        self.btn_back.pack_forget()
-
-        # 5. Возвращаем кнопку языка
-        self.btn_language.grid()
-
-        # 6. Возвращаем команду кнопки "Назад" к инвентарю (по умолчанию)
-        tr = self.translations[self.current_lang]
-        self.btn_back.config(command=self.close_inventory, text=tr["back"])
-
-    def open_authors(self):
-        """Открывает экран 'Авторы', скрывая всё остальное"""
-        tr = self.translations[self.current_lang]
-
-        # 1. Скрываем игру и правую панель
-        self.game_frame.pack_forget()
-        self.right_frame.grid_remove()  # Скрывает Инвентарь/Магазин/Авторы
-
-        # 2. Скрываем кнопку языка
-        self.btn_language.grid_remove()
-
-        # 3. Очищаем старые виджеты экрана авторов
-        for widget in self.authors_frame.winfo_children():
-            widget.destroy()
-
-        # 4. Рисуем интерфейс авторов
-        tk.Label(self.authors_frame, text=tr["btn_authors"], font=("Arial", 16, "bold")).pack(pady=20)
-
-        authors_text = (
-            "🎮 Authors:\n\n"
-            "• thekosmoss\n"
-            "• artman\n"
-            "• Kirill\n\n"
-            "🔧 Project: Clicker Basketball\n"
-            "📅 2025 GlitchHunters Team"
-        )
-
-        tk.Label(
-            self.authors_frame,
-            text=authors_text,
-            font=("Arial", 11),
-            justify="center",
-            fg="black"
-        ).pack(pady=10)
-
-        # 5. Показываем фрейм авторов
-        self.authors_frame.pack(fill=tk.BOTH, expand=True)
-
-        # 6. Настраиваем кнопку "Назад" для закрытия экрана авторов
-        self.btn_back.config(command=self.close_authors, text=tr["back"])
-        self.btn_back.pack(fill=tk.BOTH, expand=True)
-
-    def close_authors(self):
-        """Закрывает экран 'Авторы' и возвращает интерфейс игры"""
-        # 1. Скрываем экран авторов
-        self.authors_frame.pack_forget()
-
-        # 2. Возвращаем игру
-        self.game_frame.pack(fill=tk.BOTH, expand=True)
-
-        # 3. Возвращаем правую панель
-        self.right_frame.grid()
-
-        # 4. Скрываем кнопку "Назад"
-        self.btn_back.pack_forget()
-
-        # 5. Возвращаем кнопку языка
-        self.btn_language.grid()
-
-        # 6. Возвращаем команду кнопки "Назад" к инвентарю (по умолчанию)
-        tr = self.translations[self.current_lang]
-        self.btn_back.config(command=self.close_inventory, text=tr["back"])
-
-    def update_potion_image(self):
-        """Обновляет изображение зелья в зависимости от статуса"""
-        # Проверяем, создан ли вообще label и загружены ли картинки
-        if not hasattr(self, 'image_label') or self.image_label is None:
-            return
-
-        if not self.photo or not self.empty_photo:
-            # Если картинки не загрузились, ничего не меняем
-            return
-
-        try:
-            is_active = self.game.is_potion_active()
-            new_img = self.empty_photo if is_active else self.photo
-
-            # Применяем новое изображение
-            self.image_label.config(image=new_img)
-            self.image_label.image = new_img  # 🔑 ВАЖНО: держим ссылку для GC
-        except Exception as e:
-            print(f"Ошибка обновления картинки: {e}")
-
-    def open_settings(self):
-        self.hide_all_screens()
-
-        self.btn_language.grid_remove()
-        self.btn_settings.grid_remove()
-
-        self.btn_back.config(command=self.back_to_game,
-                             text=self.translations[self.current_lang]["back"])
-        self.btn_back.pack(fill=tk.BOTH, expand=True)
-
-        if self.settings_frame is None:
-            self.settings_frame = tk.Frame(self.root)
-            self.settings = Settings(self.settings_frame, self)
-
-        self.settings_frame.pack(fill=tk.BOTH, expand=True)
-    def close_settings(self):
-        if self.settings_frame:
-            self.settings_frame.pack_forget()
-
-        # возвращаем игру
-        self.game_frame.pack(fill=tk.BOTH, expand=True)
-        self.right_frame.grid()
-
-        # возвращаем кнопки
-        self.btn_language.grid()
-        self.btn_settings.grid()
-
-        # убираем back
-        self.btn_back.pack_forget()
-    def hide_all_screens(self):
-        self.game_frame.pack_forget()
-        self.inventory_frame.pack_forget()
-        self.shop_frame.pack_forget()
-        self.authors_frame.pack_forget()
-        self.right_frame.grid_remove()
-
-    def back_to_game(self):
-        # скрываем ВСЁ
-        self.game_frame.pack_forget()
-        self.inventory_frame.pack_forget()
-        self.shop_frame.pack_forget()
-        self.authors_frame.pack_forget()
-        if self.settings_frame:
-            self.settings_frame.pack_forget()
-
-        self.right_frame.grid()
-
-        # возвращаем игру
-        self.game_frame.pack(fill=tk.BOTH, expand=True)
-
-        # UI кнопки
-        self.btn_language.grid()
-        self.btn_settings.grid()
-
-        self.btn_back.pack_forget()
-
-    def hide_all(self):
-        self.game_frame.pack_forget()
-        self.inventory_frame.pack_forget()
-        self.shop_frame.pack_forget()
-        self.authors_frame.pack_forget()
-        if self.settings_frame:
-            self.settings_frame.pack_forget()
+        self.save_game(); self.root.destroy()
