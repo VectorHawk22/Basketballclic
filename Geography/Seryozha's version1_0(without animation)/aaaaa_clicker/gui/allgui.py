@@ -191,53 +191,92 @@ class ClickerGUI:
 
         tk.Label(self.inventory_frame, text=tr["inventory"], font=("Arial", 16, "bold")).pack(pady=20)
 
-        self.potion_frame = tk.Frame(self.inventory_frame, relief="ridge", bd=4, bg="lightyellow",
-                                     highlightbackground="gold", highlightthickness=2, width=250, height=140)
+        # === УВЕЛИЧЕННЫЙ ФРЕЙМ ЗЕЛЬЯ ===
+        self.potion_frame = tk.Frame(
+            self.inventory_frame,
+            relief="ridge",
+            bd=4,
+            bg="lightyellow",
+            highlightbackground="gold",
+            highlightthickness=2,
+            width=250,
+            height=170  # УВЕЛИЧИЛИ ВЫСОТУ
+        )
         self.potion_frame.pack(pady=30, padx=(20, 10), anchor="w")
         self.potion_frame.pack_propagate(False)
 
-        inner_frame = tk.Frame(self.potion_frame, bg="lightyellow")
-        inner_frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
+        # Верхняя часть (картинка + кнопка)
+        top_content = tk.Frame(self.potion_frame, bg="lightyellow")
+        top_content.place(x=10, y=10, width=230, height=100)
 
-        image_frame = tk.Frame(inner_frame, bg="lightyellow", width=100, height=100)
-        image_frame.pack(side=tk.LEFT, anchor="w", padx=(0, 10))
+        # Картинка
+        image_frame = tk.Frame(top_content, bg="lightyellow", width=80, height=80)
+        image_frame.pack(side=tk.LEFT, padx=(0, 10))
         image_frame.pack_propagate(False)
 
         try:
             base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
             full_path = os.path.join(base_dir, "images", "potionthatgives2xcoins.png")
             empty_path = os.path.join(base_dir, "images", "emptypotionthatgives2xcoins.png")
+
             if os.path.exists(full_path):
                 self.photo = ImageTk.PhotoImage(Image.open(full_path).resize((80, 80), Image.Resampling.LANCZOS))
             if os.path.exists(empty_path):
                 self.empty_photo = ImageTk.PhotoImage(Image.open(empty_path).resize((80, 80), Image.Resampling.LANCZOS))
 
             current_img = self.empty_photo if self.game.is_potion_active() else self.photo
-            if not current_img: current_img = self.photo
+            if not current_img:
+                current_img = self.photo
+
             if current_img:
                 self.image_label = tk.Label(image_frame, image=current_img, bg="lightyellow")
                 self.image_label.image = current_img
             else:
                 self.image_label = tk.Label(image_frame, text="🧪", font=("Arial", 32), bg="lightyellow")
-            self.image_label.pack(side=tk.LEFT, padx=5, pady=5)
+            self.image_label.pack(expand=True)
+
         except Exception as e:
             print(f"Ошибка загрузки: {e}")
-            self.image_label = tk.Label(image_frame, text="", font=("Arial", 32), bg="lightyellow")
-            self.image_label.pack(side=tk.LEFT, padx=5, pady=5)
+            self.image_label = tk.Label(image_frame, text="🧪", font=("Arial", 32), bg="lightyellow")
+            self.image_label.pack(expand=True)
 
-        text_frame = tk.Frame(inner_frame, bg="lightyellow")
+        # Текст и кнопка
+        text_frame = tk.Frame(top_content, bg="lightyellow")
         text_frame.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
-        tk.Label(text_frame, text=tr["potion"], bg="lightyellow", font=("Arial", 10, "bold"), anchor="w").pack(
-            fill=tk.X, pady=(0, 5))
-        self.potion_btn = tk.Button(text_frame, text="", font=("Arial", 9), width=18, command=self.use_potion)
+
+        tk.Label(text_frame, text=tr["potion"], bg="lightyellow", font=("Arial", 9, "bold"), anchor="w").pack(
+            fill=tk.X, pady=(0, 3))
+
+        self.potion_btn = tk.Button(text_frame, text="", font=("Arial", 8), width=14, command=self.use_potion)
         self.potion_btn.pack(anchor="w")
-        self.potion_timer_label = tk.Label(self.potion_frame, text="", bg="lightyellow", font=("Arial", 9))
-        self.potion_timer_label.pack(pady=(5, 0), anchor="w", padx=15)
+
+        # === ТАЙМЕР - ИСПОЛЬЗУЕМ place ДЛЯ ТОЧНОГО ПОЗИЦИОНИРОВАНИЯ ===
+        # Уничтожаем старый если есть
+        if hasattr(self, 'potion_timer_label') and self.potion_timer_label:
+            try:
+                self.potion_timer_label.destroy()
+            except:
+                pass
+
+        # Создаем новый с явными параметрами
+        self.potion_timer_label = tk.Label(
+            self.potion_frame,
+            text="",  # Будет заполнен update_potion_timer_label
+            bg="LIGHTGREEN",  # ЯРКИЙ ФОН для видимости
+            fg="BLACK",
+            font=("Arial", 8),
+            anchor="w",
+            justify="left",
+            relief="solid",
+            bd=1,
+            wraplength=220
+        )
+        # Размещаем внизу фрейма зелья
+        self.potion_timer_label.place(x=10, y=115, width=230, height=45)
 
         self.update_potion_button()
         self.update_potion_timer_label()
         self._show_back_button(self.close_inventory)
-
     def close_inventory(self):
         self.inventory_frame.pack_forget()
         self.game_frame.pack(fill=tk.BOTH, expand=True)
@@ -413,8 +452,22 @@ class ClickerGUI:
     def update_potion_timer_label(self):
         tr = self.translations[self.current_lang]
         time_left = self.game.get_potion_time_left()
+
         if hasattr(self, 'potion_timer_label') and self.potion_timer_label:
-            self.potion_timer_label.config(text=tr["potion_active"].format(time_left) if time_left > 0 else "")
+            if time_left > 0:
+                timer_text = tr["potion_active"].format(time_left)
+                self.potion_timer_label.config(
+                    text=timer_text,
+                    bg="LIGHTGREEN",  # Яркий фон когда активно
+                    fg="BLACK"
+                )
+            else:
+                # Показываем текст когда не активно
+                self.potion_timer_label.config(
+                    text="Не активно",  # Или tr["potion_inactive"]
+                    bg="LIGHTGRAY",  # Серый фон
+                    fg="BLACK"
+                )
 
     def update_potion_display(self):
         self.update_ui()
