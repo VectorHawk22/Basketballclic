@@ -4,6 +4,16 @@ from datetime import datetime
 import os
 from PIL import Image, ImageTk
 from gui.settings import Settings
+from animation.court1 import CourtSuccess
+from animation.court2 import CourtFail
+
+# ИМПОРТ АНИМАЦИЙ
+# Предполагаем, что папка animation лежит на уровень выше папки gui,
+# либо рядом. Adjust path if needed.
+import sys
+
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 
 
 class ClickerGUI:
@@ -15,6 +25,9 @@ class ClickerGUI:
         self.root.resizable(False, False)
 
         self.game.load_game()
+
+        # Определяем базовую директорию для картинок (папка images рядом с gui)
+        self.base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
         self.translations = {
             "Английский": {
@@ -73,19 +86,49 @@ class ClickerGUI:
         tr = self.translations[self.current_lang]
 
         # Главный фрейм
+        # ... (предыдущий код импортов и переменных) ...
+
+        # Главный фрейм
         self.main_frame = tk.Frame(root)
         self.main_frame.pack(fill=tk.BOTH, expand=True)
 
-        # Левая колонка
-        self.left_frame = tk.Frame(self.main_frame)
+        # === ЛЕВАЯ КОЛОНКА ===
+        self.left_frame = tk.Frame(
+            self.main_frame,
+            width=440,
+            height=430
+        )
         self.left_frame.grid(row=0, column=0, sticky="nsew", padx=20, pady=20)
+        self.left_frame.grid_propagate(False)
         self.main_frame.columnconfigure(0, weight=1)
         self.main_frame.columnconfigure(1, weight=0)
 
+
+        # === НОВОЕ: Фрейм для анимации вверху слева ===
+        self.anim_container = tk.Frame(self.left_frame, height=280, bg="#f0f0f0")  # УВЕЛИЧИЛИ до 150
+        self.anim_container.pack(fill=tk.X, side=tk.TOP, pady=(0, 5))
+        self.anim_container.pack_propagate(False)
+
+        self.animation_canvas = tk.Canvas(self.anim_container, width=420, height=240, bg="#f0f0f0",
+                                          highlightthickness=1, highlightbackground="gray")
+        self.animation_canvas.pack(
+            fill=tk.BOTH,
+            expand=True,
+            padx=5,
+            pady=5
+        )
+
+        # Инициализируем объекты анимации
+        self.court_success = CourtSuccess(self.animation_canvas)
+        self.court_fail = CourtFail(self.animation_canvas)
+
+        self.root.after(100, self.redraw_animation)
+
+        # === Игровая зона (под анимацией) ===
         self.game_frame = tk.Frame(self.left_frame)
         self.game_frame.pack(fill=tk.BOTH, expand=True)
 
-        tk.Label(self.game_frame, text="").pack(pady=(250, 0))
+        tk.Label(self.game_frame, text="").pack(pady=(20, 0))
         self.label_result = tk.Label(self.game_frame, text="", font=("Arial", 12))
         self.label_result.pack(pady=20)
 
@@ -98,39 +141,40 @@ class ClickerGUI:
                                      font=("Arial", 16, "bold"))
         self.label_points.pack(side=tk.LEFT, padx=20)
 
-        # === ВОДЯНОЙ ЗНАК (сохраняем как self.glitch_label для управления) ===
+        # === ВОДЯНОЙ ЗНАК ===
         self.glitch_label = tk.Label(root, text="GlitchHunters", font=("Georgia", 10), fg="blue")
         self.glitch_label.place(x=10, rely=1.0, y=-10, anchor="sw")
 
-        # Правая колонка
+        # === ПРАВАЯ КОЛОНКА (Только кнопки) ===
         self.right_frame = tk.Frame(self.main_frame, width=140)
         self.right_frame.grid(row=0, column=1, sticky="ns")
         self.right_frame.pack_propagate(False)
         self.right_frame.columnconfigure(0, weight=1)
-        for i in range(5):
-            self.right_frame.rowconfigure(i, weight=1)
 
+        # Кнопки теперь идут с row=0, так как анимации тут нет
         self.btn1 = tk.Button(self.right_frame, text=tr["btn_inventory"], bg="lightcoral", font=("Arial", 10, "bold"),
                               command=self.open_inventory)
-        self.btn1.grid(row=0, column=0, sticky="nsew", padx=(0, 5), pady=1)
+        self.btn1.grid(row=0, column=0, sticky="nsew", padx=(0, 5), pady=5)
 
         self.btn2 = tk.Button(self.right_frame, text=tr["btn_shop"], bg="lightgreen", font=("Arial", 10, "bold"),
                               command=self.open_shop)
-        self.btn2.grid(row=1, column=0, sticky="nsew", padx=(0, 5), pady=1)
+        self.btn2.grid(row=1, column=0, sticky="nsew", padx=(0, 5), pady=5)
 
         self.btn3 = tk.Button(self.right_frame, text=tr["btn_authors"], bg="lightyellow", font=("Arial", 10, "bold"),
                               command=self.open_authors)
-        self.btn3.grid(row=2, column=0, sticky="nsew", padx=(0, 5), pady=1)
+        self.btn3.grid(row=2, column=0, sticky="nsew", padx=(0, 5), pady=5)
 
         self.btn_language = tk.Button(self.right_frame, text=tr["menu_lang"], bg="lightblue",
                                       font=("Arial", 10, "bold"), command=self.show_language_menu)
-        self.btn_language.grid(row=3, column=0, sticky="nsew", padx=(0, 5), pady=1)
+        self.btn_language.grid(row=3, column=0, sticky="nsew", padx=(0, 5), pady=5)
 
         self.btn_settings = tk.Button(self.right_frame, text=tr["btn_settings"], font=("Arial", 10, "bold"),
                                       bg="lightgray", command=self.open_settings)
-        self.btn_settings.grid(row=4, column=0, sticky="nsew", padx=(0, 5), pady=1)
+        self.btn_settings.grid(row=4, column=0, sticky="nsew", padx=(0, 5), pady=5)
 
-        # === КНОПКА НАЗАД (ВНИЗУ ГЛАВНОГО ОКНА, НА ВСЮ ШИРИНУ) ===
+        # ... (остальной код __init__: btn_back, frames и т.д. остается без изменений) ...
+
+        # === КНОПКА НАЗАД ===
         self.btn_back = tk.Button(
             self.root,
             text=tr["back"],
@@ -140,7 +184,7 @@ class ClickerGUI:
             anchor="center",
             command=self.close_inventory
         )
-        self.btn_back.pack_forget()  # Изначально скрыта
+        self.btn_back.pack_forget()
 
         self.root.title(tr["title"])
         self.click_count = 0
@@ -163,25 +207,22 @@ class ClickerGUI:
 
     # ================= УПРАВЛЕНИЕ КНОПКОЙ НАЗАД И ВОДЯНЫМ ЗНАКОМ =================
     def _show_back_button(self, command_func):
-        """Показывает кнопку внизу на всю ширину и поднимает водяной знак"""
         tr = self.translations[self.current_lang]
         self.btn_back.config(text=tr["back"], command=command_func)
         if not self.btn_back.winfo_ismapped():
             self.btn_back.pack(side=tk.BOTTOM, fill=tk.X)
-        # Поднимаем надпись, чтобы она не перекрывалась кнопкой
         self.glitch_label.place_configure(y=-45)
 
     def _hide_back_button(self):
-        """Скрывает кнопку назад и возвращает водяной знак на место"""
         if self.btn_back.winfo_ismapped():
             self.btn_back.pack_forget()
-        # Возвращаем надпись в исходную позицию
         self.glitch_label.place_configure(y=-10)
 
     # ================= НАВИГАЦИЯ =================
     def open_inventory(self):
         tr = self.translations[self.current_lang]
         self.game_frame.pack_forget()
+        self.anim_container.pack_forget()  # Скрываем анимацию
         for btn in [self.btn1, self.btn2, self.btn3, self.btn_language, self.btn_settings]:
             btn.grid_remove()
 
@@ -191,33 +232,24 @@ class ClickerGUI:
 
         tk.Label(self.inventory_frame, text=tr["inventory"], font=("Arial", 16, "bold")).pack(pady=20)
 
-        # === УВЕЛИЧЕННЫЙ ФРЕЙМ ЗЕЛЬЯ ===
+        # === ФРЕЙМ ЗЕЛЬЯ ===
         self.potion_frame = tk.Frame(
-            self.inventory_frame,
-            relief="ridge",
-            bd=4,
-            bg="lightyellow",
-            highlightbackground="gold",
-            highlightthickness=2,
-            width=250,
-            height=170  # УВЕЛИЧИЛИ ВЫСОТУ
+            self.inventory_frame, relief="ridge", bd=4, bg="lightyellow",
+            highlightbackground="gold", highlightthickness=2, width=250, height=170
         )
         self.potion_frame.pack(pady=30, padx=(20, 10), anchor="w")
         self.potion_frame.pack_propagate(False)
 
-        # Верхняя часть (картинка + кнопка)
         top_content = tk.Frame(self.potion_frame, bg="lightyellow")
         top_content.place(x=10, y=10, width=230, height=100)
 
-        # Картинка
         image_frame = tk.Frame(top_content, bg="lightyellow", width=80, height=80)
         image_frame.pack(side=tk.LEFT, padx=(0, 10))
         image_frame.pack_propagate(False)
 
         try:
-            base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-            full_path = os.path.join(base_dir, "images", "potionthatgives2xcoins.png")
-            empty_path = os.path.join(base_dir, "images", "emptypotionthatgives2xcoins.png")
+            full_path = os.path.join(self.base_dir, "images", "potionthatgives2xcoins.png")
+            empty_path = os.path.join(self.base_dir, "images", "emptypotionthatgives2xcoins.png")
 
             if os.path.exists(full_path):
                 self.photo = ImageTk.PhotoImage(Image.open(full_path).resize((80, 80), Image.Resampling.LANCZOS))
@@ -225,8 +257,7 @@ class ClickerGUI:
                 self.empty_photo = ImageTk.PhotoImage(Image.open(empty_path).resize((80, 80), Image.Resampling.LANCZOS))
 
             current_img = self.empty_photo if self.game.is_potion_active() else self.photo
-            if not current_img:
-                current_img = self.photo
+            if not current_img: current_img = self.photo
 
             if current_img:
                 self.image_label = tk.Label(image_frame, image=current_img, bg="lightyellow")
@@ -234,52 +265,39 @@ class ClickerGUI:
             else:
                 self.image_label = tk.Label(image_frame, text="🧪", font=("Arial", 32), bg="lightyellow")
             self.image_label.pack(expand=True)
-
         except Exception as e:
             print(f"Ошибка загрузки: {e}")
             self.image_label = tk.Label(image_frame, text="🧪", font=("Arial", 32), bg="lightyellow")
             self.image_label.pack(expand=True)
 
-        # Текст и кнопка
         text_frame = tk.Frame(top_content, bg="lightyellow")
         text_frame.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 
-        tk.Label(text_frame, text=tr["potion"], bg="lightyellow", font=("Arial", 9, "bold"), anchor="w").pack(
-            fill=tk.X, pady=(0, 3))
-
+        tk.Label(text_frame, text=tr["potion"], bg="lightyellow", font=("Arial", 9, "bold"), anchor="w").pack(fill=tk.X,
+                                                                                                              pady=(
+                                                                                                              0, 3))
         self.potion_btn = tk.Button(text_frame, text="", font=("Arial", 8), width=14, command=self.use_potion)
         self.potion_btn.pack(anchor="w")
 
-        # === ТАЙМЕР - ИСПОЛЬЗУЕМ place ДЛЯ ТОЧНОГО ПОЗИЦИОНИРОВАНИЯ ===
-        # Уничтожаем старый если есть
         if hasattr(self, 'potion_timer_label') and self.potion_timer_label:
             try:
                 self.potion_timer_label.destroy()
             except:
                 pass
 
-        # Создаем новый с явными параметрами
-        self.potion_timer_label = tk.Label(
-            self.potion_frame,
-            text="",  # Будет заполнен update_potion_timer_label
-            bg="LIGHTGREEN",  # ЯРКИЙ ФОН для видимости
-            fg="BLACK",
-            font=("Arial", 8),
-            anchor="w",
-            justify="left",
-            relief="solid",
-            bd=1,
-            wraplength=220
-        )
-        # Размещаем внизу фрейма зелья
+        self.potion_timer_label = tk.Label(self.potion_frame, text="", bg="LIGHTGREEN", fg="BLACK",
+                                           font=("Arial", 8), anchor="w", justify="left", relief="solid", bd=1,
+                                           wraplength=220)
         self.potion_timer_label.place(x=10, y=115, width=230, height=45)
 
         self.update_potion_button()
         self.update_potion_timer_label()
         self._show_back_button(self.close_inventory)
+
     def close_inventory(self):
         self.inventory_frame.pack_forget()
         self.game_frame.pack(fill=tk.BOTH, expand=True)
+        self.anim_container.pack(fill=tk.X, side=tk.TOP, pady=(0, 10))  # Возвращаем анимацию
         for btn in [self.btn1, self.btn2, self.btn3, self.btn_language, self.btn_settings]:
             btn.grid()
         self._hide_back_button()
@@ -288,8 +306,10 @@ class ClickerGUI:
     def open_shop(self):
         tr = self.translations[self.current_lang]
         self.game_frame.pack_forget()
+        self.anim_container.pack_forget()  # Скрываем анимацию
         for btn in [self.btn1, self.btn2, self.btn3, self.btn_language, self.btn_settings]:
             btn.grid_remove()
+
         for widget in self.shop_frame.winfo_children():
             widget.destroy()
         tk.Label(self.shop_frame, text=tr["btn_shop"], font=("Arial", 16, "bold")).pack(pady=20)
@@ -300,6 +320,7 @@ class ClickerGUI:
     def close_shop(self):
         self.shop_frame.pack_forget()
         self.game_frame.pack(fill=tk.BOTH, expand=True)
+        self.anim_container.pack(fill=tk.X, side=tk.TOP, pady=(0, 10))  # Возвращаем анимацию
         for btn in [self.btn1, self.btn2, self.btn3, self.btn_language, self.btn_settings]:
             btn.grid()
         self._hide_back_button()
@@ -307,8 +328,10 @@ class ClickerGUI:
     def open_authors(self):
         tr = self.translations[self.current_lang]
         self.game_frame.pack_forget()
+        self.anim_container.pack_forget()  # Скрываем анимацию
         for btn in [self.btn1, self.btn2, self.btn3, self.btn_language, self.btn_settings]:
             btn.grid_remove()
+
         for widget in self.authors_frame.winfo_children():
             widget.destroy()
         tk.Label(self.authors_frame, text=tr["btn_authors"], font=("Arial", 16, "bold")).pack(pady=20)
@@ -321,12 +344,14 @@ class ClickerGUI:
     def close_authors(self):
         self.authors_frame.pack_forget()
         self.game_frame.pack(fill=tk.BOTH, expand=True)
+        self.anim_container.pack(fill=tk.X, side=tk.TOP, pady=(0, 10))  # Возвращаем анимацию
         for btn in [self.btn1, self.btn2, self.btn3, self.btn_language, self.btn_settings]:
             btn.grid()
         self._hide_back_button()
 
     def open_settings(self):
         self.hide_all_screens()
+        self.anim_container.pack_forget()  # Скрываем анимацию
         for btn in [self.btn1, self.btn2, self.btn3, self.btn_language, self.btn_settings]:
             btn.grid_remove()
 
@@ -340,6 +365,7 @@ class ClickerGUI:
         if self.settings_frame:
             self.settings_frame.pack_forget()
         self.game_frame.pack(fill=tk.BOTH, expand=True)
+        self.anim_container.pack(fill=tk.X, side=tk.TOP, pady=(0, 10))  # Возвращаем анимацию
         for btn in [self.btn1, self.btn2, self.btn3, self.btn_language, self.btn_settings]:
             btn.grid()
         self._hide_back_button()
@@ -374,7 +400,19 @@ class ClickerGUI:
 
     def process_result(self):
         success, _ = self.game.try_add_point(self.click_count)
-        self.update_ui(result=1 if success else 2)
+
+        # === ЗАПУСК АНИМАЦИИ ===
+        if success:
+            # Успех: запускаем court1
+            self.court_fail.stop()
+            self.court_success.start_animation()
+            self.update_ui(result=1)
+        else:
+            # Неудача: запускаем court2
+            self.court_success.stop()
+            self.court_fail.start_animation()
+            self.update_ui(result=2)
+
         tr = self.translations[self.current_lang]
         self.button_click.config(text=tr["start_challenge"], command=self.start_challenge)
 
@@ -458,14 +496,13 @@ class ClickerGUI:
                 timer_text = tr["potion_active"].format(time_left)
                 self.potion_timer_label.config(
                     text=timer_text,
-                    bg="LIGHTGREEN",  # Яркий фон когда активно
+                    bg="LIGHTGREEN",
                     fg="BLACK"
                 )
             else:
-                # Показываем текст когда не активно
                 self.potion_timer_label.config(
-                    text="Не активно",  # Или tr["potion_inactive"]
-                    bg="LIGHTGRAY",  # Серый фон
+                    text="Не активно",
+                    bg="LIGHTGRAY",
                     fg="BLACK"
                 )
 
@@ -494,4 +531,9 @@ class ClickerGUI:
         self.game.save_game()
 
     def on_closing(self):
-        self.save_game(); self.root.destroy()
+        self.save_game();
+        self.root.destroy()
+
+    def redraw_animation(self):
+        self.court_success.draw_court()
+        self.court_fail.draw_court()
