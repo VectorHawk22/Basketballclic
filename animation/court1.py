@@ -14,9 +14,9 @@ canvas.create_rectangle(0, 0, 800, 300, fill="#42AAFF")
 canvas.create_rectangle(0, 300, 800, 500, fill="#D16A20")
 
 # Создаю переменные для отображения картинок
-image_man = tk.PhotoImage(file= "/home/ivan/ubuntu/man.png")
-image_basket = tk.PhotoImage(file="/home/ivan/ubuntu/basket.png")
-image_ball1 = tk.PhotoImage(file="/home/ivan/ubuntu/ball1.png")
+image_man = tk.PhotoImage(file= "/home/ivan/animation/man.png")
+image_basket = tk.PhotoImage(file="/home/ivan/animation/basket.png")
+image_ball1 = tk.PhotoImage(file="/home/ivan/animation/ball1.png")
 
 # Создаём кольцо
 basket = canvas.create_image(450, 75, image=image_basket, anchor= tk.NW)
@@ -31,8 +31,8 @@ score_text = canvas.create_text(50, 50, text=score)
 # Параметры для анимации
 ball_x = 550
 ball_y = 285
-target_x = 730
-target_y = 190
+target_x = 710
+target_y = 170
 falling = False  # Флаг для падения
 fall_speed = 5   # Скорость падения
 step = 5         # Шаг движения к кольцу
@@ -78,9 +78,9 @@ def move_ball():
     
     canvas.coords(ball, ball_x-8, ball_y-8, ball_x+8, ball_y+8)
     root.after(50, move_ball)  # Запускаем снова через 50мс
+    canvas.coords(ball, target_x-8, target_y-8, target_x+8, target_y+8)
+    root.after(50, move_ball)  # Запускаем снова через 50мс
 
-# Запускаем анимацию автоматически
-move_ball()
 
 root.mainloop()
 
