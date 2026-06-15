@@ -2,5 +2,5 @@
 
 Hello, dear user! This game is still in development, so you may encounter bugs and other errors. Enjoy the game!
 
-Bonjour, cher utilisateur ! Ce jeu est encore en développement, vous pourriez donc rencontrer des bugs et autres erreurs. Amusez-vous bien !
+Bonjour, cher utilisateur! Ce jeu est encore en développement, vous pourriez donc rencontrer des bugs et autres erreurs. Amusez-vous bien !
 
