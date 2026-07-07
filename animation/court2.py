@@ -1,5 +1,6 @@
 import tkinter as tk
 from random import *
+from PIL import Image, ImageTk
 
 width = 800
 height = 500
@@ -14,9 +15,12 @@ canvas.create_rectangle(0, 0, 800, 300, fill="#42AAFF")
 canvas.create_rectangle(0, 300, 800, 500, fill="#D16A20")
 
 # Создаю переменные для отображения картинок
-image_man = tk.PhotoImage(file= "/home/ivan/ubuntu/man.png")
-image_basket = tk.PhotoImage(file="/home/ivan/ubuntu/basket.png")
-image_ball1 = tk.PhotoImage(file="/home/ivan/ubuntu/ball1.png")
+image_man = tk.PhotoImage(file= "/home/ivan/animation/man.png")
+image_basket = tk.PhotoImage(file="/home/ivan/animation/basket.png")
+img = Image.open("/home/ivan/animation/ball3.png")
+img = img.resize((50, 40), resample=Image.LANCZOS)
+image_ball = ImageTk.PhotoImage(img)
+
 
 # Создаём кольцо
 basket = canvas.create_image(450, 75, image=image_basket, anchor= tk.NW)
@@ -24,9 +28,13 @@ basket = canvas.create_image(450, 75, image=image_basket, anchor= tk.NW)
 
 # Создаём игрока с мячом
 man = canvas.create_image(222, 85, image = image_man, anchor = tk.NW)
-ball = canvas.create_oval(550-8, 285-8, 550+8, 285+8, fill="#F77F0F")
+canvas.create_image(550, 285, image=image_ball)
+
+
 score = 0
 score_text = canvas.create_text(50, 50, text=score)
+
+
 # Параметры для анимации
 ball_x = 550
 ball_y = 285
@@ -48,7 +56,7 @@ def move_ball():
         if ball_y < bounce_height:
             ball_y += fall_speed
             fall_speed += gravity  # Добавляем гравитацию
-            canvas.coords(ball, ball_x-8, ball_y-8, ball_x+8, ball_y+8)
+            canvas.coords(image_ball, ball_x-8, ball_y-8, ball_x+8, ball_y+8)
             root.after(50, move_ball)
             return
         
@@ -58,7 +66,7 @@ def move_ball():
         bouncing = False
         falling = False
         fall_speed = 5  # Восстанавливаем начальную скорость
-        canvas.coords(ball, ball_x-8, ball_y-8, ball_x+8, ball_y+8)
+        canvas.coords(image_ball, ball_x-8, ball_y-8, ball_x+8, ball_y+8)
         return
     
     # Движение к кольцу
@@ -67,7 +75,7 @@ def move_ball():
             bouncing = True
             fall_speed = -10  # Начальная скорость отскока вверх
             ball_y = target_y - 10  # Позиция для отскока
-            canvas.coords(ball, ball_x-8, ball_y-8, ball_x+8, ball_y+8)
+            canvas.coords(image_ball, ball_x-8, ball_y-8, ball_x+8, ball_y+8)
             move_ball()
             return
         
@@ -80,7 +88,7 @@ def move_ball():
         ball_y -= step
         
         # Обновляем позицию мяча на холсте
-    canvas.coords(ball, ball_x-8, ball_y-8, ball_x+8, ball_y+8)
+    canvas.coords(image_ball, ball_x-8, ball_y-8, ball_x+8, ball_y+8)
         
         # Запускаем анимацию снова через 50 мс
     root.after(50, move_ball)

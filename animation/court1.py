@@ -1,5 +1,6 @@
 import tkinter as tk
 from random import *
+from PIL import Image, ImageTk
 
 width = 800
 height = 500
@@ -16,7 +17,10 @@ canvas.create_rectangle(0, 300, 800, 500, fill="#D16A20")
 # Создаю переменные для отображения картинок
 image_man = tk.PhotoImage(file= "/home/ivan/animation/man.png")
 image_basket = tk.PhotoImage(file="/home/ivan/animation/basket.png")
-image_ball1 = tk.PhotoImage(file="/home/ivan/animation/ball1.png")
+img = Image.open("/home/ivan/animation/ball3.png")
+img = img.resize((50, 40), resample=Image.LANCZOS)
+image_ball = ImageTk.PhotoImage(img)
+
 
 # Создаём кольцо
 basket = canvas.create_image(450, 75, image=image_basket, anchor= tk.NW)
@@ -24,7 +28,8 @@ basket = canvas.create_image(450, 75, image=image_basket, anchor= tk.NW)
 
 # Создаём игрока с мячом
 man = canvas.create_image(222, 85, image = image_man, anchor = tk.NW)
-ball = canvas.create_oval(550-8, 285-8, 550+8, 285+8, fill="#F77F0F")
+canvas.create_image(550, 285, image=image_ball)
+
 score = 0
 score_text = canvas.create_text(50, 50, text=score)
 
@@ -48,7 +53,7 @@ def move_ball():
         # Анимация падения
         if ball_y < 310:
             ball_y += fall_speed
-            canvas.coords(ball, ball_x-8, ball_y-8, ball_x+8, ball_y+8)
+            canvas.coords(image_ball, ball_x-8, ball_y-8, ball_x+8, ball_y+8)
             root.after(50, move_ball)  # Запускаем снова через 50мс
             return
         
@@ -56,7 +61,7 @@ def move_ball():
         ball_x = 550
         ball_y = 285
         falling = False
-        canvas.coords(ball, ball_x-8, ball_y-8, ball_x+8, ball_y+8)
+        canvas.coords(image_ball, ball_x-8, ball_y-8, ball_x+8, ball_y+8)
         return
     
     # Движение к кольцу
@@ -65,7 +70,7 @@ def move_ball():
         update_score()
         falling = True  # Начинаем падение
         ball_x = target_x  # Ставим мяч в кольцо
-        canvas.coords(ball, ball_x-8, ball_y-8, ball_x+8, ball_y+8)
+        canvas.coords(image_ball, ball_x-8, ball_y-8, ball_x+8, ball_y+8)
         move_ball()  # Продолжаем анимацию
         return
     
@@ -76,9 +81,7 @@ def move_ball():
     if ball_y > target_y:
         ball_y -= step
     
-    canvas.coords(ball, ball_x-8, ball_y-8, ball_x+8, ball_y+8)
-    root.after(50, move_ball)  # Запускаем снова через 50мс
-    canvas.coords(ball, target_x-8, target_y-8, target_x+8, target_y+8)
+    canvas.coords(image_ball, ball_x-8, ball_y-8, ball_x+8, ball_y+8)
     root.after(50, move_ball)  # Запускаем снова через 50мс
 
 
