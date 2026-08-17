@@ -2,7 +2,7 @@ import tkinter as tk
 from game_logic import ClickerGame
 import os
 from PIL import Image, ImageTk
-from gui.settings import Settings
+#from gui.settings import Settings
 from animation.court1 import CourtSuccess
 from animation.court2 import CourtFail
 import sys
