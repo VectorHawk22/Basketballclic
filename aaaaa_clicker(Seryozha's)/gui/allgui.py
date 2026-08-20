@@ -270,7 +270,7 @@ class ClickerGUI:
         for widget in self.authors_frame.winfo_children(): widget.destroy()
         tk.Label(self.authors_frame, text=tr["btn_authors"], font=("Arial", 16, "bold")).pack(pady=20)
         tk.Label(self.authors_frame,
-                 text="🎮 Authors:\n• thekosmoss\n• artman\n• Kirill\n\n🔧 Project: Clicker Basketball\n📅 2025 GlitchHunters Team",
+                 text="🎮 Authors:\n• thekosmoss\n• artman\n• amonpys\n\n🔧 Project: Clicker Basketball\n📅 2026 GlitchHunters Team",
                  font=("Arial", 11), justify="center", fg="black").pack(pady=10)
         self.authors_frame.pack(fill=tk.BOTH, expand=True)
         self._show_back_button(self.close_authors)
