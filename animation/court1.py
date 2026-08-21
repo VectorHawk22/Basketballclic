@@ -86,4 +86,3 @@ def move_ball():
 
 
 root.mainloop()
-
