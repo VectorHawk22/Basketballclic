@@ -1,0 +1,583 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #08080d;
+    color: white;
+    overflow-x: hidden;
+}
+
+
+/* =========================
+   BACKGROUND
+========================= */
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+
+    background:
+        radial-gradient(
+            circle at 50% 0%,
+            rgba(130, 70, 255, 0.20),
+            transparent 35%
+        );
+
+    pointer-events: none;
+    z-index: -2;
+}
+
+.background-glow {
+    position: fixed;
+
+    width: 500px;
+    height: 500px;
+
+    top: -250px;
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    background: #743cff;
+
+    filter: blur(180px);
+
+    opacity: 0.18;
+
+    z-index: -1;
+}
+
+
+/* =========================
+   HERO
+========================= */
+
+.hero {
+    min-height: 100vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    text-align: center;
+
+    padding: 80px 20px;
+
+    position: relative;
+}
+
+.hero-content {
+    max-width: 900px;
+}
+
+
+/* Badge */
+
+.badge {
+    display: inline-block;
+
+    padding: 9px 18px;
+
+    margin-bottom: 25px;
+
+    border: 1px solid rgba(255,255,255,0.12);
+
+    border-radius: 50px;
+
+    background: rgba(255,255,255,0.04);
+
+    color: #bdb5ff;
+
+    font-size: 14px;
+
+    backdrop-filter: blur(10px);
+}
+
+
+/* Logo */
+
+.hero h1 {
+    font-size: clamp(70px, 12vw, 150px);
+
+    font-weight: 900;
+
+    letter-spacing: -7px;
+
+    line-height: 0.9;
+
+    margin-bottom: 30px;
+}
+
+.hero h1 span {
+    color: #8a5cff;
+
+    text-shadow:
+        0 0 30px rgba(138, 92, 255, 0.5);
+}
+
+
+/* Subtitle */
+
+.subtitle {
+    max-width: 650px;
+
+    margin: 0 auto 45px;
+
+    color: #aaa9b8;
+
+    font-size: 18px;
+
+    line-height: 1.7;
+}
+
+
+/* =========================
+   DOWNLOAD BUTTONS
+========================= */
+
+.download-buttons {
+    display: flex;
+
+    justify-content: center;
+
+    gap: 18px;
+
+    flex-wrap: wrap;
+}
+
+.download-button {
+    min-width: 230px;
+
+    padding: 18px 25px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 15px;
+
+    text-decoration: none;
+
+    color: white;
+
+    border-radius: 15px;
+
+    font-size: 17px;
+
+    font-weight: 700;
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease,
+        background 0.25s ease;
+
+    border: 1px solid rgba(255,255,255,0.12);
+
+    background: rgba(255,255,255,0.05);
+
+    backdrop-filter: blur(10px);
+}
+
+.download-button small {
+    display: block;
+
+    font-size: 10px;
+
+    letter-spacing: 2px;
+
+    color: #aaa9b8;
+
+    margin-bottom: 4px;
+}
+
+.button-icon {
+    font-size: 27px;
+}
+
+
+/* APK */
+
+.download-button.apk:hover {
+    transform: translateY(-5px);
+
+    background: rgba(90, 200, 120, 0.12);
+
+    box-shadow:
+        0 15px 40px rgba(50, 200, 100, 0.18);
+}
+
+
+/* EXE */
+
+.download-button.exe:hover {
+    transform: translateY(-5px);
+
+    background: rgba(80, 130, 255, 0.13);
+
+    box-shadow:
+        0 15px 40px rgba(70, 120, 255, 0.20);
+}
+
+
+/* =========================
+   BOOSTY
+========================= */
+
+.boosty-section {
+    margin-top: 35px;
+
+    color: #777684;
+
+    font-size: 14px;
+}
+
+.boosty-button {
+    display: inline-block;
+
+    margin-top: 12px;
+
+    padding: 12px 20px;
+
+    border-radius: 10px;
+
+    color: #ff8ab5;
+
+    text-decoration: none;
+
+    border: 1px solid rgba(255, 100, 160, 0.18);
+
+    background: rgba(255, 100, 160, 0.06);
+
+    transition: 0.25s ease;
+}
+
+.boosty-button:hover {
+    transform: translateY(-2px);
+
+    background: rgba(255, 100, 160, 0.12);
+}
+
+
+/* =========================
+   SECTIONS
+========================= */
+
+section {
+    padding: 110px 20px;
+}
+
+.section-container {
+    max-width: 1100px;
+
+    margin: auto;
+}
+
+.section-title {
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+    margin-bottom: 40px;
+}
+
+.section-title span {
+    color: #8a5cff;
+
+    font-size: 14px;
+
+    font-weight: bold;
+}
+
+.section-title h2 {
+    font-size: 38px;
+}
+
+
+/* =========================
+   ABOUT
+========================= */
+
+.about {
+    background: #0c0c13;
+}
+
+.about-text {
+    max-width: 850px;
+
+    color: #a5a4b0;
+
+    font-size: 18px;
+
+    line-height: 1.8;
+}
+
+
+/* =========================
+   FEATURES
+========================= */
+
+.feature-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 20px;
+}
+
+.feature-card {
+    padding: 30px;
+
+    border-radius: 18px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,0.06),
+            rgba(255,255,255,0.02)
+        );
+
+    border: 1px solid rgba(255,255,255,0.08);
+
+    transition: 0.3s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-6px);
+
+    border-color:
+        rgba(138,92,255,0.4);
+}
+
+.feature-icon {
+    font-size: 35px;
+
+    margin-bottom: 20px;
+}
+
+.feature-card h3 {
+    margin-bottom: 12px;
+
+    font-size: 20px;
+}
+
+.feature-card p {
+    color: #8e8d9a;
+
+    line-height: 1.6;
+}
+
+
+/* =========================
+   SCREENSHOTS
+========================= */
+
+.screenshots {
+    background: #0c0c13;
+}
+
+.screenshots-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap: 20px;
+}
+
+.screenshot {
+    overflow: hidden;
+
+    border-radius: 18px;
+
+    border: 1px solid rgba(255,255,255,0.08);
+
+    background: #11111a;
+}
+
+.screenshot img {
+    width: 100%;
+
+    display: block;
+
+    transition: transform 0.5s ease;
+}
+
+.screenshot:hover img {
+    transform: scale(1.04);
+}
+
+
+/* =========================
+   FINAL DOWNLOAD
+========================= */
+
+.download-final {
+    text-align: center;
+
+    background:
+        radial-gradient(
+            circle at center,
+            rgba(116, 60, 255, 0.15),
+            transparent 60%
+        );
+}
+
+.download-final h2 {
+    font-size: 45px;
+
+    margin-bottom: 15px;
+}
+
+.download-final p {
+    color: #92919e;
+
+    margin-bottom: 35px;
+}
+
+
+/* =========================
+   FOOTER
+========================= */
+
+footer {
+    border-top:
+        1px solid rgba(255,255,255,0.07);
+
+    background: #060609;
+
+    padding: 30px 20px;
+}
+
+.footer-content {
+    max-width: 1100px;
+
+    margin: auto;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 20px;
+}
+
+.footer-content strong {
+    font-size: 18px;
+}
+
+.footer-content p {
+    margin-top: 6px;
+
+    color: #666571;
+
+    font-size: 13px;
+}
+
+.footer-content a {
+    color: #ff8ab5;
+
+    text-decoration: none;
+}
+
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 800px) {
+
+    .feature-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .hero h1 {
+        letter-spacing: -4px;
+    }
+
+    .screenshots-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 600px) {
+
+    .hero {
+        min-height: 100svh;
+
+        padding:
+            70px 18px
+            60px;
+    }
+
+    .hero h1 {
+        font-size: 65px;
+
+        letter-spacing: -4px;
+    }
+
+    .subtitle {
+        font-size: 15px;
+
+        line-height: 1.6;
+
+        margin-bottom: 30px;
+    }
+
+    .download-buttons {
+        flex-direction: column;
+
+        width: 100%;
+
+        gap: 12px;
+    }
+
+    .download-button {
+        width: 100%;
+
+        min-width: 0;
+    }
+
+    section {
+        padding: 75px 18px;
+    }
+
+    .section-title h2 {
+        font-size: 30px;
+    }
+
+    .about-text {
+        font-size: 16px;
+    }
+
+    .download-final h2 {
+        font-size: 34px;
+    }
+
+    .footer-content {
+        flex-direction: column;
+
+        text-align: center;
+    }
+
+}
