@@ -4,7 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0c0fdf33-65dd-4d5b-b322-c58eef4f8e80" name="Changes" comment="нет анимации" />
+    <list default="true" id="0c0fdf33-65dd-4d5b-b322-c58eef4f8e80" name="Changes" comment="нет анимации">
+      <change afterPath="$PROJECT_DIR$/aaaaa_clicker(Seryozha's)/test_court.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_court.py" beforeDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -300,7 +304,15 @@
       <option name="project" value="LOCAL" />
       <updated>1787322415048</updated>
     </task>
-    <option name="localTasksCounter" value="27" />
+    <task id="LOCAL-00027" summary="нет анимации">
+      <option name="closed" value="true" />
+      <created>1787323249813</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1787323249813</updated>
+    </task>
+    <option name="localTasksCounter" value="28" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
