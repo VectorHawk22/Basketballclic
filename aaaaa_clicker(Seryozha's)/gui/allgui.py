@@ -40,6 +40,7 @@ class ClickerGUI:
         self.authors_manager = None
         self.settings_manager = None
         self.settings_frame = None
+        self.language_menu = None
 
         self.translations = {
             "Английский": {
