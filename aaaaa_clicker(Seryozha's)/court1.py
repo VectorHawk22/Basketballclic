@@ -8,9 +8,9 @@ class CourtSuccess:
         self.canvas = canvas
         self.base_dir = os.path.dirname(os.path.abspath(__file__))
 
-        # Масштабирование под canvas 420x240
-        self.scale_x = 420 / 800
-        self.scale_y = 240 / 500
+        # Масштабирование под canvas
+        self.scale_x = 1.0
+        self.scale_y = 1.0
 
         # Загрузка изображений из папки animation
         self.img_man = None
@@ -32,6 +32,7 @@ class CourtSuccess:
     def load_images(self):
         """Загрузка изображений из папки animation"""
         try:
+            # Путь к папке animation (где лежат картинки)
             anim_dir = os.path.join(self.base_dir, "animation")
 
             man_path = os.path.join(anim_dir, "man.png")
@@ -39,55 +40,59 @@ class CourtSuccess:
             ball_path = os.path.join(anim_dir, "ball3.png")
 
             if os.path.exists(man_path):
-                img_man = Image.open(man_path)
-                # ЕЩЁ БОЛЬШЕ УВЕЛИЧИВАЕМ человека
-                man_width = int(700 * self.scale_x)  # было 500
-                man_height = int(900 * self.scale_y)  # было 640
-                self.img_man = ImageTk.PhotoImage(img_man.resize((man_width, man_height), Image.Resampling.LANCZOS))
+                self.img_man = tk.PhotoImage(file=man_path)
             else:
                 print(f"⚠️ Файл не найден: {man_path}")
 
             if os.path.exists(basket_path):
-                img_basket = Image.open(basket_path)
-                # ЕЩЁ БОЛЬШЕ УВЕЛИЧИВАЕМ корзину
-                basket_width = int(650 * self.scale_x)  # было 450
-                basket_height = int(560 * self.scale_y)  # было 390
-                self.img_basket = ImageTk.PhotoImage(img_basket.resize((basket_width, basket_height), Image.Resampling.LANCZOS))
+                self.img_basket = tk.PhotoImage(file=basket_path)
             else:
                 print(f"⚠️ Файл не найден: {basket_path}")
 
             if os.path.exists(ball_path):
                 img_ball = Image.open(ball_path)
-                # НЕМНОГО УВЕЛИЧИВАЕМ мяч
-                ball_size = int(80 * self.scale_x)  # было 60
-                self.img_ball = ImageTk.PhotoImage(img_ball.resize((ball_size, ball_size), Image.Resampling.LANCZOS))
+                self.img_ball = ImageTk.PhotoImage(img_ball.resize((26, 19), Image.Resampling.LANCZOS))
             else:
                 print(f"⚠️ Файл не найден: {ball_path}")
 
         except Exception as e:
             print(f"Ошибка загрузки изображений: {e}")
 
+    def update_scale(self):
+        """Обновление масштаба на основе размера canvas"""
+        w = self.canvas.winfo_width()
+        h = self.canvas.winfo_height()
+        if w > 50 and h > 50:
+            self.scale_x = w / 800
+            self.scale_y = h / 500
+            return True
+        return False
+
     def draw_court(self):
         """Рисование поля с масштабированием"""
         self.canvas.delete("all")
 
+        if not self.update_scale():
+            return
+
+        w = self.canvas.winfo_width()
+        h = self.canvas.winfo_height()
+
         # Небо и земля
-        self.canvas.create_rectangle(0, 0, 420, 144, fill="#42AAFF")
-        self.canvas.create_rectangle(0, 144, 420, 240, fill="#D16A20")
+        self.canvas.create_rectangle(0, 0, w, h * 0.6, fill="#42AAFF")
+        self.canvas.create_rectangle(0, h * 0.6, w, h, fill="#D16A20")
 
-        # Корзина - размещаем в финальной точке полета мяча
+        # Корзина
         if self.img_basket:
-            # Корректируем позиционирование для увеличенной корзины
-            basket_x = int(710 * self.scale_x) - int(300 * self.scale_x)  # было 200
-            basket_y = int(170 * self.scale_y) - int(150 * self.scale_y)   # было 25
-            self.canvas.create_image(basket_x, basket_y, image=self.img_basket, anchor=tk.NW)
+            x = int(450 * self.scale_x)
+            y = int(75 * self.scale_y)
+            self.canvas.create_image(x, y, image=self.img_basket, anchor=tk.NW)
 
-        # Человек - размещаем ближе к мячу
+        # Человек
         if self.img_man:
-            # Корректируем позиционирование для увеличенного человека
-            man_x = int(500 * self.scale_x) - int(340 * self.scale_x)  # было 230
-            man_y = int(200 * self.scale_y) - int(300 * self.scale_y)  # было 200
-            self.canvas.create_image(man_x, man_y, image=self.img_man, anchor=tk.NW)
+            x = int(222 * self.scale_x)
+            y = int(85 * self.scale_y)
+            self.canvas.create_image(x, y, image=self.img_man, anchor=tk.NW)
 
         # Мяч
         if self.img_ball:
