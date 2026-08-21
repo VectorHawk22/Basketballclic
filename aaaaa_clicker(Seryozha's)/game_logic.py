@@ -1,22 +1,22 @@
 import json
 import os
 from datetime import datetime, timedelta
+import random
 
 class ClickerGame:
     def __init__(self):
         self.points = 0
         self.potion_active = False
-        self.potion_end_time = None  # timestamp в формате ISO
-        self.load_game()
+        self.potion_end_time = None
+        # Путь к сохранению в корне проекта
+        self.save_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), "save.json")
 
     def try_add_point(self, clicks):
         base_chance = 0.3
         luck_factor = min(clicks * 0.05, 0.7)
         total_chance = base_chance + luck_factor
-        import random
         success = random.random() < total_chance
         if success:
-            # Если зелье активно — +2 очка, иначе +1
             points_to_add = 2 if self.is_potion_active() else 1
             self.points += points_to_add
         return success, total_chance
@@ -55,13 +55,13 @@ class ClickerGame:
             "potion_active": self.potion_active,
             "potion_end_time": self.potion_end_time
         }
-        with open("save.json", "w", encoding="utf-8") as f:
-            json.dump(data, f)
+        with open(self.save_file, "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=4)
 
     def load_game(self):
-        if os.path.exists("save.json"):
+        if os.path.exists(self.save_file):
             try:
-                with open("save.json", "r", encoding="utf-8") as f:
+                with open(self.save_file, "r", encoding="utf-8") as f:
                     data = json.load(f)
                     self.points = data.get("points", 0)
                     self.potion_active = data.get("potion_active", False)
