@@ -8,30 +8,21 @@ class ShopManager:
         self.current_lang = current_lang
         self.tr = self.translations[self.current_lang]
 
-        # Фрейм магазина
         self.shop_frame = tk.Frame(parent.left_frame)
 
-        # Сохраняем состояние видимости кнопок
-        self.buttons_visible = True
-
     def open(self):
-        """Открывает магазин — скрывает ВСЕ кроме кнопки 'Назад'"""
+        """Открытие магазина"""
+        self.tr = self.translations[self.current_lang]
 
-
-        # 1. Скрываем основной игровой фрейм
+        # Скрываем всё
         self.parent.game_frame.pack_forget()
-
-        # 2. Скрываем ПРАВУЮ ПАНЕЛЬ полностью (вместе со всеми кнопками внутри)
         self.parent.right_frame.grid_remove()
 
-        # 3. Скрываем НИЖНЮЮ панель с кнопкой языка
-        self.parent.btn_language.pack_forget()
-
-        # 4. Очищаем магазин от предыдущего содержимого
+        # Очищаем фрейм
         for widget in self.shop_frame.winfo_children():
             widget.destroy()
 
-        # 5. Создаем интерфейс магазина
+        # Интерфейс магазина
         tk.Label(
             self.shop_frame,
             text=self.tr["btn_shop"],
@@ -41,37 +32,31 @@ class ShopManager:
         tk.Label(
             self.shop_frame,
             text="🏪 Магазин временно закрыт",
-            font=("Arial", 12),
+            font=("Arial", 14),
             fg="gray"
-        ).pack(pady=10)
+        ).pack(pady=20)
 
-        # 6. Показываем магазин
+        tk.Label(
+            self.shop_frame,
+            text="🚧 Ведутся технические работы\n\n"
+                 "Скоро здесь появятся новые товары!",
+            font=("Arial", 11),
+            fg="gray",
+            justify="center"
+        ).pack(pady=20)
+
         self.shop_frame.pack(fill=tk.BOTH, expand=True)
-
-        # 7. Показываем ТОЛЬКО кнопку "Назад"
-        self.parent.btn_back.pack(fill=tk.BOTH, expand=True)
-
-        # 8. Обновляем окно, чтобы изменения применились
-        self.parent.update_idletasks()
+        self.parent._show_back_button(self.close)
 
     def close(self):
-        """Закрывает магазин и возвращает всё обратно"""
-
-        # 1. Скрываем магазин
+        """Закрытие магазина"""
         self.shop_frame.pack_forget()
-
-        # 2. Скрываем кнопку "Назад"
-        self.parent.btn_back.pack_forget()
-
-        # 3. Возвращаем игровой фрейм
         self.parent.game_frame.pack(fill=tk.BOTH, expand=True)
-
-        # 4. Возвращаем правую панель с кнопками
         self.parent.right_frame.grid()
-
-        # 5. Возвращаем кнопку языка
-        self.parent.btn_language.pack(fill=tk.BOTH, expand=True)
-
-        # 6. Обновляем UI
+        self.parent._hide_back_button()
         self.parent.update_ui()
-        self.parent.update_idletasks()
+
+    def update_language(self, new_lang):
+        """Обновление языка"""
+        self.current_lang = new_lang
+        self.tr = self.translations[self.current_lang]
