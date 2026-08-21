@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="0c0fdf33-65dd-4d5b-b322-c58eef4f8e80" name="Changes" comment="нет анимации" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="main" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="UPDATE_TYPE" value="REBASE" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings">
+    <option name="selectedUrlAndAccountId">
+      <UrlAndAccount>
+        <option name="accountId" value="56a50d78-25d8-4fef-80dc-b300ac2ee1dc" />
+        <option name="url" value="https://github.com/VectorHawk22/Basketballclic.git" />
+      </UrlAndAccount>
+    </option>
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 7
+}</component>
+  <component name="ProjectId" id="3EBDM9t0DYsQOSv3M9wNkn4LIh1" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Python.OPENTHISFILE.executor": "Run",
+    "Python.allgui.executor": "Run",
+    "Python.court1 (1).executor": "Run",
+    "Python.court1.executor": "Run",
+    "Python.court2.executor": "Run",
+    "Python.game_logic.executor": "Run",
+    "Python.inventory.executor": "Run",
+    "Python.main.executor": "Debug",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "thekosmoss",
+    "last_opened_file_path": "C:/Users/home/PycharmProjects/Basketballclic/Geography/Seryozha's version1_0(without animation)/aaaaa_clicker"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\home\PycharmProjects\Basketballclic\Geography\Seryozha's version1_0(without animation)\aaaaa_clicker" />
+      <recent name="C:\Users\home\PycharmProjects\Basketballclic\Geography\Seryozha's version1_0(without animation)" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\home\PycharmProjects\Basketballclic" />
+    </key>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-python-sdk-c69650fc56ca-d3b881c8e49f-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-233.15619.17" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="0c0fdf33-65dd-4d5b-b322-c58eef4f8e80" name="Changes" comment="" />
+      <created>1779643018966</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1779643018966</updated>
+    </task>
+    <task id="LOCAL-00001" summary="тест">
+      <option name="closed" value="true" />
+      <created>1779643071605</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1779643071605</updated>
+    </task>
+    <task id="LOCAL-00002" summary="тест">
+      <option name="closed" value="true" />
+      <created>1779644470582</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1779644470582</updated>
+    </task>
+    <task id="LOCAL-00003" summary="тест">
+      <option name="closed" value="true" />
+      <created>1779645067718</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1779645067718</updated>
+    </task>
+    <task id="LOCAL-00004" summary="тест">
+      <option name="closed" value="true" />
+      <created>1779645126199</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1779645126199</updated>
+    </task>
+    <task id="LOCAL-00005" summary="тест">
+      <option name="closed" value="true" />
+      <created>1779645179429</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1779645179429</updated>
+    </task>
+    <task id="LOCAL-00006" summary="тест">
+      <option name="closed" value="true" />
+      <created>1779646791365</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1779646791365</updated>
+    </task>
+    <task id="LOCAL-00007" summary="тест">
+      <option name="closed" value="true" />
+      <created>1779709783512</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1779709783512</updated>
+    </task>
+    <task id="LOCAL-00008" summary="upd">
+      <option name="closed" value="true" />
+      <created>1779710488244</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1779710488244</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Если не будем делать магазин то там надпись тоже под другие языки надо будет переделать">
+      <option name="closed" value="true" />
+      <created>1779711875688</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1779711875688</updated>
+    </task>
+    <task id="LOCAL-00010" summary="upd, переделал все кнопки на разные места">
+      <option name="closed" value="true" />
+      <created>1779728127172</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1779728127172</updated>
+    </task>
+    <task id="LOCAL-00011" summary="upd, кнопка настроек (не полностью доделана)">
+      <option name="closed" value="true" />
+      <created>1779732707065</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1779732707065</updated>
+    </task>
+    <task id="LOCAL-00012" summary="upd, кнопка настроек (не полностью доделана)">
+      <option name="closed" value="true" />
+      <created>1779790165546</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1779790165546</updated>
+    </task>
+    <task id="LOCAL-00013" summary="upd">
+      <option name="closed" value="true" />
+      <created>1779790903049</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1779790903049</updated>
+    </task>
+    <task id="LOCAL-00014" summary="upd">
+      <option name="closed" value="true" />
+      <created>1779903797685</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1779903797685</updated>
+    </task>
+    <task id="LOCAL-00015" summary="upd">
+      <option name="closed" value="true" />
+      <created>1779913499787</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1779913499787</updated>
+    </task>
+    <task id="LOCAL-00016" summary="Потом сделаю">
+      <option name="closed" value="true" />
+      <created>1779956951436</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1779956951436</updated>
+    </task>
+    <task id="LOCAL-00017" summary="Потом сделаю">
+      <option name="closed" value="true" />
+      <created>1779958193168</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1779958193168</updated>
+    </task>
+    <task id="LOCAL-00018" summary="а">
+      <option name="closed" value="true" />
+      <created>1781547162035</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1781547162035</updated>
+    </task>
+    <task id="LOCAL-00019" summary="а">
+      <option name="closed" value="true" />
+      <created>1786986388232</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1786986388232</updated>
+    </task>
+    <task id="LOCAL-00020" summary="а">
+      <option name="closed" value="true" />
+      <created>1786986459920</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1786986459920</updated>
+    </task>
+    <task id="LOCAL-00021" summary="settings">
+      <option name="closed" value="true" />
+      <created>1786986490763</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1786986490763</updated>
+    </task>
+    <task id="LOCAL-00022" summary="settings">
+      <option name="closed" value="true" />
+      <created>1786986747677</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1786986747677</updated>
+    </task>
+    <task id="LOCAL-00023" summary="удалил лишние папки">
+      <option name="closed" value="true" />
+      <created>1787152881185</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1787152881185</updated>
+    </task>
+    <task id="LOCAL-00024" summary="удалил лишние папки">
+      <option name="closed" value="true" />
+      <created>1787317563038</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1787317563038</updated>
+    </task>
+    <task id="LOCAL-00025" summary="нет анимации">
+      <option name="closed" value="true" />
+      <created>1787319014968</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1787319014968</updated>
+    </task>
+    <task id="LOCAL-00026" summary="нет анимации">
+      <option name="closed" value="true" />
+      <created>1787322415048</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1787322415048</updated>
+    </task>
+    <option name="localTasksCounter" value="27" />
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="тест" />
+    <MESSAGE value="Если не будем делать магазин то там надпись тоже под другие языки надо будет переделать" />
+    <MESSAGE value="upd, переделал все кнопки на разные места" />
+    <MESSAGE value="upd, кнопка настроек (не полностью доделана)" />
+    <MESSAGE value="upd" />
+    <MESSAGE value="Потом сделаю" />
+    <MESSAGE value="а" />
+    <MESSAGE value="settings" />
+    <MESSAGE value="удалил лишние папки" />
+    <MESSAGE value="нет анимации" />
+    <option name="LAST_COMMIT_MESSAGE" value="нет анимации" />
+  </component>
+</project>
