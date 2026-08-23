@@ -1,167 +1,256 @@
-import os
+# main.py
 import pygame
+import os
+import sys
+
+# Инициализация Pygame
+pygame.init()
+
+# Константы для экрана
+SCREEN_WIDTH = 420
+SCREEN_HEIGHT = 240
+FPS = 20
+
+# Цвета
+SKY_COLOR = (66, 170, 255)
+GROUND_COLOR = (209, 106, 32)
 
 class CourtSuccess:
-    def __init__(self, screen):
-        self.screen = screen
-        self.is_running = False
-        self.score = 0
-        self.images = {}
-        self.use_images = False
+    def __init__(self):
+        # Настройка экрана
+        self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+        pygame.display.set_caption("Court Success")
+        self.clock = pygame.time.Clock()
         
-        # Параметры анимации
+        # Путь к папке с изображениями
+        self.base_dir = os.path.dirname(os.path.abspath(__file__))
+        
+        # Масштабирование под экран 420x240
+        self.scale_x = SCREEN_WIDTH / 800
+        self.scale_y = SCREEN_HEIGHT / 500
+        
+        # Загрузка изображений
+        self.img_man = None
+        self.img_basket = None
+        self.img_ball = None
+        self.load_images()
+        
+        # Координаты и состояние анимации
         self.ball_x = 0
         self.ball_y = 0
         self.target_x = 0
         self.target_y = 0
+        self.step = 3
         self.falling = False
-        self.fall_speed = 5
-        self.step = 5
-        self.ball_radius = 8
-        self.anim_timer = 0
-        self.frame_delay = 50
+        self.is_animating = False
+        self.ball_rect = None
         
-        # Позиции объектов
-        self.basket_x = 0
-        self.basket_y = 0
-        self.man_x = 0
-        self.man_y = 0
-        self.ball_start_x = 0
-        self.ball_start_y = 0
-        self.floor_y = 0
-        
-        self.load_images()
-
+        # Начальная отрисовка
+        self.draw_court()
+    
     def load_images(self):
-        """Загрузка изображений"""
+        """Загрузка изображений из папки animation"""
         try:
-            base_dir = os.path.dirname(os.path.abspath(__file__))
+            # Картинки в папке animation/
+            man_path = os.path.join(self.base_dir, "animation", "man.png")
+            basket_path = os.path.join(self.base_dir, "animation", "basket.png")
+            ball_path = os.path.join(self.base_dir, "animation", "ball3.png")
             
-            man_path = os.path.join(base_dir, "images", "man.png")
-            basket_path = os.path.join(base_dir, "images", "basket.png")
-            ball_path = os.path.join(base_dir, "images", "ball3.png")
+            # Альтернативный путь (если изображения в той же папке)
+            if not os.path.exists(man_path):
+                man_path = os.path.join(self.base_dir, "man.png")
+            if not os.path.exists(basket_path):
+                basket_path = os.path.join(self.base_dir, "basket.png")
+            if not os.path.exists(ball_path):
+                ball_path = os.path.join(self.base_dir, "ball3.png")
             
-            if os.path.exists(man_path) and os.path.exists(basket_path) and os.path.exists(ball_path):
-                self.images['man'] = pygame.image.load(man_path)
-                self.images['man'] = pygame.transform.scale(self.images['man'], (100, 140))
-                self.images['basket'] = pygame.image.load(basket_path)
-                self.images['basket'] = pygame.transform.scale(self.images['basket'], (80, 100))
-                self.images['ball'] = pygame.image.load(ball_path)
-                self.images['ball'] = pygame.transform.scale(self.images['ball'], (50, 40))
-                self.use_images = True
+            # Загрузка человека
+            if os.path.exists(man_path):
+                img_man = pygame.image.load(man_path).convert_alpha()
+                man_width = int(700 * self.scale_x)
+                man_height = int(900 * self.scale_y)
+                self.img_man = pygame.transform.scale(img_man, (man_width, man_height))
             else:
-                print("⚠️ CourtSuccess: Картинки не найдены")
+                print(f"⚠️ Файл не найден: {man_path}")
+                # Создаем заглушку
+                self.img_man = self._create_placeholder((50, 80), (255, 0, 0))
+            
+            # Загрузка корзины
+            if os.path.exists(basket_path):
+                img_basket = pygame.image.load(basket_path).convert_alpha()
+                basket_width = int(650 * self.scale_x)
+                basket_height = int(560 * self.scale_y)
+                self.img_basket = pygame.transform.scale(img_basket, (basket_width, basket_height))
+            else:
+                print(f"⚠️ Файл не найден: {basket_path}")
+                self.img_basket = self._create_placeholder((60, 50), (0, 255, 0))
+            
+            # Загрузка мяча
+            if os.path.exists(ball_path):
+                img_ball = pygame.image.load(ball_path).convert_alpha()
+                ball_size = int(80 * self.scale_x)
+                self.img_ball = pygame.transform.scale(img_ball, (ball_size, ball_size))
+            else:
+                print(f"⚠️ Файл не найден: {ball_path}")
+                self.img_ball = self._create_placeholder((30, 30), (255, 200, 0))
+                
         except Exception as e:
-            print(f"❌ CourtSuccess ошибка загрузки: {e}")
-
+            print(f"Ошибка загрузки изображений: {e}")
+            # Создаем заглушки
+            self.img_man = self._create_placeholder((50, 80), (255, 0, 0))
+            self.img_basket = self._create_placeholder((60, 50), (0, 255, 0))
+            self.img_ball = self._create_placeholder((30, 30), (255, 200, 0))
+    
+    def _create_placeholder(self, size, color):
+        """Создание заглушки для отсутствующих изображений"""
+        surf = pygame.Surface(size, pygame.SRCALPHA)
+        surf.fill(color)
+        return surf
+    
+    def draw_court(self):
+        """Рисование поля с масштабированием"""
+        # Небо и земля
+        self.screen.fill(SKY_COLOR)
+        pygame.draw.rect(self.screen, GROUND_COLOR, (0, 144, SCREEN_WIDTH, SCREEN_HEIGHT - 144))
+        
+        # Корзина
+        if self.img_basket:
+            basket_x = int(710 * self.scale_x) - int(300 * self.scale_x)
+            basket_y = int(170 * self.scale_y) - int(150 * self.scale_y)
+            self.screen.blit(self.img_basket, (basket_x, basket_y))
+        
+        # Человек
+        if self.img_man:
+            man_x = int(500 * self.scale_x) - int(340 * self.scale_x)
+            man_y = int(200 * self.scale_y) - int(300 * self.scale_y)
+            self.screen.blit(self.img_man, (man_x, man_y))
+        
+        # Мяч (начальная позиция)
+        if self.img_ball:
+            self.ball_x = int(550 * self.scale_x)
+            self.ball_y = int(285 * self.scale_y)
+            self.target_x = int(710 * self.scale_x)
+            self.target_y = int(170 * self.scale_y)
+            
+            # Сохраняем прямоугольник мяча для обновления
+            ball_rect = self.img_ball.get_rect()
+            ball_rect.center = (self.ball_x, self.ball_y)
+            self.ball_rect = ball_rect
+            
+            self.screen.blit(self.img_ball, ball_rect)
+    
     def start_animation(self):
-        if self.is_running:
-            return
-        self.is_running = True
-        self.ball_x = self.ball_start_x
-        self.ball_y = self.ball_start_y
+        """Запуск анимации"""
+        self.is_animating = True
         self.falling = False
-        self.anim_timer = 0
-
-    def update(self, dt):
-        """Обновление анимации"""
-        if not self.is_running:
+        self.draw_court()
+        # Обновляем позицию мяча в прямоугольнике
+        if self.ball_rect:
+            self.ball_rect.center = (self.ball_x, self.ball_y)
+    
+    def stop(self):
+        """Остановка анимации"""
+        self.is_animating = False
+    
+    def update(self):
+        """Обновление состояния анимации"""
+        if not self.is_animating or self.img_ball is None:
             return
-
-        self.anim_timer += dt * 1000
-        if self.anim_timer < self.frame_delay:
-            return
-        self.anim_timer = 0
-
+        
+        # Падение вниз после попадания
         if self.falling:
-            if self.ball_y < self.floor_y + 10:
-                self.ball_y += self.fall_speed
+            if self.ball_y < int(310 * self.scale_y):
+                self.ball_y += 3
+                if self.ball_rect:
+                    self.ball_rect.center = (self.ball_x, self.ball_y)
+                return
             else:
-                self.ball_x = self.ball_start_x
-                self.ball_y = self.ball_start_y
-                self.falling = False
-                self.is_running = False
-            return
-
-        if abs(self.ball_x - self.target_x) < 5 and abs(self.ball_y - self.target_y) < 5:
-            self.score += 1
+                self.stop()
+                return
+        
+        # Проверка достижения цели
+        dx = abs(self.ball_x - self.target_x)
+        dy = abs(self.ball_y - self.target_y)
+        
+        if dx < 5 and dy < 5:
             self.falling = True
             self.ball_x = self.target_x
+            self.ball_y = self.target_y
+            if self.ball_rect:
+                self.ball_rect.center = (self.ball_x, self.ball_y)
             return
-
+        
+        # Движение к цели
         if self.ball_x < self.target_x:
             self.ball_x += self.step
-        elif self.ball_x > self.target_x:
+        if self.ball_x > self.target_x:
             self.ball_x -= self.step
         if self.ball_y > self.target_y:
             self.ball_y -= self.step
-
-    def draw(self, offset_x=0, offset_y=0):
-        """Отрисовка анимации"""
-        width, height = self.screen.get_size()
         
-        # Фон
-        self.floor_y = height * 0.6
-        pygame.draw.rect(self.screen, (66, 170, 255), (0, 0, width, self.floor_y))
-        pygame.draw.rect(self.screen, (209, 106, 32), (0, self.floor_y, width, height - self.floor_y))
-        pygame.draw.line(self.screen, (139, 69, 19), (0, self.floor_y), (width, self.floor_y), 2)
-
-        # Счёт
-        font = pygame.font.Font(None, 36)
-        score_text = font.render(str(self.score), True, (255, 255, 255))
-        self.screen.blit(score_text, (50, 50))
-
+        # Обновляем позицию мяча
+        if self.ball_rect:
+            self.ball_rect.center = (self.ball_x, self.ball_y)
+    
+    def render(self):
+        """Отрисовка всех элементов"""
+        # Перерисовываем фон и статичные элементы
+        self.screen.fill(SKY_COLOR)
+        pygame.draw.rect(self.screen, GROUND_COLOR, (0, 144, SCREEN_WIDTH, SCREEN_HEIGHT - 144))
+        
         # Корзина
-        self.basket_x = width * 0.88
-        self.basket_y = height * 0.35
-        self.target_x = self.basket_x
-        self.target_y = self.basket_y
+        if self.img_basket:
+            basket_x = int(710 * self.scale_x) - int(300 * self.scale_x)
+            basket_y = int(170 * self.scale_y) - int(150 * self.scale_y)
+            self.screen.blit(self.img_basket, (basket_x, basket_y))
+        
+        # Человек
+        if self.img_man:
+            man_x = int(500 * self.scale_x) - int(340 * self.scale_x)
+            man_y = int(200 * self.scale_y) - int(300 * self.scale_y)
+            self.screen.blit(self.img_man, (man_x, man_y))
+        
+        # Мяч (обновленная позиция)
+        if self.img_ball and self.ball_rect:
+            self.screen.blit(self.img_ball, self.ball_rect)
+    
+    def run(self):
+        """Основной игровой цикл"""
+        running = True
+        animation_started = False
+        
+        while running:
+            # Обработка событий
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_SPACE and not animation_started:
+                        self.start_animation()
+                        animation_started = True
+                    elif event.key == pygame.K_r:
+                        # Сброс анимации
+                        animation_started = False
+                        self.stop()
+                        self.draw_court()
+            
+            # Обновление анимации
+            if self.is_animating:
+                self.update()
+                self.render()
+            else:
+                # Если анимация не активна, просто рисуем статичную сцену
+                if not animation_started:
+                    self.render()
+            
+            # Обновление экрана
+            pygame.display.flip()
+            self.clock.tick(FPS)
+        
+        pygame.quit()
+        sys.exit()
 
-        if self.use_images and 'basket' in self.images:
-            basket_rect = self.images['basket'].get_rect(center=(self.basket_x, self.basket_y))
-            self.screen.blit(self.images['basket'], basket_rect)
-        else:
-            # Fallback графика
-            pygame.draw.rect(self.screen, (255, 255, 255), (self.basket_x + 15, self.basket_y - 50, 10, 80))
-            pygame.draw.rect(self.screen, (128, 128, 128), (self.basket_x + 15, self.basket_y - 50, 10, 80), 3)
-            pygame.draw.ellipse(self.screen, (255, 165, 0), (self.basket_x - 35, self.basket_y - 15, 40, 30), 5)
-            for i in range(-30, 0, 10):
-                pygame.draw.line(self.screen, (255, 255, 255), 
-                               (self.basket_x + i, self.basket_y - 10),
-                               (self.basket_x + i + 5, self.basket_y + 30), 2)
 
-        # Игрок
-        self.man_x = width * 0.18
-        self.man_y = self.floor_y
-
-        if self.use_images and 'man' in self.images:
-            man_rect = self.images['man'].get_rect(center=(self.man_x, self.man_y - 50))
-            self.screen.blit(self.images['man'], man_rect)
-        else:
-            # Fallback графика
-            pygame.draw.rect(self.screen, (46, 92, 138), (self.man_x - 30, self.man_y - 120, 60, 80))
-            pygame.draw.rect(self.screen, (0, 0, 0), (self.man_x - 30, self.man_y - 120, 60, 80), 3)
-            pygame.draw.ellipse(self.screen, (255, 176, 160), (self.man_x - 25, self.man_y - 155, 50, 40))
-            pygame.draw.ellipse(self.screen, (0, 0, 0), (self.man_x - 25, self.man_y - 155, 50, 40), 3)
-            pygame.draw.line(self.screen, (51, 51, 51), (self.man_x - 20, self.man_y - 40), (self.man_x - 20, self.man_y), 8)
-            pygame.draw.line(self.screen, (51, 51, 51), (self.man_x + 20, self.man_y - 40), (self.man_x + 20, self.man_y), 8)
-            pygame.draw.line(self.screen, (255, 176, 160), (self.man_x - 30, self.man_y - 90), (self.man_x - 50, self.man_y - 70), 6)
-            pygame.draw.line(self.screen, (255, 176, 160), (self.man_x + 30, self.man_y - 90), (self.man_x + 50, self.man_y - 80), 6)
-
-        # Мяч
-        self.ball_start_x = width * 0.69
-        self.ball_start_y = height * 0.57
-        if not self.is_running and not self.falling:
-            self.ball_x = self.ball_start_x
-            self.ball_y = self.ball_start_y
-
-        if self.use_images and 'ball' in self.images:
-            ball_rect = self.images['ball'].get_rect(center=(self.ball_x, self.ball_y))
-            self.screen.blit(self.images['ball'], ball_rect)
-        else:
-            pygame.draw.circle(self.screen, (247, 127, 15), (int(self.ball_x), int(self.ball_y)), self.ball_radius)
-            pygame.draw.circle(self.screen, (0, 0, 0), (int(self.ball_x), int(self.ball_y)), self.ball_radius, 3)
-
-    def stop(self):
-        self.is_running = False
-        self.score = 0
+if __name__ == "__main__":
+    game = CourtSuccess()
+    game.run()

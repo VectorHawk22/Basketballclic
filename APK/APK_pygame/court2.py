@@ -1,175 +1,196 @@
+# court2_pygame.py
 import os
 import pygame
+import math
 
 class CourtFail:
     def __init__(self, screen):
         self.screen = screen
-        self.is_running = False
-        self.score = 0
-        self.images = {}
-        self.use_images = False
+        self.base_dir = os.path.dirname(os.path.abspath(__file__))
+        
+        # Размеры экрана
+        self.screen_width = 420
+        self.screen_height = 240
+        
+        # Масштабирование
+        self.scale_x = self.screen_width / 800
+        self.scale_y = self.screen_height / 500
+        
+        # Загрузка изображений
+        self.img_man = None
+        self.img_basket = None
+        self.img_ball = None
+        self.load_images()
         
         # Параметры анимации
         self.ball_x = 0
         self.ball_y = 0
         self.target_x = 0
         self.target_y = 0
+        self.step = 3
         self.falling = False
         self.bouncing = False
         self.fall_speed = 5
         self.gravity = 0.5
-        self.step = 5
         self.bounce_height = 0
-        self.ball_radius = 8
-        self.anim_timer = 0
-        self.frame_delay = 50
+        self.is_animating = False
+        self.animation_complete = False
         
-        # Позиции объектов
-        self.basket_x = 0
-        self.basket_y = 0
-        self.man_x = 0
-        self.man_y = 0
-        self.ball_start_x = 0
-        self.ball_start_y = 0
-        self.floor_y = 0
-        
-        self.load_images()
+        # Цвета
+        self.sky_color = (66, 170, 255)
+        self.ground_color = (209, 106, 32)
 
     def load_images(self):
-        """Загрузка изображений"""
+        """Загрузка изображений из папки animation"""
         try:
-            base_dir = os.path.dirname(os.path.abspath(__file__))
+            man_path = os.path.join(self.base_dir, "man.png")
+            basket_path = os.path.join(self.base_dir, "basket.png")
+            ball_path = os.path.join(self.base_dir, "ball3.png")
             
-            man_path = os.path.join(base_dir, "images", "man.png")
-            basket_path = os.path.join(base_dir, "images", "basket.png")
-            ball_path = os.path.join(base_dir, "images", "ball3.png")
-            
-            if os.path.exists(man_path) and os.path.exists(basket_path) and os.path.exists(ball_path):
-                self.images['man'] = pygame.image.load(man_path)
-                self.images['man'] = pygame.transform.scale(self.images['man'], (100, 140))
-                self.images['basket'] = pygame.image.load(basket_path)
-                self.images['basket'] = pygame.transform.scale(self.images['basket'], (80, 100))
-                self.images['ball'] = pygame.image.load(ball_path)
-                self.images['ball'] = pygame.transform.scale(self.images['ball'], (50, 40))
-                self.use_images = True
+            if os.path.exists(man_path):
+                img_man = pygame.image.load(man_path)
+                man_width = int(700 * self.scale_x)
+                man_height = int(900 * self.scale_y)
+                self.img_man = pygame.transform.scale(img_man, (man_width, man_height))
             else:
-                print("⚠️ CourtFail: Картинки не найдены")
+                print(f"⚠️ Файл не найден: {man_path}")
+                
+            if os.path.exists(basket_path):
+                img_basket = pygame.image.load(basket_path)
+                basket_width = int(650 * self.scale_x)
+                basket_height = int(560 * self.scale_y)
+                self.img_basket = pygame.transform.scale(img_basket, (basket_width, basket_height))
+            else:
+                print(f"⚠️ Файл не найден: {basket_path}")
+                
+            if os.path.exists(ball_path):
+                img_ball = pygame.image.load(ball_path)
+                ball_size = int(80 * self.scale_x)
+                self.img_ball = pygame.transform.scale(img_ball, (ball_size, ball_size))
+            else:
+                print(f"⚠️ Файл не найден: {ball_path}")
+                
         except Exception as e:
-            print(f"❌ CourtFail ошибка загрузки: {e}")
+            print(f"Ошибка загрузки изображений промаха: {e}")
+
+    def draw_court(self):
+        """Рисование поля с масштабированием"""
+        # Небо и земля
+        self.screen.fill(self.sky_color)
+        pygame.draw.rect(self.screen, self.ground_color, (0, 144, self.screen_width, self.screen_height - 144))
+        
+        # Корзина
+        if self.img_basket:
+            basket_x = int(710 * self.scale_x) - int(300 * self.scale_x)
+            basket_y = int(170 * self.scale_y) - int(150 * self.scale_y)
+            self.screen.blit(self.img_basket, (basket_x, basket_y))
+        
+        # Человек
+        if self.img_man:
+            man_x = int(500 * self.scale_x) - int(340 * self.scale_x)
+            man_y = int(200 * self.scale_y) - int(300 * self.scale_y)
+            self.screen.blit(self.img_man, (man_x, man_y))
+        
+        # Мяч
+        if self.img_ball:
+            self.ball_x = int(550 * self.scale_x)
+            self.ball_y = int(285 * self.scale_y)
+            self.target_x = int(710 * self.scale_x)
+            self.target_y = int(170 * self.scale_y)
+            self.bounce_height = int(290 * self.scale_y)
 
     def start_animation(self):
-        if self.is_running:
-            return
-        self.is_running = True
-        self.ball_x = self.ball_start_x
-        self.ball_y = self.ball_start_y
-        self.bouncing = False
+        """Запуск анимации промаха"""
+        self.is_animating = True
+        self.animation_complete = False
         self.falling = False
+        self.bouncing = False
         self.fall_speed = 5
-        self.anim_timer = 0
+        self.draw_court()
+        # Начальная позиция мяча
+        self.ball_x = int(550 * self.scale_x)
+        self.ball_y = int(285 * self.scale_y)
 
-    def update(self, dt):
-        """Обновление анимации"""
-        if not self.is_running:
+    def stop(self):
+        """Остановка анимации"""
+        self.is_animating = False
+
+    def update(self):
+        """Обновление состояния анимации"""
+        if not self.is_animating or not self.img_ball:
             return
-
-        self.anim_timer += dt * 1000
-        if self.anim_timer < self.frame_delay:
-            return
-        self.anim_timer = 0
-
-        width, height = self.screen.get_size()
-        self.bounce_height = height * 0.58
-
+        
+        # Отскок после удара о кольцо
         if self.bouncing:
             if self.ball_y < self.bounce_height:
                 self.ball_y += self.fall_speed
                 self.fall_speed += self.gravity
+                return
             else:
-                self.ball_x = self.ball_start_x
-                self.ball_y = self.ball_start_y
-                self.bouncing = False
-                self.falling = False
-                self.fall_speed = 5
-                self.is_running = False
-            return
-
-        self.target_x = width * 0.95
-        self.target_y = height * 0.38
-
-        if abs(self.ball_x - self.target_x) < 5 and self.ball_y < self.target_y + 10:
+                self.stop()
+                self.animation_complete = True
+                return
+        
+        # Проверка попадания в кольцо (промах)
+        dx = abs(self.ball_x - self.target_x)
+        dy = abs(self.ball_y - self.target_y)
+        
+        if dx < 10 and dy < 20:
             self.bouncing = True
             self.fall_speed = -10
             self.ball_y = self.target_y - 10
             return
-
+        
+        # Движение к цели
         if self.ball_x < self.target_x:
             self.ball_x += self.step
-        elif self.ball_x > self.target_x:
+        if self.ball_x > self.target_x:
             self.ball_x -= self.step
         if self.ball_y > self.target_y:
             self.ball_y -= self.step
 
-    def draw(self, offset_x=0, offset_y=0):
-        """Отрисовка анимации"""
-        width, height = self.screen.get_size()
+    def draw(self):
+        """Отрисовка мяча на экране"""
+        if self.img_ball and self.is_animating:
+            self.screen.blit(self.img_ball, (self.ball_x, self.ball_y))
+
+    def is_finished(self):
+        """Проверка завершения анимации"""
+        return self.animation_complete
+
+
+# Пример использования
+def main():
+    pygame.init()
+    screen = pygame.display.set_mode((420, 240))
+    pygame.display.set_caption("Court Fail Animation")
+    clock = pygame.time.Clock()
+    
+    court_fail = CourtFail(screen)
+    court_fail.start_animation()
+    
+    running = True
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    court_fail.start_animation()
+                elif event.key == pygame.K_ESCAPE:
+                    running = False
         
-        # Фон
-        self.floor_y = height * 0.6
-        pygame.draw.rect(self.screen, (66, 170, 255), (0, 0, width, self.floor_y))
-        pygame.draw.rect(self.screen, (209, 106, 32), (0, self.floor_y, width, height - self.floor_y))
-        pygame.draw.line(self.screen, (139, 69, 19), (0, self.floor_y), (width, self.floor_y), 2)
+        court_fail.update()
+        court_fail.draw()
+        pygame.display.flip()
+        clock.tick(60)  # 60 FPS
+        
+        if court_fail.is_finished():
+            # Анимация завершена, можно выйти или перезапустить
+            pass
+    
+    pygame.quit()
 
-        # Счёт
-        font = pygame.font.Font(None, 36)
-        score_text = font.render(str(self.score), True, (255, 255, 255))
-        self.screen.blit(score_text, (50, 50))
 
-        # Корзина
-        self.basket_x = width * 0.88
-        self.basket_y = height * 0.35
-
-        if self.use_images and 'basket' in self.images:
-            basket_rect = self.images['basket'].get_rect(center=(self.basket_x, self.basket_y))
-            self.screen.blit(self.images['basket'], basket_rect)
-        else:
-            pygame.draw.rect(self.screen, (255, 255, 255), (self.basket_x + 15, self.basket_y - 50, 10, 80))
-            pygame.draw.rect(self.screen, (128, 128, 128), (self.basket_x + 15, self.basket_y - 50, 10, 80), 3)
-            pygame.draw.ellipse(self.screen, (255, 165, 0), (self.basket_x - 35, self.basket_y - 15, 40, 30), 5)
-            for i in range(-30, 0, 10):
-                pygame.draw.line(self.screen, (255, 255, 255), 
-                               (self.basket_x + i, self.basket_y - 10),
-                               (self.basket_x + i + 5, self.basket_y + 30), 2)
-
-        # Игрок
-        self.man_x = width * 0.18
-        self.man_y = self.floor_y
-
-        if self.use_images and 'man' in self.images:
-            man_rect = self.images['man'].get_rect(center=(self.man_x, self.man_y))
-            self.screen.blit(self.images['man'], man_rect)
-        else:
-            pygame.draw.rect(self.screen, (46, 92, 138), (self.man_x - 30, self.man_y - 120, 60, 80))
-            pygame.draw.rect(self.screen, (0, 0, 0), (self.man_x - 30, self.man_y - 120, 60, 80), 3)
-            pygame.draw.ellipse(self.screen, (255, 176, 160), (self.man_x - 25, self.man_y - 155, 50, 40))
-            pygame.draw.ellipse(self.screen, (0, 0, 0), (self.man_x - 25, self.man_y - 155, 50, 40), 3)
-            pygame.draw.line(self.screen, (51, 51, 51), (self.man_x - 20, self.man_y - 40), (self.man_x - 20, self.man_y), 8)
-            pygame.draw.line(self.screen, (51, 51, 51), (self.man_x + 20, self.man_y - 40), (self.man_x + 20, self.man_y), 8)
-
-        # Мяч
-        self.ball_start_x = width * 0.69
-        self.ball_start_y = height * 0.57
-        if not self.is_running and not self.bouncing:
-            self.ball_x = self.ball_start_x
-            self.ball_y = self.ball_start_y
-
-        if self.use_images and 'ball' in self.images:
-            ball_rect = self.images['ball'].get_rect(center=(self.ball_x, self.ball_y))
-            self.screen.blit(self.images['ball'], ball_rect)
-        else:
-            pygame.draw.circle(self.screen, (247, 127, 15), (int(self.ball_x), int(self.ball_y)), self.ball_radius)
-            pygame.draw.circle(self.screen, (0, 0, 0), (int(self.ball_x), int(self.ball_y)), self.ball_radius, 3)
-
-    def stop(self):
-        self.is_running = False
-        self.score = 0
+if __name__ == "__main__":
+    main()
