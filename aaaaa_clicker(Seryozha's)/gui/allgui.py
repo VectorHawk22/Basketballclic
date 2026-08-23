@@ -6,8 +6,8 @@ from PIL import Image, ImageTk
 # Добавляем корень проекта в пути импорта
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from game_logic import ClickerGame
-from gui.settings import Settings      # ← gui. потому что settings.py в той же папке gui/
+from game_logic import ClickerGame  # ← ЭТО БЫЛО ПРОПУЩЕНО!
+from gui.settings import Settings
 from gui.inventory import InventoryManager
 from gui.shop import ShopManager
 from gui.authors import AuthorsManager

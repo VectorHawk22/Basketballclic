@@ -36,11 +36,10 @@ class CourtFail:
     def load_images(self):
         """Загрузка изображений из папки animation"""
         try:
-            anim_dir = os.path.join(self.base_dir, "animation")
-
-            man_path = os.path.join(anim_dir, "man.png")
-            basket_path = os.path.join(anim_dir, "basket.png")
-            ball_path = os.path.join(anim_dir, "ball3.png")
+            # Картинки в той же папке (animation/)
+            man_path = os.path.join(self.base_dir, "man.png")
+            basket_path = os.path.join(self.base_dir, "basket.png")
+            ball_path = os.path.join(self.base_dir, "ball3.png")
 
             if os.path.exists(man_path):
                 img_man = Image.open(man_path)
@@ -56,7 +55,8 @@ class CourtFail:
                 # ЕЩЁ БОЛЬШЕ УВЕЛИЧИВАЕМ корзину
                 basket_width = int(650 * self.scale_x)  # было 450
                 basket_height = int(560 * self.scale_y)  # было 390
-                self.img_basket = ImageTk.PhotoImage(img_basket.resize((basket_width, basket_height), Image.Resampling.LANCZOS))
+                self.img_basket = ImageTk.PhotoImage(
+                    img_basket.resize((basket_width, basket_height), Image.Resampling.LANCZOS))
             else:
                 print(f"⚠️ Файл не найден: {basket_path}")
 
@@ -83,17 +83,16 @@ class CourtFail:
         if self.img_basket:
             # Корректируем позиционирование для увеличенной корзины
             basket_x = int(710 * self.scale_x) - int(300 * self.scale_x)  # было 200
-            basket_y = int(170 * self.scale_y) - int(150 * self.scale_y)   # было 25
+            basket_y = int(170 * self.scale_y) - int(150 * self.scale_y)  # было 25
             self.canvas.create_image(basket_x, basket_y, image=self.img_basket, anchor=tk.NW)
-        
-            # Человек - размещаем ближе к мячу
+
+        # Человек - размещаем ближе к мячу
         if self.img_man:
             # Корректируем позиционирование для увеличенного человека
             man_x = int(500 * self.scale_x) - int(340 * self.scale_x)  # было 230
             man_y = int(200 * self.scale_y) - int(300 * self.scale_y)  # было 200
             self.canvas.create_image(man_x, man_y, image=self.img_man, anchor=tk.NW)
-        
-            
+
         # Мяч
         if self.img_ball:
             self.ball_x = int(550 * self.scale_x)

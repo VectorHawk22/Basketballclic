@@ -32,11 +32,10 @@ class CourtSuccess:
     def load_images(self):
         """Загрузка изображений из папки animation"""
         try:
-            anim_dir = os.path.join(self.base_dir, "animation")
-
-            man_path = os.path.join(anim_dir, "man.png")
-            basket_path = os.path.join(anim_dir, "basket.png")
-            ball_path = os.path.join(anim_dir, "ball3.png")
+            # Картинки в той же папке (animation/)
+            man_path = os.path.join(self.base_dir, "man.png")
+            basket_path = os.path.join(self.base_dir, "basket.png")
+            ball_path = os.path.join(self.base_dir, "ball3.png")
 
             if os.path.exists(man_path):
                 img_man = Image.open(man_path)
