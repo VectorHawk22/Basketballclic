@@ -6,7 +6,7 @@ from PIL import Image, ImageTk
 # Добавляем корень проекта в пути импорта
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from game_logic import ClickerGame  # ← ЭТО БЫЛО ПРОПУЩЕНО!
+from game_logic import ClickerGame
 from gui.settings import Settings
 from gui.inventory import InventoryManager
 from gui.shop import ShopManager
@@ -66,7 +66,7 @@ class ClickerGUI:
                 "title": "Cliqueur", "result": "Résultat : -", "hit": "🎯 Touché ! +1 point !", "miss": "❌ Raté :(",
                 "points": "Points : {}", "button_click": "Cliquez !", "menu_lang": "Choisir la langue",
                 "btn_inventory": "Inventaire", "btn_shop": "Magasin", "btn_authors": "Auteurs",
-                                "start_challenge": "Cliquez pour commencer !", "click_now": "CLIQUEZ MAINTENANT !",
+                "start_challenge": "Cliquez pour commencer !", "click_now": "CLIQUEZ MAINTENANT !",
                 "score_message": "{} clics en 1 seconde !", "inventory": "Inventaire",
                 "potion": "🧪 Double points (10 min)", "potion_active": "Actif ! Temps restant : {} sec",
                 "potion_inactive": "Utiliser : 10 min x2", "use": "Utiliser", "back": "Retour",
@@ -99,19 +99,26 @@ class ClickerGUI:
         self.main_frame = tk.Frame(root)
         self.main_frame.pack(fill=tk.BOTH, expand=True)
 
-        self.left_frame = tk.Frame(self.main_frame, width=440, height=430)
+        self.left_frame = tk.Frame(self.main_frame, width=440)
         self.left_frame.grid(row=0, column=0, sticky="nsew", padx=20, pady=20)
         self.left_frame.grid_propagate(False)
         self.main_frame.columnconfigure(0, weight=1)
         self.main_frame.columnconfigure(1, weight=0)
 
         # === АНИМАЦИЯ ===
-        self.anim_container = tk.Frame(self.left_frame, height=280, bg="#f0f0f0")
-        self.anim_container.pack(fill=tk.X, side=tk.TOP, pady=(0, 5))
+        self.anim_container = tk.Frame(self.left_frame, height=240, bg="#f0f0f0")
+        self.anim_container.pack(fill=tk.X, side=tk.TOP, pady=(0, 2))
         self.anim_container.pack_propagate(False)
 
-        self.animation_canvas = tk.Canvas(self.anim_container, width=420, height=240, bg="#f0f0f0",
-                                          highlightthickness=1, highlightbackground="gray")
+        # Убираем чёрную рамку вокруг Canvas
+        self.animation_canvas = tk.Canvas(
+            self.anim_container,
+            width=420,
+            height=200,
+            bg="#f0f0f0",
+            highlightthickness=0,
+            bd=0
+        )
         self.animation_canvas.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)
 
         # Инициализация классов анимации
@@ -121,25 +128,39 @@ class ClickerGUI:
 
         # === ИГРОВОЙ ЭКРАН ===
         self.game_frame = tk.Frame(self.left_frame)
-        tk.Label(self.game_frame, text="").pack(pady=(20, 0))
-        self.label_result = tk.Label(self.game_frame, text="", font=("Arial", 12))
-        self.label_result.pack(pady=20)
 
-        bottom_row = tk.Frame(self.game_frame)
-        bottom_row.pack(side=tk.BOTTOM, anchor="s", pady=(0, 5))
+        # Уменьшаем отступ сверху
+        tk.Label(self.game_frame, text="").pack(pady=(2, 0))
 
-        self.button_click = tk.Button(bottom_row, text=tr["start_challenge"], font=("Arial", 14), width=18, height=2,
-                                      bg="lightblue", command=self.start_challenge)
-        self.button_click.pack(side=tk.LEFT, padx=20)
+        self.label_result = tk.Label(self.game_frame, text="", font=("Arial", 11))
+        self.label_result.pack(pady=5)
 
-        self.label_points = tk.Label(bottom_row, text=tr["points"].format(self.game.get_points()),
-                                     font=("Arial", 16, "bold"))
-        self.label_points.pack(side=tk.LEFT, padx=20)
+        # Нижняя строка с кнопкой и очками
+        self.bottom_row = tk.Frame(self.game_frame)
+        self.bottom_row.pack(side=tk.BOTTOM, anchor="s", pady=(0, 2), fill=tk.X)
+
+        self.button_click = tk.Button(
+            self.bottom_row,
+            text=tr["start_challenge"],
+            font=("Arial", 12),
+            width=16,
+            height=1,
+            bg="lightblue",
+            command=self.start_challenge
+        )
+        self.button_click.pack(side=tk.LEFT, padx=10)
+
+        self.label_points = tk.Label(
+            self.bottom_row,
+            text=tr["points"].format(self.game.get_points()),
+            font=("Arial", 14, "bold")
+        )
+        self.label_points.pack(side=tk.LEFT, padx=10)
 
         # === ПРАВАЯ ПАНЕЛЬ ===
         self.right_frame = tk.Frame(self.main_frame, width=140)
         self.right_frame.grid(row=0, column=1, sticky="ns")
-        self.right_frame.pack_propagate(False)
+        self.right_frame.grid_propagate(False)
 
         self.btn1 = tk.Button(self.right_frame, text=tr["btn_inventory"], bg="lightcoral", font=("Arial", 10, "bold"),
                               command=self.open_inventory)
@@ -167,8 +188,8 @@ class ClickerGUI:
         self.btn_back.pack_forget()
 
         # === НИЖНИЙ ТЕКСТ ===
-        self.glitch_label = tk.Label(root, text="GlitchHunters", font=("Georgia", 10), fg="blue")
-        self.glitch_label.place(x=10, rely=1.0, y=-10, anchor="sw")
+        self.glitch_label = tk.Label(root, text="GlitchHunters", font=("Georgia", 9), fg="blue")
+        self.glitch_label.place(x=10, rely=1.0, y=-30, anchor="sw")
 
         # === ПЕРЕМЕННЫЕ ДЛЯ ИГРЫ ===
         self.click_count = 0
@@ -184,7 +205,6 @@ class ClickerGUI:
         default_settings = {"sound": True, "language": "Русский"}
 
         if not os.path.exists(settings_file):
-            # Создаём файл с настройками по умолчанию
             try:
                 import json
                 with open(settings_file, "w", encoding="utf-8") as f:
@@ -225,7 +245,7 @@ class ClickerGUI:
     def _hide_back_button(self):
         if self.btn_back.winfo_ismapped():
             self.btn_back.pack_forget()
-        self.glitch_label.place_configure(y=-10)
+        self.glitch_label.place_configure(y=-30)
 
     def hide_all_screens(self):
         self.game_frame.pack_forget()
@@ -261,7 +281,7 @@ class ClickerGUI:
             self.settings_frame = tk.Frame(self.left_frame)
             self.settings_manager = Settings(self.settings_frame, self)
 
-        # Скрываем игровой экран
+        # Скрываем игровой экран и анимацию
         self.game_frame.pack_forget()
         self.anim_container.pack_forget()
 
@@ -273,13 +293,29 @@ class ClickerGUI:
         self._show_back_button(self.close_settings)
 
     def close_settings(self):
+        # Убираем настройки
         if self.settings_frame:
             self.settings_frame.pack_forget()
-        self.show_game()
-        self.anim_container.pack(fill=tk.X, side=tk.TOP, pady=(0, 5))
+
+        # Показываем анимацию и игру
+        self.anim_container.pack(fill=tk.X, side=tk.TOP, pady=(0, 2))
+        self.game_frame.pack(fill=tk.BOTH, expand=True)
+
+        # Показываем правую панель
         for btn in [self.btn1, self.btn2, self.btn3, self.btn_language, self.btn_settings]:
             btn.grid()
+
+        # Скрываем кнопку назад
         self._hide_back_button()
+
+        # Обновляем UI
+        self.update_ui()
+
+        # Принудительно обновляем layout
+        self.root.update_idletasks()
+
+        # Перерисовываем анимацию
+        self.redraw_animation()
 
     # ================= GAME LOGIC =================
     def start_challenge(self):
@@ -374,7 +410,11 @@ class ClickerGUI:
 
     # ================= LIFECYCLE =================
     def show_game(self):
+        # Показываем анимацию и игру
+        self.anim_container.pack(fill=tk.X, side=tk.TOP, pady=(0, 2))
         self.game_frame.pack(fill=tk.BOTH, expand=True)
+
+        # Скрываем другие экраны
         if self.inventory_manager:
             self.inventory_manager.inventory_frame.pack_forget()
         if self.shop_manager:
@@ -383,7 +423,12 @@ class ClickerGUI:
             self.authors_manager.authors_frame.pack_forget()
         if self.settings_frame:
             self.settings_frame.pack_forget()
+
+        # Обновляем очки
         self.update_ui()
+
+        # Перерисовываем анимацию
+        self.redraw_animation()
 
     def on_closing(self):
         self.game.save_game()
