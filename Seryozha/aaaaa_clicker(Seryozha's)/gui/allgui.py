@@ -50,7 +50,19 @@ class ClickerGUI:
                 "start_challenge": "Click to start!", "click_now": "CLICK NOW!",
                 "score_message": "{} clicks in 1 second!", "inventory": "Inventory",
                 "potion": "🧪 Double Points (10 min)", "potion_active": "Active! Time left: {} sec",
-                "potion_inactive": "Use: 10 min x2", "use": "Use", "back": "Back", "btn_settings": "Settings"
+                "potion_inactive": "Use: 10 min x2", "use": "Use", "back": "Back", "btn_settings": "Settings",
+                "settings_title": "⚙️ Settings",
+                "language_label": "🌐 Language:",
+                "sound_label": "🔊 Sound:",
+                "sound_on": "On",
+                "sound_off": "Off",
+                "save_button": "💾 Save Settings",
+                "reset_button": "🗑️ Reset Progress",
+                "reset_confirm": "Are you sure you want to delete all progress?\n\nThis action cannot be undone!",
+                "reset_done": "Progress successfully reset!",
+                "reset_error": "Failed to reset progress",
+                "save_success": "Settings saved!",
+                "save_error": "Failed to save settings!"
             },
             "Русский": {
                 "title": "Кликер", "result": "Результат: -", "hit": "🎯 Попал! +1 очко!", "miss": "❌ Промах :(",
@@ -60,7 +72,19 @@ class ClickerGUI:
                 "score_message": "{} кликов за 1 секунду!", "inventory": "Инвентарь",
                 "potion": "🧪 2x очки (10 мин)", "potion_active": "Активно! Осталось: {} сек",
                 "potion_inactive": "Использовать: 10 мин", "use": "Использовать", "back": "Назад",
-                "btn_settings": "Настройки"
+                "btn_settings": "Настройки",
+                "settings_title": "⚙️ Настройки",
+                "language_label": "🌐 Язык:",
+                "sound_label": "🔊 Звук:",
+                "sound_on": "Включён",
+                "sound_off": "Выключен",
+                "save_button": "💾 Сохранить настройки",
+                "reset_button": "🗑️ Сбросить прогресс",
+                "reset_confirm": "Вы уверены, что хотите удалить весь прогресс?\n\nЭто действие нельзя отменить!",
+                "reset_done": "Прогресс успешно сброшен!",
+                "reset_error": "Не удалось сбросить прогресс",
+                "save_success": "Настройки сохранены!",
+                "save_error": "Не удалось сохранить настройки!"
             },
             "Французский": {
                 "title": "Cliqueur", "result": "Résultat : -", "hit": "🎯 Touché ! +1 point !", "miss": "❌ Raté :(",
@@ -70,7 +94,19 @@ class ClickerGUI:
                 "score_message": "{} clics en 1 seconde !", "inventory": "Inventaire",
                 "potion": "🧪 Double points (10 min)", "potion_active": "Actif ! Temps restant : {} sec",
                 "potion_inactive": "Utiliser : 10 min x2", "use": "Utiliser", "back": "Retour",
-                "btn_settings": "Paramètres"
+                "btn_settings": "Paramètres",
+                "settings_title": "⚙️ Paramètres",
+                "language_label": "🌐 Langue :",
+                "sound_label": "🔊 Son :",
+                "sound_on": "Activé",
+                "sound_off": "Désactivé",
+                "save_button": "💾 Enregistrer les paramètres",
+                "reset_button": "🗑️ Réinitialiser la progression",
+                "reset_confirm": "Êtes-vous sûr de vouloir supprimer toute la progression ?\n\nCette action est irréversible !",
+                "reset_done": "Progression réinitialisée avec succès !",
+                "reset_error": "Échec de la réinitialisation de la progression",
+                "save_success": "Paramètres enregistrés !",
+                "save_error": "Échec de l'enregistrement des paramètres !"
             },
             "Немецкий": {
                 "title": "Klicker", "result": "Ergebnis: -", "hit": "🎯 Treffer! +1 Punkt!", "miss": "❌ Daneben :(",
@@ -80,7 +116,19 @@ class ClickerGUI:
                 "score_message": "{} Klicks in 1 Sekunde!", "inventory": "Inventar",
                 "potion": "🧪 Doppelte Punkte (10 Min)", "potion_active": "Aktiv! Verbleibend: {} Sek",
                 "potion_inactive": "Benutzen: 10 Min x2", "use": "Benutzen", "back": "Zurück",
-                "btn_settings": "Einstellungen"
+                "btn_settings": "Einstellungen",
+                "settings_title": "⚙️ Einstellungen",
+                "language_label": "🌐 Sprache:",
+                "sound_label": "🔊 Sound:",
+                "sound_on": "Ein",
+                "sound_off": "Aus",
+                "save_button": "💾 Einstellungen speichern",
+                "reset_button": "🗑️ Fortschritt zurücksetzen",
+                "reset_confirm": "Sind Sie sicher, dass Sie den gesamten Fortschritt löschen möchten?\n\nDiese Aktion kann nicht rückgängig gemacht werden!",
+                "reset_done": "Fortschritt erfolgreich zurückgesetzt!",
+                "reset_error": "Fehler beim Zurücksetzen des Fortschritts",
+                "save_success": "Einstellungen gespeichert!",
+                "save_error": "Fehler beim Speichern der Einstellungen!"
             },
             "Китайский": {
                 "title": "点击器", "result": "结果: -", "hit": "🎯 击中！+1 分！", "miss": "❌ 未命中 :(",
@@ -89,7 +137,20 @@ class ClickerGUI:
                 "start_challenge": "点击开始！", "click_now": "立即点击！",
                 "score_message": "1秒内点击 {} 次！", "inventory": "背包",
                 "potion": "🧪 双倍积分 (10分钟)", "potion_active": "生效中！剩余时间：{} 秒",
-                "potion_inactive": "使用：10分钟双倍", "use": "使用", "back": "返回", "btn_settings": "设置"
+                "potion_inactive": "使用：10分钟双倍", "use": "使用", "back": "返回",
+                "btn_settings": "设置",
+                "settings_title": "⚙️ 设置",
+                "language_label": "🌐 语言:",
+                "sound_label": "🔊 声音:",
+                "sound_on": "开启",
+                "sound_off": "关闭",
+                "save_button": "💾 保存设置",
+                "reset_button": "🗑️ 重置进度",
+                "reset_confirm": "您确定要删除所有进度吗？\n\n此操作无法撤销！",
+                "reset_done": "进度已成功重置！",
+                "reset_error": "重置进度失败",
+                "save_success": "设置已保存！",
+                "save_error": "保存设置失败！"
             }
         }
 
@@ -158,13 +219,12 @@ class ClickerGUI:
         self.label_points.pack(side=tk.LEFT, padx=10)
 
         # === ПРАВАЯ ПАНЕЛЬ ===
-        # Делаем правую панель шире для фиксированных кнопок
         self.right_frame = tk.Frame(self.main_frame, width=150)
         self.right_frame.grid(row=0, column=1, sticky="ns")
         self.right_frame.grid_propagate(False)
 
         # Конфигурация для всех кнопок справа - фиксированная ширина
-        BUTTON_WIDTH = 18  # Фиксированная ширина в символах
+        BUTTON_WIDTH = 18
         BUTTON_FONT = ("Arial", 9, "bold")
         BUTTON_PADX = (0, 5)
         BUTTON_PADY = 4
@@ -199,16 +259,6 @@ class ClickerGUI:
         )
         self.btn3.grid(row=2, column=0, sticky="nsew", padx=BUTTON_PADX, pady=BUTTON_PADY)
 
-        self.btn_language = tk.Button(
-            self.right_frame,
-            text=tr["menu_lang"],
-            bg="lightblue",
-            font=BUTTON_FONT,
-            width=BUTTON_WIDTH,
-            command=self.show_language_menu
-        )
-        self.btn_language.grid(row=3, column=0, sticky="nsew", padx=BUTTON_PADX, pady=BUTTON_PADY)
-
         self.btn_settings = tk.Button(
             self.right_frame,
             text=tr["btn_settings"],
@@ -217,10 +267,10 @@ class ClickerGUI:
             width=BUTTON_WIDTH,
             command=self.open_settings
         )
-        self.btn_settings.grid(row=4, column=0, sticky="nsew", padx=BUTTON_PADX, pady=BUTTON_PADY)
+        self.btn_settings.grid(row=3, column=0, sticky="nsew", padx=BUTTON_PADX, pady=BUTTON_PADY)
 
         # Настройка растягивания строк в правой панели
-        for i in range(5):
+        for i in range(4):
             self.right_frame.grid_rowconfigure(i, weight=1)
 
         # === КНОПКА НАЗАД ===
@@ -288,20 +338,8 @@ class ClickerGUI:
             self.btn_back.pack_forget()
         self.glitch_label.place_configure(y=-30)
 
-    def hide_all_screens(self):
-        self.game_frame.pack_forget()
-        if self.inventory_manager:
-            self.inventory_manager.inventory_frame.pack_forget()
-        if self.shop_manager:
-            self.shop_manager.shop_frame.pack_forget()
-        if self.authors_manager:
-            self.authors_manager.authors_frame.pack_forget()
-        if self.settings_frame:
-            self.settings_frame.pack_forget()
-
     # ================= NAVIGATION =================
     def open_inventory(self):
-        # Скрываем анимацию
         self.anim_container.pack_forget()
         self.game_frame.pack_forget()
         self.right_frame.grid_remove()
@@ -313,7 +351,6 @@ class ClickerGUI:
         self.inventory_manager.open()
 
     def open_shop(self):
-        # Скрываем анимацию и игру
         self.anim_container.pack_forget()
         self.game_frame.pack_forget()
         self.right_frame.grid_remove()
@@ -323,7 +360,6 @@ class ClickerGUI:
         self.shop_manager.open()
 
     def open_authors(self):
-        # Скрываем анимацию и игру
         self.anim_container.pack_forget()
         self.game_frame.pack_forget()
         self.right_frame.grid_remove()
@@ -333,7 +369,6 @@ class ClickerGUI:
         self.authors_manager.open()
 
     def open_settings(self):
-        # Скрываем анимацию и игру
         self.anim_container.pack_forget()
         self.game_frame.pack_forget()
         self.right_frame.grid_remove()
@@ -346,28 +381,10 @@ class ClickerGUI:
         self._show_back_button(self.close_settings)
 
     def close_settings(self):
-        # Убираем настройки
         if self.settings_frame:
             self.settings_frame.pack_forget()
-
-        # Показываем анимацию и игру
-        self.anim_container.pack(fill=tk.X, side=tk.TOP, pady=(0, 2))
-        self.game_frame.pack(fill=tk.BOTH, expand=True)
-
-        # Показываем правую панель
-        self.right_frame.grid()
-
-        # Скрываем кнопку назад
+        self.show_game()
         self._hide_back_button()
-
-        # Обновляем UI
-        self.update_ui()
-
-        # Принудительно обновляем layout
-        self.root.update_idletasks()
-
-        # Перерисовываем анимацию
-        self.redraw_animation()
 
     # ================= GAME LOGIC =================
     def start_challenge(self):
@@ -406,20 +423,6 @@ class ClickerGUI:
         self.button_click.config(text=tr["start_challenge"], command=self.start_challenge)
 
     # ================= UI & LANGUAGE =================
-    def show_language_menu(self):
-        if hasattr(self, 'language_menu') and self.language_menu:
-            self.language_menu.destroy()
-        self.language_menu = tk.Menu(self.root, tearoff=0)
-        for lang in self.translations.keys():
-            self.language_menu.add_command(
-                label=lang,
-                command=lambda l=lang: self.set_language(l)
-            )
-        self.language_menu.post(
-            self.btn_language.winfo_rootx(),
-            self.btn_language.winfo_rooty() + self.btn_language.winfo_height()
-        )
-
     def set_language(self, lang):
         self.current_lang = lang
         self.settings["language"] = lang
@@ -427,7 +430,6 @@ class ClickerGUI:
 
         tr = self.translations[lang]
         self.root.title(tr["title"])
-        self.btn_language.config(text=tr["menu_lang"])
         self.btn_back.config(text=tr["back"])
 
         current = self.button_click.cget("text")
@@ -440,7 +442,6 @@ class ClickerGUI:
 
         self.label_points.config(text=tr["points"].format(self.game.get_points()))
 
-        # Обновляем текст кнопок справа (ширина остаётся фиксированной)
         self.btn1.config(text=tr["btn_inventory"])
         self.btn2.config(text=tr["btn_shop"])
         self.btn3.config(text=tr["btn_authors"])
@@ -453,6 +454,8 @@ class ClickerGUI:
             self.shop_manager.update_language(lang)
         if self.authors_manager:
             self.authors_manager.update_language(lang)
+        if self.settings_manager:
+            self.settings_manager.update_language(lang)
 
     def update_ui(self, result=None):
         tr = self.translations[self.current_lang]
@@ -464,30 +467,26 @@ class ClickerGUI:
 
     # ================= LIFECYCLE =================
     def show_game(self):
-        # Показываем анимацию и игру
-        self.anim_container.pack(fill=tk.X, side=tk.TOP, pady=(0, 2))
-        self.game_frame.pack(fill=tk.BOTH, expand=True)
-
-        # Показываем правую панель
-        self.right_frame.grid()
-
-        # Скрываем другие экраны
-        if self.inventory_manager:
+        if self.inventory_manager and self.inventory_manager.inventory_frame:
             self.inventory_manager.inventory_frame.pack_forget()
-        if self.shop_manager:
+        if self.shop_manager and self.shop_manager.shop_frame:
             self.shop_manager.shop_frame.pack_forget()
-        if self.authors_manager:
+        if self.authors_manager and self.authors_manager.authors_frame:
             self.authors_manager.authors_frame.pack_forget()
         if self.settings_frame:
             self.settings_frame.pack_forget()
 
-        # Обновляем очки
-        self.update_ui()
+        self.anim_container.pack(fill=tk.X, side=tk.TOP, pady=(0, 2))
+        self.anim_container.lift()
+        self.game_frame.pack(fill=tk.BOTH, expand=True)
+        self.right_frame.grid()
 
-        # Перерисовываем анимацию
-        self.redraw_animation()
+        self.update_ui()
+        self.root.after(50, self.redraw_animation)
 
     def on_closing(self):
+        self.court_success.stop()
+        self.court_fail.stop()
         self.game.save_game()
         self.save_settings()
         self.root.destroy()
