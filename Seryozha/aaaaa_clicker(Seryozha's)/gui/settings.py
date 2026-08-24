@@ -61,6 +61,48 @@ class Settings:
         self.settings["language"] = new_lang
         self.build_ui()
 
+    def get_language_names(self):
+        """Возвращает словарь с названиями языков на текущем языке"""
+        # Словарь перевода названий языков
+        language_names = {
+            "Английский": {
+                "Английский": "English",
+                "Русский": "Russian",
+                "Французский": "French",
+                "Немецкий": "German",
+                "Китайский": "Chinese"
+            },
+            "Русский": {
+                "Английский": "Английский",
+                "Русский": "Русский",
+                "Французский": "Французский",
+                "Немецкий": "Немецкий",
+                "Китайский": "Китайский"
+            },
+            "Французский": {
+                "Английский": "Anglais",
+                "Русский": "Russe",
+                "Французский": "Français",
+                "Немецкий": "Allemand",
+                "Китайский": "Chinois"
+            },
+            "Немецкий": {
+                "Английский": "Englisch",
+                "Русский": "Russisch",
+                "Французский": "Französisch",
+                "Немецкий": "Deutsch",
+                "Китайский": "Chinesisch"
+            },
+            "Китайский": {
+                "Английский": "英语",
+                "Русский": "俄语",
+                "Французский": "法语",
+                "Немецкий": "德语",
+                "Китайский": "中文"
+            }
+        }
+        return language_names.get(self.app.current_lang, language_names["Русский"])
+
     def build_ui(self):
         """Построение интерфейса настроек"""
         # Очищаем parent
@@ -90,16 +132,30 @@ class Settings:
 
         self.language_var = tk.StringVar(value=self.settings.get("language", "Русский"))
 
+        # Получаем названия языков на текущем языке
+        lang_names = self.get_language_names()
         available_langs = list(self.app.translations.keys())
 
+        # Создаём список для отображения в меню
+        display_langs = [lang_names.get(lang, lang) for lang in available_langs]
+
+        # Создаём словарь для обратного преобразования
+        self.lang_display_to_key = {lang_names.get(lang, lang): lang for lang in available_langs}
+
+        # Создаём меню с переведёнными названиями
         self.language_menu = tk.OptionMenu(
             language_frame,
             self.language_var,
-            *available_langs,
+            *display_langs,
             command=self.on_language_change
         )
         self.language_menu.config(width=15, font=("Arial", 10))
         self.language_menu.pack(side=tk.RIGHT)
+
+        # Устанавливаем текущее значение (отображаемое)
+        current_display = lang_names.get(self.settings.get("language", "Русский"),
+                                         self.settings.get("language", "Русский"))
+        self.language_var.set(current_display)
 
         # Звук
         sound_frame = tk.Frame(self.parent)
@@ -143,10 +199,13 @@ class Settings:
         )
         reset_button.pack(fill=tk.X, padx=40, pady=8)
 
-    def on_language_change(self, language):
+    def on_language_change(self, display_lang):
         """Обработка смены языка"""
-        self.settings["language"] = language
-        self.app.set_language(language)
+        # Преобразуем отображаемое название в ключ
+        lang_key = self.lang_display_to_key.get(display_lang, display_lang)
+
+        self.settings["language"] = lang_key
+        self.app.set_language(lang_key)
         self.save_settings()
         # Перестраиваем UI для обновления текста
         self.build_ui()
@@ -162,8 +221,12 @@ class Settings:
 
     def save_and_close(self):
         """Сохранение и закрытие настроек"""
+        # Получаем реальный ключ языка из отображаемого названия
+        display_lang = self.language_var.get()
+        lang_key = self.lang_display_to_key.get(display_lang, display_lang)
+
         self.settings["sound"] = self.sound_var.get()
-        self.settings["language"] = self.language_var.get()
+        self.settings["language"] = lang_key
 
         tr = self.app.translations[self.app.current_lang]
 
