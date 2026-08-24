@@ -158,29 +158,70 @@ class ClickerGUI:
         self.label_points.pack(side=tk.LEFT, padx=10)
 
         # === ПРАВАЯ ПАНЕЛЬ ===
-        self.right_frame = tk.Frame(self.main_frame, width=140)
+        # Делаем правую панель шире для фиксированных кнопок
+        self.right_frame = tk.Frame(self.main_frame, width=150)
         self.right_frame.grid(row=0, column=1, sticky="ns")
         self.right_frame.grid_propagate(False)
 
-        self.btn1 = tk.Button(self.right_frame, text=tr["btn_inventory"], bg="lightcoral", font=("Arial", 10, "bold"),
-                              command=self.open_inventory)
-        self.btn1.grid(row=0, column=0, sticky="nsew", padx=(0, 5), pady=5)
+        # Конфигурация для всех кнопок справа - фиксированная ширина
+        BUTTON_WIDTH = 18  # Фиксированная ширина в символах
+        BUTTON_FONT = ("Arial", 9, "bold")
+        BUTTON_PADX = (0, 5)
+        BUTTON_PADY = 4
 
-        self.btn2 = tk.Button(self.right_frame, text=tr["btn_shop"], bg="lightgreen", font=("Arial", 10, "bold"),
-                              command=self.open_shop)
-        self.btn2.grid(row=1, column=0, sticky="nsew", padx=(0, 5), pady=5)
+        self.btn1 = tk.Button(
+            self.right_frame,
+            text=tr["btn_inventory"],
+            bg="lightcoral",
+            font=BUTTON_FONT,
+            width=BUTTON_WIDTH,
+            command=self.open_inventory
+        )
+        self.btn1.grid(row=0, column=0, sticky="nsew", padx=BUTTON_PADX, pady=BUTTON_PADY)
 
-        self.btn3 = tk.Button(self.right_frame, text=tr["btn_authors"], bg="lightyellow", font=("Arial", 10, "bold"),
-                              command=self.open_authors)
-        self.btn3.grid(row=2, column=0, sticky="nsew", padx=(0, 5), pady=5)
+        self.btn2 = tk.Button(
+            self.right_frame,
+            text=tr["btn_shop"],
+            bg="lightgreen",
+            font=BUTTON_FONT,
+            width=BUTTON_WIDTH,
+            command=self.open_shop
+        )
+        self.btn2.grid(row=1, column=0, sticky="nsew", padx=BUTTON_PADX, pady=BUTTON_PADY)
 
-        self.btn_language = tk.Button(self.right_frame, text=tr["menu_lang"], bg="lightblue",
-                                      font=("Arial", 10, "bold"), command=self.show_language_menu)
-        self.btn_language.grid(row=3, column=0, sticky="nsew", padx=(0, 5), pady=5)
+        self.btn3 = tk.Button(
+            self.right_frame,
+            text=tr["btn_authors"],
+            bg="lightyellow",
+            font=BUTTON_FONT,
+            width=BUTTON_WIDTH,
+            command=self.open_authors
+        )
+        self.btn3.grid(row=2, column=0, sticky="nsew", padx=BUTTON_PADX, pady=BUTTON_PADY)
 
-        self.btn_settings = tk.Button(self.right_frame, text=tr["btn_settings"], font=("Arial", 10, "bold"),
-                                      bg="lightgray", command=self.open_settings)
-        self.btn_settings.grid(row=4, column=0, sticky="nsew", padx=(0, 5), pady=5)
+        self.btn_language = tk.Button(
+            self.right_frame,
+            text=tr["menu_lang"],
+            bg="lightblue",
+            font=BUTTON_FONT,
+            width=BUTTON_WIDTH,
+            command=self.show_language_menu
+        )
+        self.btn_language.grid(row=3, column=0, sticky="nsew", padx=BUTTON_PADX, pady=BUTTON_PADY)
+
+        self.btn_settings = tk.Button(
+            self.right_frame,
+            text=tr["btn_settings"],
+            font=BUTTON_FONT,
+            bg="lightgray",
+            width=BUTTON_WIDTH,
+            command=self.open_settings
+        )
+        self.btn_settings.grid(row=4, column=0, sticky="nsew", padx=BUTTON_PADX, pady=BUTTON_PADY)
+
+        # Настройка растягивания строк в правой панели
+        for i in range(5):
+            self.right_frame.grid_rowconfigure(i, weight=1)
 
         # === КНОПКА НАЗАД ===
         self.btn_back = tk.Button(self.root, text=tr["back"], font=("Arial", 12, "bold"), bg="lightblue", height=2,
@@ -260,6 +301,11 @@ class ClickerGUI:
 
     # ================= NAVIGATION =================
     def open_inventory(self):
+        # Скрываем анимацию
+        self.anim_container.pack_forget()
+        self.game_frame.pack_forget()
+        self.right_frame.grid_remove()
+
         if self.inventory_manager is None:
             self.inventory_manager = InventoryManager(
                 self, self.game, self.translations, self.current_lang
@@ -267,27 +313,34 @@ class ClickerGUI:
         self.inventory_manager.open()
 
     def open_shop(self):
+        # Скрываем анимацию и игру
+        self.anim_container.pack_forget()
+        self.game_frame.pack_forget()
+        self.right_frame.grid_remove()
+
         if self.shop_manager is None:
             self.shop_manager = ShopManager(self, self.translations, self.current_lang)
         self.shop_manager.open()
 
     def open_authors(self):
+        # Скрываем анимацию и игру
+        self.anim_container.pack_forget()
+        self.game_frame.pack_forget()
+        self.right_frame.grid_remove()
+
         if self.authors_manager is None:
             self.authors_manager = AuthorsManager(self, self.translations, self.current_lang)
         self.authors_manager.open()
 
     def open_settings(self):
+        # Скрываем анимацию и игру
+        self.anim_container.pack_forget()
+        self.game_frame.pack_forget()
+        self.right_frame.grid_remove()
+
         if self.settings_frame is None:
             self.settings_frame = tk.Frame(self.left_frame)
             self.settings_manager = Settings(self.settings_frame, self)
-
-        # Скрываем игровой экран и анимацию
-        self.game_frame.pack_forget()
-        self.anim_container.pack_forget()
-
-        # Скрываем правую панель
-        for btn in [self.btn1, self.btn2, self.btn3, self.btn_language, self.btn_settings]:
-            btn.grid_remove()
 
         self.settings_frame.pack(fill=tk.BOTH, expand=True)
         self._show_back_button(self.close_settings)
@@ -302,8 +355,7 @@ class ClickerGUI:
         self.game_frame.pack(fill=tk.BOTH, expand=True)
 
         # Показываем правую панель
-        for btn in [self.btn1, self.btn2, self.btn3, self.btn_language, self.btn_settings]:
-            btn.grid()
+        self.right_frame.grid()
 
         # Скрываем кнопку назад
         self._hide_back_button()
@@ -387,6 +439,8 @@ class ClickerGUI:
             self.button_click.config(text=tr["button_click"])
 
         self.label_points.config(text=tr["points"].format(self.game.get_points()))
+
+        # Обновляем текст кнопок справа (ширина остаётся фиксированной)
         self.btn1.config(text=tr["btn_inventory"])
         self.btn2.config(text=tr["btn_shop"])
         self.btn3.config(text=tr["btn_authors"])
@@ -413,6 +467,9 @@ class ClickerGUI:
         # Показываем анимацию и игру
         self.anim_container.pack(fill=tk.X, side=tk.TOP, pady=(0, 2))
         self.game_frame.pack(fill=tk.BOTH, expand=True)
+
+        # Показываем правую панель
+        self.right_frame.grid()
 
         # Скрываем другие экраны
         if self.inventory_manager:

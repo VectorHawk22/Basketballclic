@@ -14,10 +14,6 @@ class ShopManager:
         """Открытие магазина"""
         self.tr = self.translations[self.current_lang]
 
-        # Скрываем всё
-        self.parent.game_frame.pack_forget()
-        self.parent.right_frame.grid_remove()
-
         # Очищаем фрейм
         for widget in self.shop_frame.winfo_children():
             widget.destroy()
@@ -51,8 +47,8 @@ class ShopManager:
     def close(self):
         """Закрытие магазина"""
         self.shop_frame.pack_forget()
-        self.parent.game_frame.pack(fill=tk.BOTH, expand=True)
-        self.parent.right_frame.grid()
+        # Возвращаемся к игре с анимацией
+        self.parent.show_game()
         self.parent._hide_back_button()
         self.parent.update_ui()
 

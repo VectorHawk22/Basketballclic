@@ -14,10 +14,6 @@ class AuthorsManager:
         """Открытие экрана авторов"""
         self.tr = self.translations[self.current_lang]
 
-        # Скрываем всё
-        self.parent.game_frame.pack_forget()
-        self.parent.right_frame.grid_remove()
-
         # Очищаем фрейм
         for widget in self.authors_frame.winfo_children():
             widget.destroy()
@@ -54,8 +50,8 @@ class AuthorsManager:
     def close(self):
         """Закрытие экрана авторов"""
         self.authors_frame.pack_forget()
-        self.parent.game_frame.pack(fill=tk.BOTH, expand=True)
-        self.parent.right_frame.grid()
+        # Возвращаемся к игре с анимацией
+        self.parent.show_game()
         self.parent._hide_back_button()
         self.parent.update_ui()
 
