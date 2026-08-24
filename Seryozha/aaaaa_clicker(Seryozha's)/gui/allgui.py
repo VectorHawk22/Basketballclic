@@ -19,7 +19,7 @@ class ClickerGUI:
     def __init__(self, root):
         self.root = root
         self.root.title("Кликер")
-        self.root.geometry("600x450")
+        self.root.geometry("600x490")
         self.root.resizable(False, False)
 
         # Определяем корневую папку проекта
@@ -167,7 +167,7 @@ class ClickerGUI:
         self.main_frame.columnconfigure(1, weight=0)
 
         # === АНИМАЦИЯ ===
-        self.anim_container = tk.Frame(self.left_frame, height=240, bg="#f0f0f0")
+        self.anim_container = tk.Frame(self.left_frame, height=280, bg="#f0f0f0")
         self.anim_container.pack(fill=tk.X, side=tk.TOP, pady=(0, 2))
         self.anim_container.pack_propagate(False)
 
