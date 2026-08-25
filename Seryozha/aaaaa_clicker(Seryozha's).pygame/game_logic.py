@@ -1,7 +1,10 @@
 import json
 import os
+import hashlib
 from datetime import datetime, timedelta
 import random
+
+_SECRET = "bK7x2mP9qL4wR8jN"
 
 
 class ClickerGame:
@@ -11,6 +14,7 @@ class ClickerGame:
         self.potion_end_time = None
         self.base_dir = os.path.dirname(os.path.abspath(__file__))
         self.save_file = os.path.join(self.base_dir, "save.json")
+        self.hash_file = os.path.join(self.base_dir, "save1.json")
         self.load_game()
 
     def try_add_point(self, clicks):
@@ -67,6 +71,10 @@ class ClickerGame:
         except (ValueError, TypeError):
             return 0
 
+    def _compute_hash(self, data):
+        raw = json.dumps(data, sort_keys=True, ensure_ascii=False)
+        return hashlib.sha256((_SECRET + raw).encode("utf-8")).hexdigest()
+
     def save_game(self):
         try:
             data = {
@@ -76,17 +84,38 @@ class ClickerGame:
             }
             with open(self.save_file, "w", encoding="utf-8") as f:
                 json.dump(data, f, indent=4, ensure_ascii=False)
+            h = self._compute_hash(data)
+            with open(self.hash_file, "w", encoding="utf-8") as f:
+                json.dump({"hash": h}, f, indent=4, ensure_ascii=False)
         except Exception as e:
             print(f"Ошибка сохранения: {e}")
+
+    def _verify_hash(self, data):
+        if not os.path.exists(self.hash_file):
+            return False
+        try:
+            with open(self.hash_file, "r", encoding="utf-8") as f:
+                stored = json.load(f)
+            expected = self._compute_hash(data)
+            return stored.get("hash") == expected
+        except Exception:
+            return False
 
     def load_game(self):
         if os.path.exists(self.save_file):
             try:
                 with open(self.save_file, "r", encoding="utf-8") as f:
                     data = json.load(f)
+                if self._verify_hash(data):
                     self.points = data.get("points", 0)
                     self.potion_active = data.get("potion_active", False)
                     self.potion_end_time = data.get("potion_end_time", None)
+                else:
+                    print("Обнаружена модификация save.json! Прогресс сброшен.")
+                    self.points = 0
+                    self.potion_active = False
+                    self.potion_end_time = None
+                    self.save_game()
             except Exception as e:
                 print(f"Ошибка загрузки: {e}")
                 self.points = 0
@@ -94,6 +123,7 @@ class ClickerGame:
                 self.potion_end_time = None
         else:
             print("Новый прогресс (файл сохранения не найден)")
+            self.save_game()
 
     def reset_progress(self):
         """Сброс прогресса"""
