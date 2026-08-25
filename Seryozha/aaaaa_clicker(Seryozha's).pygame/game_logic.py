@@ -1,10 +1,11 @@
 import json
 import os
+import hmac
 import hashlib
 from datetime import datetime, timedelta
 import random
 
-_SECRET = "bK7x2mP9qL4wR8jN"
+_SECRET = b"bK7x2mP9qL4wR8jN\x03\x7f"
 
 
 class ClickerGame:
@@ -14,11 +15,10 @@ class ClickerGame:
         self.potion_end_time = None
         self.base_dir = os.path.dirname(os.path.abspath(__file__))
         self.save_file = os.path.join(self.base_dir, "save.json")
-        self.hash_file = os.path.join(self.base_dir, "save1.json")
+        self.settings_file = os.path.join(self.base_dir, "settings.json")
         self.load_game()
 
     def try_add_point(self, clicks):
-        """Попытка добавить очко на основе количества кликов"""
         if clicks == 0:
             return False, 0.0
 
@@ -71,47 +71,80 @@ class ClickerGame:
         except (ValueError, TypeError):
             return 0
 
-    def _compute_hash(self, data):
-        raw = json.dumps(data, sort_keys=True, ensure_ascii=False)
-        return hashlib.sha256((_SECRET + raw).encode("utf-8")).hexdigest()
+    def _get_save_data(self):
+        return {
+            "points": self.points,
+            "potion_active": self.potion_active,
+            "potion_end_time": self.potion_end_time
+        }
+
+    def _get_settings_context(self):
+        try:
+            with open(self.settings_file, "r", encoding="utf-8") as f:
+                s = json.load(f)
+        except Exception:
+            s = {}
+        return {
+            "language": s.get("language", ""),
+            "skin_ball": s.get("skin_ball", ""),
+            "skin_basket": s.get("skin_basket", ""),
+            "inv_balls": sorted(s.get("inventory_balls", [])),
+            "inv_baskets": sorted(s.get("inventory_baskets", [])),
+        }
+
+    def _compute_mac(self, save_data, context):
+        blob = json.dumps(save_data, sort_keys=True, ensure_ascii=False)
+        ctx = json.dumps(context, sort_keys=True, ensure_ascii=False)
+        msg = blob.encode("utf-8") + b"\x00" + ctx.encode("utf-8")
+        return hmac.new(_SECRET, msg, hashlib.sha256).hexdigest()
+
+    def _read_settings(self):
+        try:
+            with open(self.settings_file, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except Exception:
+            return {}
+
+    def _write_settings(self, settings):
+        try:
+            with open(self.settings_file, "w", encoding="utf-8") as f:
+                json.dump(settings, f, ensure_ascii=False, indent=4)
+        except Exception:
+            pass
 
     def save_game(self):
         try:
-            data = {
-                "points": self.points,
-                "potion_active": self.potion_active,
-                "potion_end_time": self.potion_end_time
-            }
+            data = self._get_save_data()
             with open(self.save_file, "w", encoding="utf-8") as f:
                 json.dump(data, f, indent=4, ensure_ascii=False)
-            h = self._compute_hash(data)
-            with open(self.hash_file, "w", encoding="utf-8") as f:
-                json.dump({"hash": h}, f, indent=4, ensure_ascii=False)
+            ctx = self._get_settings_context()
+            mac = self._compute_mac(data, ctx)
+            settings = self._read_settings()
+            settings["_v"] = mac
+            self._write_settings(settings)
         except Exception as e:
             print(f"Ошибка сохранения: {e}")
-
-    def _verify_hash(self, data):
-        if not os.path.exists(self.hash_file):
-            return False
-        try:
-            with open(self.hash_file, "r", encoding="utf-8") as f:
-                stored = json.load(f)
-            expected = self._compute_hash(data)
-            return stored.get("hash") == expected
-        except Exception:
-            return False
 
     def load_game(self):
         if os.path.exists(self.save_file):
             try:
                 with open(self.save_file, "r", encoding="utf-8") as f:
                     data = json.load(f)
-                if self._verify_hash(data):
+                ctx = self._get_settings_context()
+                expected = self._compute_mac(data, ctx)
+                settings = self._read_settings()
+                stored_mac = settings.get("_v", "")
+                if stored_mac == "":
+                    self.points = data.get("points", 0)
+                    self.potion_active = data.get("potion_active", False)
+                    self.potion_end_time = data.get("potion_end_time", None)
+                    self.save_game()
+                elif hmac.compare_digest(stored_mac, expected):
                     self.points = data.get("points", 0)
                     self.potion_active = data.get("potion_active", False)
                     self.potion_end_time = data.get("potion_end_time", None)
                 else:
-                    print("Обнаружена модификация save.json! Прогресс сброшен.")
+                    print("Обнаружена модификация! Прогресс сброшен.")
                     self.points = 0
                     self.potion_active = False
                     self.potion_end_time = None
@@ -122,11 +155,12 @@ class ClickerGame:
                 self.potion_active = False
                 self.potion_end_time = None
         else:
-            print("Новый прогресс (файл сохранения не найден)")
+            self.points = 0
+            self.potion_active = False
+            self.potion_end_time = None
             self.save_game()
 
     def reset_progress(self):
-        """Сброс прогресса"""
         self.points = 0
         self.potion_active = False
         self.potion_end_time = None
