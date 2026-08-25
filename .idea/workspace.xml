@@ -4,9 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0c0fdf33-65dd-4d5b-b322-c58eef4f8e80" name="Changes" comment="начал делать pygame">
-      <change beforePath="$PROJECT_DIR$/Seryozha/aaaaa_clicker(Seryozha's).pygame/game_logic.py" beforeDir="false" afterPath="$PROJECT_DIR$/Seryozha/aaaaa_clicker(Seryozha's).pygame/game_logic.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Seryozha/aaaaa_clicker(Seryozha's).pygame/save1.json" beforeDir="false" />
+    <list default="true" id="0c0fdf33-65dd-4d5b-b322-c58eef4f8e80" name="Changes" comment="очень хорошая защита">
+      <change beforePath="$PROJECT_DIR$/Seryozha/aaaaa_clicker(Seryozha's).pygame/animation/court_fail.py" beforeDir="false" afterPath="$PROJECT_DIR$/Seryozha/aaaaa_clicker(Seryozha's).pygame/animation/court_fail.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Seryozha/aaaaa_clicker(Seryozha's).pygame/animation/court_success.py" beforeDir="false" afterPath="$PROJECT_DIR$/Seryozha/aaaaa_clicker(Seryozha's).pygame/animation/court_success.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Seryozha/aaaaa_clicker(Seryozha's).pygame/gui/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/Seryozha/aaaaa_clicker(Seryozha's).pygame/gui/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Seryozha/aaaaa_clicker(Seryozha's).pygame/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/Seryozha/aaaaa_clicker(Seryozha's).pygame/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -435,7 +437,15 @@
       <option name="project" value="LOCAL" />
       <updated>1787674077557</updated>
     </task>
-    <option name="localTasksCounter" value="43" />
+    <task id="LOCAL-00043" summary="очень хорошая защита">
+      <option name="closed" value="true" />
+      <created>1787674612377</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1787674612377</updated>
+    </task>
+    <option name="localTasksCounter" value="44" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -466,6 +476,7 @@
     <MESSAGE value="скины добавлены" />
     <MESSAGE value="поставил иконку приложению" />
     <MESSAGE value="начал делать pygame" />
-    <option name="LAST_COMMIT_MESSAGE" value="начал делать pygame" />
+    <MESSAGE value="очень хорошая защита" />
+    <option name="LAST_COMMIT_MESSAGE" value="очень хорошая защита" />
   </component>
 </project>
