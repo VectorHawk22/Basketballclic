@@ -12,43 +12,15 @@ class Settings:
         self.base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         self.settings_file = os.path.join(self.base_dir, "settings.json")
 
-        self.settings = self.load_settings()
+        # Единый источник настроек - словарь приложения
+        self.settings = self.app.settings
+
+        self._rebuild_id = None
         self.build_ui()
 
-    def load_settings(self):
-        """Загрузка настроек из файла"""
-        default_settings = {
-            "sound": True,
-            "language": "Русский"
-        }
-
-        if not os.path.exists(self.settings_file):
-            try:
-                with open(self.settings_file, "w", encoding="utf-8") as file:
-                    json.dump(default_settings, file, ensure_ascii=False, indent=4)
-                print("✅ Создан файл настроек settings.json")
-            except Exception as e:
-                print(f"⚠️ Не удалось создать settings.json: {e}")
-            return default_settings
-
-        try:
-            with open(self.settings_file, "r", encoding="utf-8") as file:
-                data = json.load(file)
-            default_settings.update(data)
-            return default_settings
-        except (json.JSONDecodeError, OSError) as e:
-            print(f"⚠️ Ошибка загрузки настроек: {e}")
-            return default_settings
-
     def save_settings(self):
-        """Сохранение настроек в файл"""
-        try:
-            with open(self.settings_file, "w", encoding="utf-8") as file:
-                json.dump(self.settings, file, ensure_ascii=False, indent=4)
-            return True
-        except OSError as e:
-            print(f"⚠️ Ошибка сохранения настроек: {e}")
-            return False
+        """Сохранение настроек приложения в файл"""
+        return self.app.save_settings()
 
     def get_language(self):
         return self.settings.get("language", "Русский")
@@ -57,9 +29,24 @@ class Settings:
         return self.settings.get("sound", True)
 
     def update_language(self, new_lang):
-        """Обновление языка интерфейса"""
-        self.settings["language"] = new_lang
-        self.build_ui()
+        """Обновление языка интерфейса (вызывается из app.set_language)"""
+        self.schedule_rebuild()
+
+    def schedule_rebuild(self):
+        """Отложенная перестройка UI - чтобы не уничтожать виджеты
+        внутри колбэка самого виджета"""
+        if self._rebuild_id:
+            try:
+                self.parent.after_cancel(self._rebuild_id)
+            except Exception:
+                pass
+        self._rebuild_id = self.parent.after(10, self._do_rebuild)
+
+    def _do_rebuild(self):
+        self._rebuild_id = None
+        # Перестраиваем только если экран настроек сейчас показан
+        if self.parent.winfo_ismapped():
+            self.build_ui()
 
     def get_language_names(self):
         """Возвращает словарь с названиями языков на текущем языке"""
@@ -204,11 +191,9 @@ class Settings:
         # Преобразуем отображаемое название в ключ
         lang_key = self.lang_display_to_key.get(display_lang, display_lang)
 
-        self.settings["language"] = lang_key
+        # app.set_language обновит словарь, сохранит файл и вызовет
+        # update_language -> отложенную перестройку UI
         self.app.set_language(lang_key)
-        self.save_settings()
-        # Перестраиваем UI для обновления текста
-        self.build_ui()
 
     def on_sound_toggle(self):
         """Обработка переключения звука"""

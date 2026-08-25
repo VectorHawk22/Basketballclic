@@ -2,11 +2,17 @@ import os
 import tkinter as tk
 from PIL import Image, ImageTk
 
+from animation.rim_config import get_rim_calibration
+
 
 class CourtSuccess:
-    def __init__(self, canvas):
+    def __init__(self, canvas, ball_file="ball3.png", basket_file="basket.png"):
         self.canvas = canvas
         self.base_dir = os.path.dirname(os.path.abspath(__file__))
+
+        # Выбранные скины
+        self.ball_file = ball_file
+        self.basket_file = basket_file
 
         # Загрузка изображений (обрезаются до видимого содержимого)
         self.img_man = None
@@ -57,10 +63,19 @@ class CourtSuccess:
         """Загрузка изображений"""
         try:
             self._pil_man = self._load_cropped("man.png")
-            self._pil_basket = self._load_cropped("basket.png")
-            self._pil_ball = self._load_cropped("ball3.png")
+            self._pil_basket = self._load_cropped(self.basket_file)
+            self._pil_ball = self._load_cropped(self.ball_file)
         except Exception as e:
             print(f"Ошибка загрузки изображений: {e}")
+
+    def set_skins(self, ball_file, basket_file):
+        """Смена скинов мяча и корзины"""
+        self.ball_file = ball_file
+        self.basket_file = basket_file
+        self.img_ball = None
+        self.img_basket = None
+        self._prepared_size = None
+        self.load_images()
 
     @staticmethod
     def _fit_height(pil_img, target_h):
@@ -137,9 +152,10 @@ class CourtSuccess:
         self.ball_x = man_x + int(self.man_w * 0.8)
         self.ball_y = sky_height - int(self.man_h * 0.65)
 
-        # ЦЕЛЬ - кольцо (перекладина: ~22% ширины, ~20% высоты картинки корзины)
-        self.target_x = basket_left_x + int(self.basket_w * 0.22)
-        self.target_y = (sky_height - self.basket_h) + int(self.basket_h * 0.20)
+        # ЦЕЛЬ - кольцо (координаты зависят от выбранной картинки корзины)
+        cal = get_rim_calibration(self.basket_file)
+        self.target_x = basket_left_x + int(self.basket_w * cal["cx"])
+        self.target_y = (sky_height - self.basket_h) + int(self.basket_h * cal["cy"])
 
         if self.img_ball:
             self.ball_obj = self.canvas.create_image(
@@ -147,22 +163,45 @@ class CourtSuccess:
                 image=self.img_ball
             )
 
+    def _plan_flight(self, ex, ey):
+        """Расчёт физичного полёта по параболе из текущей позиции мяча в (ex, ey)"""
+        sx, sy = self.ball_x, self.ball_y
+        dx = max(10.0, abs(ex - sx))
+        g = 0.35
+
+        T0 = dx / float(self.step)
+        vy_ideal = (sy - ey + 0.5 * g * T0 * T0) / T0
+
+        # Потолок по высоте дуги (мяч не выходит за верх canvas)
+        headroom = max(20.0, sy - self.ball_r - 2)
+        vy_ceiling = (2 * g * headroom) ** 0.5
+
+        if vy_ideal <= vy_ceiling:
+            vy0 = vy_ideal
+            T = T0
+        else:
+            # Ограничены потолком: максимальная начальная скорость,
+            # время из квадратного уравнения g*T^2/2 - vy0*T + (sy-ey) = 0
+            vy0 = vy_ceiling
+            disc = vy0 * vy0 - 2 * g * (sy - ey)
+            if disc < 0:
+                vy0 = (2 * g * max(1.0, sy - ey)) ** 0.5
+                disc = 0.0
+            T = (vy0 + disc ** 0.5) / g
+
+        self.flight_vx = dx / T
+        self.flight_vy = -vy0
+        self.flight_g = g
+        self.flight_T = T
+        self.flight_t = 0.0
+
     def start_animation(self):
         """Запуск анимации"""
         self.is_animating = True
         self.falling = False
         self.draw_court()
         if self.ball_obj:
-            # Параметры полёта: дуга (Безье) с контрольной точкой над кольцом,
-            # чтобы мяч опускался в него сверху
-            self.arc_start_x = self.ball_x
-            self.arc_start_y = self.ball_y
-            dist = abs(self.target_x - self.ball_x)
-            self.ctrl_x = self.target_x - max(30, int(dist * 0.12))
-            self.ctrl_y = self.ball_r + 2
-            steps = max(1, dist // self.step)
-            self.t_progress = 0.0
-            self.t_speed = 1.0 / steps
+            self._plan_flight(self.target_x, self.target_y)
             self._move_ball()
 
     def stop(self):
@@ -195,15 +234,16 @@ class CourtSuccess:
                 self.stop()
                 return
 
-        # Полёт по дуге (квадратичная Безье) - мяч приходит в кольцо сверху
-        self.t_progress = min(1.0, self.t_progress + self.t_speed)
-        t = self.t_progress
-        mt = 1.0 - t
-        self.ball_x = int(mt * mt * self.arc_start_x + 2 * mt * t * self.ctrl_x + t * t * self.target_x)
-        self.ball_y = int(mt * mt * self.arc_start_y + 2 * mt * t * self.ctrl_y + t * t * self.target_y)
-
-        if t >= 1.0:
+        # Полёт по параболе (гравитация)
+        self.flight_t += 1.0
+        if self.flight_t >= self.flight_T:
+            self.ball_x = self.target_x
+            self.ball_y = self.target_y
             self.falling = True
+        else:
+            self.ball_x += self.flight_vx
+            self.ball_y += self.flight_vy
+            self.flight_vy += self.flight_g
 
         self.canvas.coords(self.ball_obj, self.ball_x, self.ball_y)
         self.anim_id = self.canvas.after(50, self._move_ball)

@@ -61,6 +61,8 @@ class ClickerGUI:
                 "reset_confirm": "Are you sure you want to delete all progress?\n\nThis action cannot be undone!",
                 "reset_done": "Progress successfully reset!",
                 "reset_error": "Failed to reset progress",
+                "tab_potions": "Potions", "tab_skins": "Skins",
+                "skins_balls": "Balls", "skins_baskets": "Hoops",
                 "save_success": "Settings saved!",
                 "save_error": "Failed to save settings!"
             },
@@ -83,6 +85,8 @@ class ClickerGUI:
                 "reset_confirm": "Вы уверены, что хотите удалить весь прогресс?\n\nЭто действие нельзя отменить!",
                 "reset_done": "Прогресс успешно сброшен!",
                 "reset_error": "Не удалось сбросить прогресс",
+                "tab_potions": "Зелья", "tab_skins": "Скины",
+                "skins_balls": "Мячи", "skins_baskets": "Корзины",
                 "save_success": "Настройки сохранены!",
                 "save_error": "Не удалось сохранить настройки!"
             },
@@ -105,6 +109,8 @@ class ClickerGUI:
                 "reset_confirm": "Êtes-vous sûr de vouloir supprimer toute la progression ?\n\nCette action est irréversible !",
                 "reset_done": "Progression réinitialisée avec succès !",
                 "reset_error": "Échec de la réinitialisation de la progression",
+                "tab_potions": "Élixirs", "tab_skins": "Skins",
+                "skins_balls": "Ballons", "skins_baskets": "Paniers",
                 "save_success": "Paramètres enregistrés !",
                 "save_error": "Échec de l'enregistrement des paramètres !"
             },
@@ -127,6 +133,8 @@ class ClickerGUI:
                 "reset_confirm": "Sind Sie sicher, dass Sie den gesamten Fortschritt löschen möchten?\n\nDiese Aktion kann nicht rückgängig gemacht werden!",
                 "reset_done": "Fortschritt erfolgreich zurückgesetzt!",
                 "reset_error": "Fehler beim Zurücksetzen des Fortschritts",
+                "tab_potions": "Tränke", "tab_skins": "Skins",
+                "skins_balls": "Bälle", "skins_baskets": "Körbe",
                 "save_success": "Einstellungen gespeichert!",
                 "save_error": "Fehler beim Speichern der Einstellungen!"
             },
@@ -149,6 +157,8 @@ class ClickerGUI:
                 "reset_confirm": "您确定要删除所有进度吗？\n\n此操作无法撤销！",
                 "reset_done": "进度已成功重置！",
                 "reset_error": "重置进度失败",
+                "tab_potions": "药水", "tab_skins": "皮肤",
+                "skins_balls": "球", "skins_baskets": "篮筐",
                 "save_success": "设置已保存！",
                 "save_error": "保存设置失败！"
             }
@@ -182,9 +192,11 @@ class ClickerGUI:
         )
         self.animation_canvas.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)
 
-        # Инициализация классов анимации
-        self.court_success = CourtSuccess(self.animation_canvas)
-        self.court_fail = CourtFail(self.animation_canvas)
+        # Инициализация классов анимации (с выбранными скинами)
+        skin_ball = self.settings.get("skin_ball", "ball3.png")
+        skin_basket = self.settings.get("skin_basket", "basket.png")
+        self.court_success = CourtSuccess(self.animation_canvas, ball_file=skin_ball, basket_file=skin_basket)
+        self.court_fail = CourtFail(self.animation_canvas, ball_file=skin_ball, basket_file=skin_basket)
         self.root.after(150, self.redraw_animation)
 
         # === ИГРОВОЙ ЭКРАН ===
@@ -423,6 +435,19 @@ class ClickerGUI:
         self.button_click.config(text=tr["start_challenge"], command=self.start_challenge)
 
     # ================= UI & LANGUAGE =================
+    def apply_skins(self):
+        """Применение выбранных скинов к анимациям"""
+        ball_file = self.settings.get("skin_ball", "ball3.png")
+        basket_file = self.settings.get("skin_basket", "basket.png")
+        for court in (self.court_success, self.court_fail):
+            court.set_skins(ball_file, basket_file)
+
+        w = self.animation_canvas.winfo_width()
+        h = self.animation_canvas.winfo_height()
+        if w > 50 and h > 50 and not self.challenge_active:
+            self.animation_canvas.delete("all")
+            self.court_success.draw_court()
+
     def set_language(self, lang):
         self.current_lang = lang
         self.settings["language"] = lang
