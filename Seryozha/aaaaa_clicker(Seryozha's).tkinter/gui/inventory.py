@@ -191,9 +191,12 @@ class InventoryManager:
         self.start_updates()
 
     def build_skins_tab(self):
-        """Содержимое вкладки скинов"""
+        """Содержимое вкладки скинов — только купленные"""
         body = tk.Frame(self.tab_container)
         body.pack(padx=15, pady=5, fill=tk.BOTH, expand=True)
+
+        owned_balls = self.parent.settings.get("inventory_balls", [])
+        owned_baskets = self.parent.settings.get("inventory_baskets", [])
 
         # === МЯЧИ ===
         self.section_labels["balls"] = tk.Label(
@@ -206,8 +209,8 @@ class InventoryManager:
 
         balls_row = tk.Frame(body)
         balls_row.pack(pady=(0, 12))
-        for i, fname in enumerate(self.ball_skins, start=1):
-            self._make_skin_item(balls_row, "ball", fname, str(i))
+        for fname in owned_balls:
+            self._make_skin_item(balls_row, "ball", fname)
 
         # === КОРЗИНЫ ===
         self.section_labels["baskets"] = tk.Label(
@@ -220,12 +223,12 @@ class InventoryManager:
 
         baskets_row = tk.Frame(body)
         baskets_row.pack()
-        for i, fname in enumerate(self.basket_skins, start=1):
-            self._make_skin_item(baskets_row, "basket", fname, str(i))
+        for fname in owned_baskets:
+            self._make_skin_item(baskets_row, "basket", fname)
 
         self.update_skin_highlights()
 
-    def _make_skin_item(self, parent_row, kind, filename, caption):
+    def _make_skin_item(self, parent_row, kind, filename):
         """Создание элемента выбора скина"""
         selected_file = self.parent.settings.get(
             "skin_ball" if kind == "ball" else "skin_basket", ""
@@ -254,7 +257,8 @@ class InventoryManager:
             img_label = tk.Label(item, text="❔", font=("Arial", 20), bg=item.cget("bg"))
         img_label.pack(expand=True)
 
-        tk.Label(item, text=caption, font=("Arial", 9), bg=item.cget("bg")).pack(pady=(0, 3))
+        name_label = filename.replace(".png", "")
+        tk.Label(item, text=name_label, font=("Arial", 8), bg=item.cget("bg")).pack(pady=(0, 3))
 
         for w in (item, img_label):
             w.bind("<Button-1>", lambda e, k=kind, f=filename: self.select_skin(k, f))

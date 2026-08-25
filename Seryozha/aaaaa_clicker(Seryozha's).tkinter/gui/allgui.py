@@ -73,7 +73,11 @@ class ClickerGUI:
                 "tab_potions": "Potions", "tab_skins": "Skins",
                 "skins_balls": "Balls", "skins_baskets": "Hoops",
                 "save_success": "Settings saved!",
-                "save_error": "Failed to save settings!"
+                "save_error": "Failed to save settings!",
+                "shop_tab_upgrades": "Upgrades", "shop_tab_balls": "Balls", "shop_tab_baskets": "Hoops",
+                "shop_buy": "Buy", "shop_owned": "Owned",
+                "shop_price": "{} pts", "shop_not_enough": "Not enough points!",
+                "shop_coming_soon": "Coming soon..."
             },
             "Русский": {
                 "title": "Кликер", "result": "Результат: -", "hit": "🎯 Попал! +1 очко!", "miss": "❌ Промах :(",
@@ -97,7 +101,11 @@ class ClickerGUI:
                 "tab_potions": "Зелья", "tab_skins": "Скины",
                 "skins_balls": "Мячи", "skins_baskets": "Корзины",
                 "save_success": "Настройки сохранены!",
-                "save_error": "Не удалось сохранить настройки!"
+                "save_error": "Не удалось сохранить настройки!",
+                "shop_tab_upgrades": "Улучшения", "shop_tab_balls": "Мячи", "shop_tab_baskets": "Кольца",
+                "shop_buy": "Купить", "shop_owned": "Куплено",
+                "shop_price": "{} очков", "shop_not_enough": "Недостаточно очков!",
+                "shop_coming_soon": "Скоро будет..."
             },
             "Французский": {
                 "title": "Cliqueur", "result": "Résultat : -", "hit": "🎯 Touché ! +1 point !", "miss": "❌ Raté :(",
@@ -121,7 +129,11 @@ class ClickerGUI:
                 "tab_potions": "Élixirs", "tab_skins": "Skins",
                 "skins_balls": "Ballons", "skins_baskets": "Paniers",
                 "save_success": "Paramètres enregistrés !",
-                "save_error": "Échec de l'enregistrement des paramètres !"
+                "save_error": "Échec de l'enregistrement des paramètres !",
+                "shop_tab_upgrades": "Améliorations", "shop_tab_balls": "Ballons", "shop_tab_baskets": "Paniers",
+                "shop_buy": "Acheter", "shop_owned": "Possédé",
+                "shop_price": "{} pts", "shop_not_enough": "Pas assez de points !",
+                "shop_coming_soon": "Bientôt disponible..."
             },
             "Немецкий": {
                 "title": "Klicker", "result": "Ergebnis: -", "hit": "🎯 Treffer! +1 Punkt!", "miss": "❌ Daneben :(",
@@ -145,7 +157,11 @@ class ClickerGUI:
                 "tab_potions": "Tränke", "tab_skins": "Skins",
                 "skins_balls": "Bälle", "skins_baskets": "Körbe",
                 "save_success": "Einstellungen gespeichert!",
-                "save_error": "Fehler beim Speichern der Einstellungen!"
+                "save_error": "Fehler beim Speichern der Einstellungen!",
+                "shop_tab_upgrades": "Verbesserungen", "shop_tab_balls": "Bälle", "shop_tab_baskets": "Körbe",
+                "shop_buy": "Kaufen", "shop_owned": "Besessen",
+                "shop_price": "{} Punkte", "shop_not_enough": "Nicht genug Punkte!",
+                "shop_coming_soon": "Demnächst verfügbar..."
             },
             "Китайский": {
                 "title": "点击器", "result": "结果: -", "hit": "🎯 击中！+1 分！", "miss": "❌ 未命中 :(",
@@ -169,7 +185,11 @@ class ClickerGUI:
                 "tab_potions": "药水", "tab_skins": "皮肤",
                 "skins_balls": "球", "skins_baskets": "篮筐",
                 "save_success": "设置已保存！",
-                "save_error": "保存设置失败！"
+                "save_error": "保存设置失败！",
+                "shop_tab_upgrades": "升级", "shop_tab_balls": "球", "shop_tab_baskets": "篮筐",
+                "shop_buy": "购买", "shop_owned": "已拥有",
+                "shop_price": "{} 分", "shop_not_enough": "分数不足！",
+                "shop_coming_soon": "即将推出..."
             }
         }
 
@@ -202,7 +222,7 @@ class ClickerGUI:
         self.animation_canvas.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)
 
         # Инициализация классов анимации (с выбранными скинами)
-        skin_ball = self.settings.get("skin_ball", "ball3.png")
+        skin_ball = self.settings.get("skin_ball", "ball1.png")
         skin_basket = self.settings.get("skin_basket", "basket.png")
         self.court_success = CourtSuccess(self.animation_canvas, ball_file=skin_ball, basket_file=skin_basket)
         self.court_fail = CourtFail(self.animation_canvas, ball_file=skin_ball, basket_file=skin_basket)
@@ -314,7 +334,11 @@ class ClickerGUI:
     def load_settings(self):
         """Загрузка настроек из файла settings.json"""
         settings_file = os.path.join(self.base_dir, "settings.json")
-        default_settings = {"sound": True, "language": "Русский"}
+        default_settings = {
+            "sound": True, "language": "Русский",
+            "skin_ball": "ball1.png", "skin_basket": "basket.png",
+            "inventory_balls": ["ball1.png"], "inventory_baskets": ["basket.png"]
+        }
 
         if not os.path.exists(settings_file):
             try:
@@ -377,7 +401,7 @@ class ClickerGUI:
         self.right_frame.grid_remove()
 
         if self.shop_manager is None:
-            self.shop_manager = ShopManager(self, self.translations, self.current_lang)
+            self.shop_manager = ShopManager(self, self.game, self.translations, self.current_lang)
         self.shop_manager.open()
 
     def open_authors(self):
@@ -446,7 +470,7 @@ class ClickerGUI:
     # ================= UI & LANGUAGE =================
     def apply_skins(self):
         """Применение выбранных скинов к анимациям"""
-        ball_file = self.settings.get("skin_ball", "ball3.png")
+        ball_file = self.settings.get("skin_ball", "ball1.png")
         basket_file = self.settings.get("skin_basket", "basket.png")
         for court in (self.court_success, self.court_fail):
             court.set_skins(ball_file, basket_file)

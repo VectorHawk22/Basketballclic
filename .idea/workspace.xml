@@ -4,15 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0c0fdf33-65dd-4d5b-b322-c58eef4f8e80" name="Changes" comment="поставил иконку приложению">
-      <change beforePath="$PROJECT_DIR$/Seryozha/aaaaa_clicker(Seryozha's)/animation/court1.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Seryozha/aaaaa_clicker(Seryozha's)/animation/court2.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Seryozha/aaaaa_clicker(Seryozha's)/gui/allgui.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Seryozha/aaaaa_clicker(Seryozha's)/gui/authors.py" beforeDir="false" afterPath="$PROJECT_DIR$/Seryozha/aaaaa_clicker(Seryozha's)/gui/authors.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Seryozha/aaaaa_clicker(Seryozha's)/gui/inventory.py" beforeDir="false" afterPath="$PROJECT_DIR$/Seryozha/aaaaa_clicker(Seryozha's)/gui/inventory.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Seryozha/aaaaa_clicker(Seryozha's)/gui/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/Seryozha/aaaaa_clicker(Seryozha's)/gui/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Seryozha/aaaaa_clicker(Seryozha's)/gui/shop.py" beforeDir="false" afterPath="$PROJECT_DIR$/Seryozha/aaaaa_clicker(Seryozha's)/gui/shop.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Seryozha/aaaaa_clicker(Seryozha's)/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/Seryozha/aaaaa_clicker(Seryozha's)/main.py" afterDir="false" />
+    <list default="true" id="0c0fdf33-65dd-4d5b-b322-c58eef4f8e80" name="Changes" comment="начал делать pygame">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Seryozha/aaaaa_clicker(Seryozha's).tkinter/gui/allgui.py" beforeDir="false" afterPath="$PROJECT_DIR$/Seryozha/aaaaa_clicker(Seryozha's).tkinter/gui/allgui.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Seryozha/aaaaa_clicker(Seryozha's).tkinter/gui/inventory.py" beforeDir="false" afterPath="$PROJECT_DIR$/Seryozha/aaaaa_clicker(Seryozha's).tkinter/gui/inventory.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Seryozha/aaaaa_clicker(Seryozha's).tkinter/gui/shop.py" beforeDir="false" afterPath="$PROJECT_DIR$/Seryozha/aaaaa_clicker(Seryozha's).tkinter/gui/shop.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Seryozha/aaaaa_clicker(Seryozha's).tkinter/settings.json" beforeDir="false" afterPath="$PROJECT_DIR$/Seryozha/aaaaa_clicker(Seryozha's).tkinter/settings.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,24 +55,25 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Python.OPENTHISFILE.executor": "Run",
-    "Python.allgui.executor": "Run",
-    "Python.court1 (1).executor": "Run",
-    "Python.court1.executor": "Run",
-    "Python.court2.executor": "Run",
-    "Python.game_logic.executor": "Run",
-    "Python.inventory.executor": "Run",
-    "Python.main.executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "thekosmoss",
-    "last_opened_file_path": "C:/Users/home/PycharmProjects/Basketballclic"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python.OPENTHISFILE.executor&quot;: &quot;Run&quot;,
+    &quot;Python.allgui.executor&quot;: &quot;Run&quot;,
+    &quot;Python.court1 (1).executor&quot;: &quot;Run&quot;,
+    &quot;Python.court1.executor&quot;: &quot;Run&quot;,
+    &quot;Python.court2.executor&quot;: &quot;Run&quot;,
+    &quot;Python.game_logic.executor&quot;: &quot;Run&quot;,
+    &quot;Python.inventory.executor&quot;: &quot;Run&quot;,
+    &quot;Python.main.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;thekosmoss&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/home/PycharmProjects/Basketballclic/Seryozha&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\home\PycharmProjects\Basketballclic\Seryozha" />
       <recent name="C:\Users\home\PycharmProjects\Basketballclic" />
       <recent name="C:\Users\home\PycharmProjects\Basketballclic\Geography\Seryozha's version1_0(without animation)\aaaaa_clicker" />
       <recent name="C:\Users\home\PycharmProjects\Basketballclic\Geography\Seryozha's version1_0(without animation)" />
@@ -408,7 +406,15 @@
       <option name="project" value="LOCAL" />
       <updated>1787649701818</updated>
     </task>
-    <option name="localTasksCounter" value="39" />
+    <task id="LOCAL-00039" summary="начал делать pygame">
+      <option name="closed" value="true" />
+      <created>1787651930812</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1787651930812</updated>
+    </task>
+    <option name="localTasksCounter" value="40" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -438,6 +444,7 @@
     <MESSAGE value="пофиксил еще баги" />
     <MESSAGE value="скины добавлены" />
     <MESSAGE value="поставил иконку приложению" />
-    <option name="LAST_COMMIT_MESSAGE" value="поставил иконку приложению" />
+    <MESSAGE value="начал делать pygame" />
+    <option name="LAST_COMMIT_MESSAGE" value="начал делать pygame" />
   </component>
 </project>
