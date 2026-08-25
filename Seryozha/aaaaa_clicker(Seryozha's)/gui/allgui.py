@@ -22,6 +22,15 @@ class ClickerGUI:
         self.root.geometry("600x490")
         self.root.resizable(False, False)
 
+        # Устанавливаем иконку приложения
+        try:
+            icon_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "animation", "icon.jpg")
+            icon = Image.open(icon_path)
+            self._app_icon = ImageTk.PhotoImage(icon)
+            self.root.iconphoto(True, self._app_icon)
+        except Exception:
+            pass
+
         # Определяем корневую папку проекта
         self.base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 

@@ -4,12 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0c0fdf33-65dd-4d5b-b322-c58eef4f8e80" name="Changes" comment="пофиксил еще баги">
-      <change beforePath="$PROJECT_DIR$/Seryozha/aaaaa_clicker(Seryozha's)/animation/court1.py" beforeDir="false" afterPath="$PROJECT_DIR$/Seryozha/aaaaa_clicker(Seryozha's)/animation/court1.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Seryozha/aaaaa_clicker(Seryozha's)/animation/court2.py" beforeDir="false" afterPath="$PROJECT_DIR$/Seryozha/aaaaa_clicker(Seryozha's)/animation/court2.py" afterDir="false" />
+    <list default="true" id="0c0fdf33-65dd-4d5b-b322-c58eef4f8e80" name="Changes" comment="скины добавлены">
+      <change afterPath="$PROJECT_DIR$/Seryozha/aaaaa_clicker(Seryozha's)/animation/icon.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Seryozha/aaaaa_clicker(Seryozha's)/gui/allgui.py" beforeDir="false" afterPath="$PROJECT_DIR$/Seryozha/aaaaa_clicker(Seryozha's)/gui/allgui.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Seryozha/aaaaa_clicker(Seryozha's)/gui/inventory.py" beforeDir="false" afterPath="$PROJECT_DIR$/Seryozha/aaaaa_clicker(Seryozha's)/gui/inventory.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Seryozha/aaaaa_clicker(Seryozha's)/gui/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/Seryozha/aaaaa_clicker(Seryozha's)/gui/settings.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -55,28 +53,29 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Python.OPENTHISFILE.executor": "Run",
-    "Python.allgui.executor": "Run",
-    "Python.court1 (1).executor": "Run",
-    "Python.court1.executor": "Run",
-    "Python.court2.executor": "Run",
-    "Python.game_logic.executor": "Run",
-    "Python.inventory.executor": "Run",
-    "Python.main.executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "thekosmoss",
-    "last_opened_file_path": "C:/Users/home/PycharmProjects/Basketballclic/Geography/Seryozha's version1_0(without animation)/aaaaa_clicker"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python.OPENTHISFILE.executor&quot;: &quot;Run&quot;,
+    &quot;Python.allgui.executor&quot;: &quot;Run&quot;,
+    &quot;Python.court1 (1).executor&quot;: &quot;Run&quot;,
+    &quot;Python.court1.executor&quot;: &quot;Run&quot;,
+    &quot;Python.court2.executor&quot;: &quot;Run&quot;,
+    &quot;Python.game_logic.executor&quot;: &quot;Run&quot;,
+    &quot;Python.inventory.executor&quot;: &quot;Run&quot;,
+    &quot;Python.main.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;thekosmoss&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/home/PycharmProjects/Basketballclic/Geography/Seryozha's version1_0(without animation)/aaaaa_clicker&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\home\PycharmProjects\Basketballclic\Geography\Seryozha's version1_0(without animation)\aaaaa_clicker" />
       <recent name="C:\Users\home\PycharmProjects\Basketballclic\Geography\Seryozha's version1_0(without animation)" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\home\PycharmProjects\Basketballclic\Seryozha\aaaaa_clicker(Seryozha's)\animation" />
       <recent name="C:\Users\home\PycharmProjects\Basketballclic\Seryozha" />
       <recent name="C:\Users\home\PycharmProjects\Basketballclic\aaaaa_clicker(Seryozha's)\animation" />
       <recent name="C:\Users\home\PycharmProjects\Basketballclic\aaaaa_clicker(Seryozha's)" />
@@ -387,7 +386,15 @@
       <option name="project" value="LOCAL" />
       <updated>1787638504141</updated>
     </task>
-    <option name="localTasksCounter" value="37" />
+    <task id="LOCAL-00037" summary="скины добавлены">
+      <option name="closed" value="true" />
+      <created>1787642618218</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1787642618218</updated>
+    </task>
+    <option name="localTasksCounter" value="38" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -415,6 +422,7 @@
     <MESSAGE value="оно работает" />
     <MESSAGE value="пофиксил баги" />
     <MESSAGE value="пофиксил еще баги" />
-    <option name="LAST_COMMIT_MESSAGE" value="пофиксил еще баги" />
+    <MESSAGE value="скины добавлены" />
+    <option name="LAST_COMMIT_MESSAGE" value="скины добавлены" />
   </component>
 </project>
