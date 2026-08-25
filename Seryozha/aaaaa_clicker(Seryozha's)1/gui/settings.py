@@ -16,14 +16,13 @@ class Settings:
         self.build_ui()
 
     def load_settings(self):
-        """Загрузка настроек из файла, создаёт файл если его нет"""
+        """Загрузка настроек из файла"""
         default_settings = {
             "sound": True,
             "language": "Русский"
         }
 
         if not os.path.exists(self.settings_file):
-            # Создаём файл с настройками по умолчанию
             try:
                 with open(self.settings_file, "w", encoding="utf-8") as file:
                     json.dump(default_settings, file, ensure_ascii=False, indent=4)
@@ -52,22 +51,71 @@ class Settings:
             return False
 
     def get_language(self):
-        """Получение текущего языка"""
         return self.settings.get("language", "Русский")
 
     def get_sound(self):
-        """Получение состояния звука"""
         return self.settings.get("sound", True)
+
+    def update_language(self, new_lang):
+        """Обновление языка интерфейса"""
+        self.settings["language"] = new_lang
+        self.build_ui()
+
+    def get_language_names(self):
+        """Возвращает словарь с названиями языков на текущем языке"""
+        # Словарь перевода названий языков
+        language_names = {
+            "Английский": {
+                "Английский": "English",
+                "Русский": "Russian",
+                "Французский": "French",
+                "Немецкий": "German",
+                "Китайский": "Chinese"
+            },
+            "Русский": {
+                "Английский": "Английский",
+                "Русский": "Русский",
+                "Французский": "Французский",
+                "Немецкий": "Немецкий",
+                "Китайский": "Китайский"
+            },
+            "Французский": {
+                "Английский": "Anglais",
+                "Русский": "Russe",
+                "Французский": "Français",
+                "Немецкий": "Allemand",
+                "Китайский": "Chinois"
+            },
+            "Немецкий": {
+                "Английский": "Englisch",
+                "Русский": "Russisch",
+                "Французский": "Französisch",
+                "Немецкий": "Deutsch",
+                "Китайский": "Chinesisch"
+            },
+            "Китайский": {
+                "Английский": "英语",
+                "Русский": "俄语",
+                "Французский": "法语",
+                "Немецкий": "德语",
+                "Китайский": "中文"
+            }
+        }
+        return language_names.get(self.app.current_lang, language_names["Русский"])
 
     def build_ui(self):
         """Построение интерфейса настроек"""
+        # Очищаем parent
         for widget in self.parent.winfo_children():
             widget.destroy()
+
+        # Получаем переводы
+        tr = self.app.translations[self.app.current_lang]
 
         # Заголовок
         title = tk.Label(
             self.parent,
-            text="⚙️ Настройки",
+            text=tr["settings_title"],
             font=("Arial", 20, "bold")
         )
         title.pack(pady=(25, 20))
@@ -78,23 +126,36 @@ class Settings:
 
         tk.Label(
             language_frame,
-            text="🌐 Язык:",
+            text=tr["language_label"],
             font=("Arial", 12)
         ).pack(side=tk.LEFT)
 
         self.language_var = tk.StringVar(value=self.settings.get("language", "Русский"))
 
-        # Доступные языки (из главного окна)
+        # Получаем названия языков на текущем языке
+        lang_names = self.get_language_names()
         available_langs = list(self.app.translations.keys())
 
+        # Создаём список для отображения в меню
+        display_langs = [lang_names.get(lang, lang) for lang in available_langs]
+
+        # Создаём словарь для обратного преобразования
+        self.lang_display_to_key = {lang_names.get(lang, lang): lang for lang in available_langs}
+
+        # Создаём меню с переведёнными названиями
         self.language_menu = tk.OptionMenu(
             language_frame,
             self.language_var,
-            *available_langs,
+            *display_langs,
             command=self.on_language_change
         )
         self.language_menu.config(width=15, font=("Arial", 10))
         self.language_menu.pack(side=tk.RIGHT)
+
+        # Устанавливаем текущее значение (отображаемое)
+        current_display = lang_names.get(self.settings.get("language", "Русский"),
+                                         self.settings.get("language", "Русский"))
+        self.language_var.set(current_display)
 
         # Звук
         sound_frame = tk.Frame(self.parent)
@@ -102,15 +163,16 @@ class Settings:
 
         tk.Label(
             sound_frame,
-            text="🔊 Звук:",
+            text=tr["sound_label"],
             font=("Arial", 12)
         ).pack(side=tk.LEFT)
 
         self.sound_var = tk.BooleanVar(value=self.settings.get("sound", True))
+        sound_text = tr["sound_on"] if self.sound_var.get() else tr["sound_off"]
 
         self.sound_check = tk.Checkbutton(
             sound_frame,
-            text="Включён",
+            text=sound_text,
             variable=self.sound_var,
             command=self.on_sound_toggle,
             font=("Arial", 10)
@@ -120,7 +182,7 @@ class Settings:
         # Кнопка сохранения
         save_button = tk.Button(
             self.parent,
-            text="💾 Сохранить настройки",
+            text=tr["save_button"],
             font=("Arial", 11, "bold"),
             bg="lightgreen",
             command=self.save_and_close
@@ -130,41 +192,57 @@ class Settings:
         # Кнопка сброса
         reset_button = tk.Button(
             self.parent,
-            text="🗑️ Сбросить прогресс",
+            text=tr["reset_button"],
             font=("Arial", 11, "bold"),
             bg="lightcoral",
             command=self.reset_progress
         )
         reset_button.pack(fill=tk.X, padx=40, pady=8)
 
-    def on_language_change(self, language):
+    def on_language_change(self, display_lang):
         """Обработка смены языка"""
-        self.settings["language"] = language
-        self.app.set_language(language)
+        # Преобразуем отображаемое название в ключ
+        lang_key = self.lang_display_to_key.get(display_lang, display_lang)
+
+        self.settings["language"] = lang_key
+        self.app.set_language(lang_key)
         self.save_settings()
+        # Перестраиваем UI для обновления текста
+        self.build_ui()
 
     def on_sound_toggle(self):
         """Обработка переключения звука"""
         self.settings["sound"] = self.sound_var.get()
         self.save_settings()
+        # Обновляем текст кнопки звука
+        tr = self.app.translations[self.app.current_lang]
+        sound_text = tr["sound_on"] if self.sound_var.get() else tr["sound_off"]
+        self.sound_check.config(text=sound_text)
 
     def save_and_close(self):
         """Сохранение и закрытие настроек"""
+        # Получаем реальный ключ языка из отображаемого названия
+        display_lang = self.language_var.get()
+        lang_key = self.lang_display_to_key.get(display_lang, display_lang)
+
         self.settings["sound"] = self.sound_var.get()
-        self.settings["language"] = self.language_var.get()
+        self.settings["language"] = lang_key
+
+        tr = self.app.translations[self.app.current_lang]
 
         if self.save_settings():
-            messagebox.showinfo("Успех", "Настройки сохранены!")
+            messagebox.showinfo("✅", tr["save_success"])
             self.app.close_settings()
         else:
-            messagebox.showerror("Ошибка", "Не удалось сохранить настройки!")
+            messagebox.showerror("❌", tr["save_error"])
 
     def reset_progress(self):
         """Сброс прогресса игры"""
+        tr = self.app.translations[self.app.current_lang]
+
         answer = messagebox.askyesno(
-            "Сброс прогресса",
-            "Вы уверены, что хотите удалить весь прогресс?\n\n"
-            "Это действие нельзя отменить!"
+            "⚠️",
+            tr["reset_confirm"]
         )
 
         if not answer:
@@ -173,9 +251,9 @@ class Settings:
         try:
             self.app.game.reset_progress()
             self.app.update_ui()
-            messagebox.showinfo("Готово", "Прогресс успешно сброшен!")
+            messagebox.showinfo("✅", tr["reset_done"])
         except Exception as e:
             messagebox.showerror(
-                "Ошибка",
-                f"Не удалось сбросить прогресс:\n{e}"
+                "❌",
+                f"{tr['reset_error']}:\n{e}"
             )

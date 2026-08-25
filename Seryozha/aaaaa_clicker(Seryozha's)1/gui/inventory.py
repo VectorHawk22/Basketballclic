@@ -29,10 +29,6 @@ class InventoryManager:
         """Открытие инвентаря"""
         self.tr = self.translations[self.current_lang]
 
-        # Скрываем игровой экран
-        self.parent.game_frame.pack_forget()
-        self.parent.right_frame.grid_remove()
-
         # Очищаем фрейм
         for widget in self.inventory_frame.winfo_children():
             widget.destroy()
@@ -162,8 +158,8 @@ class InventoryManager:
         """Закрытие инвентаря"""
         self.stop_updates()
         self.inventory_frame.pack_forget()
-        self.parent.game_frame.pack(fill=tk.BOTH, expand=True)
-        self.parent.right_frame.grid()
+        # Возвращаемся к игре с анимацией
+        self.parent.show_game()
         self.parent._hide_back_button()
         self.parent.update_ui()
 
