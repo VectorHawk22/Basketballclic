@@ -33,15 +33,15 @@ class InventoryScreen(Screen):
             path = os.path.join(self.images_dir, fname)
             if os.path.exists(path):
                 try:
-                    img = PILImage.open(path).resize((80, 80), PILImage.Resampling.LANCZOS)
+                    img = PILImage.open(path).convert("RGBA").resize((80, 80), PILImage.Resampling.LANCZOS)
                     data = img.tobytes()
                     surf = pygame.image.fromstring(data, img.size, "RGBA").convert_alpha()
                     if name == "full":
                         self.potion_img = surf
                     else:
                         self.potion_empty_img = surf
-                except Exception:
-                    pass
+                except Exception as e:
+                    print(f"Potion image load error ({fname}): {e}")
 
     def _load_skin_thumbnails(self):
         ball_skins = ["ball1.png", "ball2.png", "ball3.png", "ball4.png"]
@@ -163,10 +163,12 @@ class InventoryScreen(Screen):
         current_basket = self.app.settings.get("skin_basket", "")
         self.skin_rects = {}
 
-        render_text(surface, "Balls:", font_label, (0, 0, 0), 40, 110, 520)
-        ball_skins = ["ball1.png", "ball2.png", "ball3.png", "ball4.png"]
+        owned_balls = self.app.settings.get("inventory_balls", [])
+        owned_baskets = self.app.settings.get("inventory_baskets", [])
+
+        render_text(surface, tr["skins_balls"] + ":", font_label, (0, 0, 0), 40, 110, 520)
         x_start = 40
-        for i, fname in enumerate(ball_skins):
+        for i, fname in enumerate(owned_balls):
             rect = pygame.Rect(x_start + i * 110, 140, 100, 110)
             is_sel = (fname == current_ball)
             border_color = (0, 120, 215) if is_sel else (180, 180, 180)
@@ -180,13 +182,13 @@ class InventoryScreen(Screen):
                 ty = rect.y + 10
                 surface.blit(thumb, (tx, ty))
 
-            render_text(surface, str(i + 1), font_small, (80, 80, 80),
-                        rect.centerx - 5, rect.bottom - 18)
+            name_label = fname.replace(".png", "")
+            render_text(surface, name_label, font_small, (80, 80, 80),
+                        rect.centerx - 15, rect.bottom - 18)
             self.skin_rects[("ball", fname)] = rect
 
-        render_text(surface, "Baskets:", font_label, (0, 0, 0), 40, 265, 520)
-        basket_skins = ["basket.png", "basket2.png", "basket3.png", "basket4.png"]
-        for i, fname in enumerate(basket_skins):
+        render_text(surface, tr["skins_baskets"] + ":", font_label, (0, 0, 0), 40, 265, 520)
+        for i, fname in enumerate(owned_baskets):
             rect = pygame.Rect(x_start + i * 110, 295, 100, 110)
             is_sel = (fname == current_basket)
             border_color = (0, 120, 215) if is_sel else (180, 180, 180)
@@ -200,6 +202,7 @@ class InventoryScreen(Screen):
                 ty = rect.y + 10
                 surface.blit(thumb, (tx, ty))
 
-            render_text(surface, str(i + 1), font_small, (80, 80, 80),
-                        rect.centerx - 5, rect.bottom - 18)
+            name_label = fname.replace(".png", "")
+            render_text(surface, name_label, font_small, (80, 80, 80),
+                        rect.centerx - 15, rect.bottom - 18)
             self.skin_rects[("basket", fname)] = rect

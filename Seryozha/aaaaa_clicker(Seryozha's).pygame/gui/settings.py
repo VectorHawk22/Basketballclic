@@ -74,7 +74,8 @@ class SettingsScreen(Screen):
     def _on_reset(self):
         tr = self.app.translations[self.app.current_lang]
         self.app.dialog.show_confirm(
-            tr["reset_button"], tr["reset_confirm"], self._confirm_reset)
+            tr["reset_button"], tr["reset_confirm"], self._confirm_reset,
+            yes_text=tr.get("dialog_yes", "Yes"), no_text=tr.get("dialog_no", "No"))
 
     def _confirm_reset(self, yes):
         if yes:
@@ -87,7 +88,8 @@ class SettingsScreen(Screen):
                                           f"{tr['reset_error']}:\n{e}")
 
     def handle_event(self, event):
-        self.lang_dropdown.handle_event(event)
+        if self.lang_dropdown.handle_event(event):
+            return
         self.sound_checkbox.handle_event(event)
         self.btn_save.handle_event(event)
         self.btn_reset.handle_event(event)
@@ -102,8 +104,8 @@ class SettingsScreen(Screen):
         render_text(surface, tr["language_label"], font_label, (0, 0, 0), 40, 107, 250)
         self.lang_dropdown.draw(surface)
 
-        render_text(surface, tr["sound_label"], font_label, (0, 0, 0), 40, 165, 250)
-        self.sound_checkbox.draw(surface)
-
-        self.btn_save.draw(surface)
-        self.btn_reset.draw(surface)
+        if not self.lang_dropdown.open:
+            render_text(surface, tr["sound_label"], font_label, (0, 0, 0), 40, 165, 250)
+            self.sound_checkbox.draw(surface)
+            self.btn_save.draw(surface)
+            self.btn_reset.draw(surface)

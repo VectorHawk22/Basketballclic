@@ -36,6 +36,11 @@ TRANSLATIONS = {
         "save_success": "Settings saved!",
         "save_error": "Failed to save settings!",
         "button_click": "Click!",
+        "shop_tab_upgrades": "Upgrades", "shop_tab_balls": "Balls", "shop_tab_baskets": "Hoops",
+        "shop_buy": "Buy", "shop_owned": "Owned",
+        "shop_price": "{} pts", "shop_not_enough": "Not enough points!",
+        "shop_coming_soon": "Coming soon...",
+        "dialog_yes": "Yes", "dialog_no": "No",
     },
     "Русский": {
         "title": "Кликер", "hit": "Попал! +1 очко!", "miss": "Промах :(",
@@ -57,6 +62,11 @@ TRANSLATIONS = {
         "save_success": "Настройки сохранены!",
         "save_error": "Не удалось сохранить настройки!",
         "button_click": "Клик!",
+        "shop_tab_upgrades": "Улучшения", "shop_tab_balls": "Мячи", "shop_tab_baskets": "Кольца",
+        "shop_buy": "Купить", "shop_owned": "Куплено",
+        "shop_price": "{} очков", "shop_not_enough": "Недостаточно очков!",
+        "shop_coming_soon": "Скоро будет...",
+        "dialog_yes": "Да", "dialog_no": "Нет",
     },
     "Французский": {
         "title": "Cliqueur", "hit": "Touche ! +1 point !", "miss": "Rate :(",
@@ -79,6 +89,11 @@ TRANSLATIONS = {
         "save_success": "Parametres enregistres !",
         "save_error": "Echec de l'enregistrement !",
         "button_click": "Cliquez !",
+        "shop_tab_upgrades": "Ameliorations", "shop_tab_balls": "Ballons", "shop_tab_baskets": "Paniers",
+        "shop_buy": "Acheter", "shop_owned": "Possede",
+        "shop_price": "{} pts", "shop_not_enough": "Pas assez de points !",
+        "shop_coming_soon": "Bientot disponible...",
+        "dialog_yes": "Oui", "dialog_no": "Non",
     },
     "Немецкий": {
         "title": "Klicker", "hit": "Treffer! +1 Punkt!", "miss": "Daneben :(",
@@ -102,6 +117,11 @@ TRANSLATIONS = {
         "save_success": "Einstellungen gespeichert!",
         "save_error": "Fehler beim Speichern!",
         "button_click": "Klick!",
+        "shop_tab_upgrades": "Verbesserungen", "shop_tab_balls": "Baelle", "shop_tab_baskets": "Koerbe",
+        "shop_buy": "Kaufen", "shop_owned": "Besessen",
+        "shop_price": "{} Punkte", "shop_not_enough": "Nicht genug Punkte!",
+        "shop_coming_soon": "Demnaechst verfuegbar...",
+        "dialog_yes": "Ja", "dialog_no": "Nein",
     },
     "Китайский": {
         "title": "点击器", "hit": "击中！+1 分！", "miss": "未命中 :(",
@@ -124,6 +144,11 @@ TRANSLATIONS = {
         "save_success": "设置已保存！",
         "save_error": "保存设置失败！",
         "button_click": "点击！",
+        "shop_tab_upgrades": "升级", "shop_tab_balls": "球", "shop_tab_baskets": "篮筐",
+        "shop_buy": "购买", "shop_owned": "已拥有",
+        "shop_price": "{} 分", "shop_not_enough": "分数不足！",
+        "shop_coming_soon": "即将推出...",
+        "dialog_yes": "是", "dialog_no": "否",
     },
 }
 
@@ -211,6 +236,8 @@ class App:
                 self.screens["settings"] = SettingsScreen(self)
             elif name == "inventory":
                 self.screens["inventory"] = InventoryScreen(self)
+            elif name == "shop":
+                self.screens["shop"] = ShopScreen(self)
         self.current_screen = name
 
     def set_language(self, lang):
@@ -250,7 +277,11 @@ class App:
 
     def _load_settings(self):
         settings_file = os.path.join(self.base_dir, "settings.json")
-        defaults = {"sound": True, "language": "Русский"}
+        defaults = {
+            "sound": True, "language": "Русский",
+            "skin_ball": "ball1.png", "skin_basket": "basket.png",
+            "inventory_balls": ["ball1.png"], "inventory_baskets": ["basket.png"]
+        }
         if not os.path.exists(settings_file):
             try:
                 with open(settings_file, "w", encoding="utf-8") as f:

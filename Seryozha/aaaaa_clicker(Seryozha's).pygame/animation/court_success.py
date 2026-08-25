@@ -142,7 +142,8 @@ class CourtSuccess:
                          (cx + int(self.ball_x) - bw // 2,
                           cy + int(self.ball_y) - bh // 2))
 
-    def start_animation(self):
+    def start_animation(self, court_w, court_h):
+        self.prepare(court_w, court_h)
         self.state = "flying"
         self.ball_x = float(self._rest_x)
         self.ball_y = float(self._rest_y)

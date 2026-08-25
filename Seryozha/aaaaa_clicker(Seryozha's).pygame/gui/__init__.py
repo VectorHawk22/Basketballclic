@@ -2,16 +2,35 @@ import pygame
 import platform
 
 
+_cjk_font = None
+
+def _has_cjk(text):
+    for ch in text:
+        cp = ord(ch)
+        if (0x4E00 <= cp <= 0x9FFF or 0x3400 <= cp <= 0x4DBF or
+                0xF900 <= cp <= 0xFAFF or 0x20000 <= cp <= 0x2FA1F):
+            return True
+    return False
+
 def get_font(size, bold=False):
     try:
         if platform.system() == "Windows":
-            name = "Microsoft YaHei" if not bold else "Microsoft YaHei Bold"
-            f = pygame.font.SysFont(name, size, bold=bold)
+            f = pygame.font.SysFont("Microsoft YaHei", size, bold=bold)
             if f:
                 return f
     except Exception:
         pass
     return pygame.font.SysFont("Arial", size, bold=bold)
+
+
+def get_font_for(text, size, bold=False):
+    if _has_cjk(text):
+        try:
+            if platform.system() == "Windows":
+                return pygame.font.SysFont("Microsoft YaHei", size, bold=bold)
+        except Exception:
+            pass
+    return get_font(size, bold)
 
 
 def strip_emoji(text):
@@ -26,25 +45,27 @@ def strip_emoji(text):
 def render_text(surface, text, font, color, x, y, max_width=None):
     lines = strip_emoji(text).split("\n")
     y_offset = 0
+    sz = font.get_linesize()
     for line in lines:
-        surf = font.render(line, True, color)
+        use_font = get_font_for(line, sz, bold=font.get_bold()) if _has_cjk(line) else font
+        surf = use_font.render(line, True, color)
         if max_width and surf.get_width() > max_width:
             words = line.split(" ")
             current = ""
             for word in words:
                 test = current + (" " if current else "") + word
-                if font.size(test)[0] > max_width and current:
-                    surface.blit(font.render(current, True, color), (x, y + y_offset))
-                    y_offset += font.get_linesize()
+                if use_font.size(test)[0] > max_width and current:
+                    surface.blit(use_font.render(current, True, color), (x, y + y_offset))
+                    y_offset += use_font.get_linesize()
                     current = word
                 else:
                     current = test
             if current:
-                surface.blit(font.render(current, True, color), (x, y + y_offset))
-                y_offset += font.get_linesize()
+                surface.blit(use_font.render(current, True, color), (x, y + y_offset))
+                y_offset += use_font.get_linesize()
         else:
             surface.blit(surf, (x, y + y_offset))
-            y_offset += font.get_linesize()
+            y_offset += use_font.get_linesize()
     return y_offset
 
 
@@ -78,6 +99,7 @@ class Button:
         self.border_radius = border_radius
         self.callback = callback
         self.hovered = False
+        self._flash_timer = 0
 
     def set_text(self, text):
         self.text = text
@@ -86,17 +108,26 @@ class Button:
         if event.type == pygame.MOUSEMOTION:
             self.hovered = self.rect.collidepoint(event.pos)
         elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-            if self.rect.collidepoint(event.pos) and self.callback:
-                self.callback()
+            if self.rect.collidepoint(event.pos):
+                self._flash_timer = 6
+                if self.callback:
+                    self.callback()
                 return True
         return False
 
     def draw(self, surface):
-        color = tuple(min(255, c + 30) for c in self.bg_color) if self.hovered else self.bg_color
+        if self._flash_timer > 0:
+            color = (255, 255, 255)
+            self._flash_timer -= 1
+        elif self.hovered:
+            color = tuple(min(255, c + 30) for c in self.bg_color)
+        else:
+            color = self.bg_color
         pygame.draw.rect(surface, color, self.rect, border_radius=self.border_radius)
         pygame.draw.rect(surface, (100, 100, 100), self.rect, 1, border_radius=self.border_radius)
         txt = strip_emoji(self.text)
-        text_surf = self.font.render(txt, True, self.text_color)
+        use_font = get_font_for(txt, self.font.get_linesize(), bold=self.font.get_bold()) if _has_cjk(txt) else self.font
+        text_surf = use_font.render(txt, True, self.text_color)
         text_rect = text_surf.get_rect(center=self.rect.center)
         surface.blit(text_surf, text_rect)
 
@@ -132,7 +163,8 @@ class Checkbox:
             inner = box_rect.inflate(-6, -6)
             pygame.draw.rect(surface, (0, 150, 0), inner, border_radius=2)
         txt = strip_emoji(self.text)
-        text_surf = self.font.render(txt, True, (0, 0, 0))
+        use_font = get_font_for(txt, self.font.get_linesize(), bold=self.font.get_bold()) if _has_cjk(txt) else self.font
+        text_surf = use_font.render(txt, True, (0, 0, 0))
         surface.blit(text_surf, (self.rect.x + self.box_size + 8,
                                  self.rect.centery - text_surf.get_height() // 2))
 
@@ -174,7 +206,8 @@ class Dropdown:
         pygame.draw.rect(surface, (255, 255, 255), self.rect, border_radius=4)
         pygame.draw.rect(surface, (100, 100, 100), self.rect, 2, border_radius=4)
         txt = strip_emoji(self.selected)
-        text_surf = self.font.render(txt, True, (0, 0, 0))
+        use_font = get_font_for(txt, self.font.get_linesize(), bold=self.font.get_bold()) if _has_cjk(txt) else self.font
+        text_surf = use_font.render(txt, True, (0, 0, 0))
         surface.blit(text_surf, (self.rect.x + 8, self.rect.centery - text_surf.get_height() // 2))
         ax = self.rect.right - 18
         ay = self.rect.centery
@@ -196,7 +229,8 @@ class Dropdown:
                     pygame.draw.rect(surface, (200, 220, 255), opt_rect)
                 pygame.draw.rect(surface, (180, 180, 180), opt_rect, 1)
                 opt_txt = strip_emoji(opt)
-                opt_surf = self.font.render(opt_txt, True, (0, 0, 0))
+                opt_font = get_font_for(opt_txt, self.font.get_linesize(), bold=self.font.get_bold()) if _has_cjk(opt_txt) else self.font
+                opt_surf = opt_font.render(opt_txt, True, (0, 0, 0))
                 surface.blit(opt_surf, (opt_rect.x + 8,
                                         opt_rect.centery - opt_surf.get_height() // 2))
 
@@ -209,6 +243,8 @@ class Dialog:
         self.buttons = []
         self.callback = None
         self._btn_rects = []
+        self.yes_text = "Yes"
+        self.no_text = "No"
 
     def show_info(self, title, message):
         self.title = title
@@ -217,10 +253,12 @@ class Dialog:
         self.callback = None
         self.active = True
 
-    def show_confirm(self, title, message, on_yes):
+    def show_confirm(self, title, message, on_yes, yes_text="Yes", no_text="No"):
         self.title = title
         self.message = message
-        self.buttons = [("Yes", True), ("No", False)]
+        self.yes_text = yes_text
+        self.no_text = no_text
+        self.buttons = [(yes_text, True), (no_text, False)]
         self.callback = on_yes
         self.active = True
 

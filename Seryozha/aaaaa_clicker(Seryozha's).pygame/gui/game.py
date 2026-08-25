@@ -13,7 +13,7 @@ class GameScreen(Screen):
     def __init__(self, app):
         super().__init__(app)
 
-        skin_ball = self.app.settings.get("skin_ball", "ball3.png")
+        skin_ball = self.app.settings.get("skin_ball", "ball1.png")
         skin_basket = self.app.settings.get("skin_basket", "basket.png")
         self.court_success = CourtSuccess(ball_file=skin_ball, basket_file=skin_basket)
         self.court_fail = CourtFail(ball_file=skin_ball, basket_file=skin_basket)
@@ -29,6 +29,7 @@ class GameScreen(Screen):
 
         self.nav_buttons = []
         self._build_nav()
+        self._update_button_text()
 
     def _build_nav(self):
         tr = self.app.translations[self.app.current_lang]
@@ -44,7 +45,7 @@ class GameScreen(Screen):
         ]
 
     def apply_skins(self):
-        ball_file = self.app.settings.get("skin_ball", "ball3.png")
+        ball_file = self.app.settings.get("skin_ball", "ball1.png")
         basket_file = self.app.settings.get("skin_basket", "basket.png")
         for court in (self.court_success, self.court_fail):
             court.set_skins(ball_file, basket_file)
@@ -91,10 +92,10 @@ class GameScreen(Screen):
         self.court_fail.stop()
 
         if success:
-            self.court_success.start_animation()
+            self.court_success.start_animation(COURT_W, COURT_H)
             self.result_type = "hit"
         else:
-            self.court_fail.start_animation()
+            self.court_fail.start_animation(COURT_W, COURT_H)
             self.result_type = "miss"
 
         self.game_state = "idle"
@@ -119,7 +120,10 @@ class GameScreen(Screen):
         font_points = get_font(16, bold=True)
         font_result = get_font(12)
 
-        self.court_success.draw(surface, COURT_X, COURT_Y, COURT_W, COURT_H)
+        if self.court_fail.is_animating:
+            self.court_fail.draw(surface, COURT_X, COURT_Y, COURT_W, COURT_H)
+        else:
+            self.court_success.draw(surface, COURT_X, COURT_Y, COURT_W, COURT_H)
 
         if self.result_type == "hit":
             render_text(surface, tr["hit"], font_result, (0, 150, 0), 30, 285, 400)

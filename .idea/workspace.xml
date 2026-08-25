@@ -6,10 +6,16 @@
   <component name="ChangeListManager">
     <list default="true" id="0c0fdf33-65dd-4d5b-b322-c58eef4f8e80" name="Changes" comment="начал делать pygame">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Seryozha/aaaaa_clicker(Seryozha's).tkinter/gui/allgui.py" beforeDir="false" afterPath="$PROJECT_DIR$/Seryozha/aaaaa_clicker(Seryozha's).tkinter/gui/allgui.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Seryozha/aaaaa_clicker(Seryozha's).tkinter/gui/inventory.py" beforeDir="false" afterPath="$PROJECT_DIR$/Seryozha/aaaaa_clicker(Seryozha's).tkinter/gui/inventory.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Seryozha/aaaaa_clicker(Seryozha's).tkinter/gui/shop.py" beforeDir="false" afterPath="$PROJECT_DIR$/Seryozha/aaaaa_clicker(Seryozha's).tkinter/gui/shop.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Seryozha/aaaaa_clicker(Seryozha's).tkinter/settings.json" beforeDir="false" afterPath="$PROJECT_DIR$/Seryozha/aaaaa_clicker(Seryozha's).tkinter/settings.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Seryozha/aaaaa_clicker(Seryozha's).pygame/animation/court_fail.py" beforeDir="false" afterPath="$PROJECT_DIR$/Seryozha/aaaaa_clicker(Seryozha's).pygame/animation/court_fail.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Seryozha/aaaaa_clicker(Seryozha's).pygame/animation/court_success.py" beforeDir="false" afterPath="$PROJECT_DIR$/Seryozha/aaaaa_clicker(Seryozha's).pygame/animation/court_success.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Seryozha/aaaaa_clicker(Seryozha's).pygame/gui/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/Seryozha/aaaaa_clicker(Seryozha's).pygame/gui/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Seryozha/aaaaa_clicker(Seryozha's).pygame/gui/game.py" beforeDir="false" afterPath="$PROJECT_DIR$/Seryozha/aaaaa_clicker(Seryozha's).pygame/gui/game.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Seryozha/aaaaa_clicker(Seryozha's).pygame/gui/inventory.py" beforeDir="false" afterPath="$PROJECT_DIR$/Seryozha/aaaaa_clicker(Seryozha's).pygame/gui/inventory.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Seryozha/aaaaa_clicker(Seryozha's).pygame/gui/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/Seryozha/aaaaa_clicker(Seryozha's).pygame/gui/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Seryozha/aaaaa_clicker(Seryozha's).pygame/gui/shop.py" beforeDir="false" afterPath="$PROJECT_DIR$/Seryozha/aaaaa_clicker(Seryozha's).pygame/gui/shop.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Seryozha/aaaaa_clicker(Seryozha's).pygame/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/Seryozha/aaaaa_clicker(Seryozha's).pygame/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Seryozha/aaaaa_clicker(Seryozha's).pygame/save.json" beforeDir="false" afterPath="$PROJECT_DIR$/Seryozha/aaaaa_clicker(Seryozha's).pygame/save.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Seryozha/aaaaa_clicker(Seryozha's).pygame/settings.json" beforeDir="false" afterPath="$PROJECT_DIR$/Seryozha/aaaaa_clicker(Seryozha's).pygame/settings.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -414,7 +420,15 @@
       <option name="project" value="LOCAL" />
       <updated>1787651930812</updated>
     </task>
-    <option name="localTasksCounter" value="40" />
+    <task id="LOCAL-00040" summary="начал делать pygame">
+      <option name="closed" value="true" />
+      <created>1787669157843</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1787669157843</updated>
+    </task>
+    <option name="localTasksCounter" value="41" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
